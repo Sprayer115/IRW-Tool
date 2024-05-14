@@ -13,6 +13,8 @@ Neuste Version installieren: https://www.geeksforgeeks.org/how-to-install-php-in
 Entkommentieren : 
 - "extension=fileinfo"
 - "extension=pdo_sqlite"
+
+Falls weitere Fehler bei "composer install" kommen, fehlt meist eine extension bei php.
   
  in php.ini
 
@@ -41,7 +43,7 @@ composer install
 npm install
 php artisan migrate
 ```
-
+cp .env.example -> .env
 ## Troubleshoots
 
 ***1. No application encryption key has been specified.***
