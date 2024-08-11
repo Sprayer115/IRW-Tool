@@ -2,6 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
 
 const emit = defineEmits(['update:checked']);
 
@@ -29,98 +30,152 @@ const proxyChecked = computed({
     },
 });
 
-const input1 = ref(null);
+const aufwand = ref(null);
 const zeitraum = ref(null);
+const zeitlicheAbgrenzung = ref(null);
 const sachlicheAbgrenzung = ref(null);
+const za_aw = ref(null);
+const kosten = ref(null);
 const rows = ref([]);
 
-function addRow() {
-    rows.value.push({
-        input1: input1.value,
-        zeitraum: zeitraum.value,
-        sachlicheAbgrenzung: sachlicheAbgrenzung.value,
-        neueSpalte: null
-    });
-    clearInputs();
+onMounted(() => {
+    rows.value = props.items.map(item => ({
+        id: item.id,  // Ensure you have an ID field for deleting rows later
+        aufwand: item.aufwand,
+        zeitraum: item.zeitraum,
+        zeitlicheAbgrenzung: item.zeitliche_abgrenzung,
+        sachlicheAbgrenzung: item.sachliche_abgrenzung,
+        za_aw: item.za_aw,
+        kosten: item.kosten,
+        neueSpalte: null,
+    }));
+});
+
+async function addRow() {
+    try {
+        const newRow = {
+            aufwand: aufwand.value,
+            zeitraum: zeitraum.value,
+            zeitliche_abgrenzung: zeitlicheAbgrenzung.value,
+            sachliche_abgrenzung: sachlicheAbgrenzung.value,
+            za_aw: za_aw.value,
+            kosten: kosten.value,
+        };
+
+        const response = await axios.post('/abgrenzungsrechnung', newRow);
+        
+        if (response.data) {
+            rows.value.push({
+                ...newRow,
+                id: response.data.id,  
+                neueSpalte: calculateWert(newRow)
+            });
+            clearInputs();
+        }
+    } catch (error) {
+        console.error('Error adding row:', error);
+    }
+}
+
+async function deleteRow(id, index) {
+    try {
+        const response = await axios.delete(`/abgrenzungsrechnung/${id}`);
+        
+        if (response.data) {
+            rows.value.splice(index, 1); // Remove row from the array
+        }
+    } catch (error) {
+        console.error('Error deleting row:', error);
+    }
 }
 
 function clearInputs() {
-    input1.value = null;
+    aufwand.value = null;
     zeitraum.value = null;
+    zeitlicheAbgrenzung.value = null;
     sachlicheAbgrenzung.value = null;
+    za_aw.value = null;
+    kosten.value = null;
 }
 
 function calculateWert(row) {
     let wert = 0;
-    if (row.zeitraum && row.input1) {
-        wert = (row.input1 / 12) * row.zeitraum - row.input1;
+    if (row.zeitraum && row.aufwand) {
+        wert = (row.aufwand / 12) * row.zeitraum - row.aufwand;
     } else if (row.sachlicheAbgrenzung) {
         wert = row.sachlicheAbgrenzung * 1.2;
     }
     row.neueSpalte = wert;
     return wert;
 }
-
-// Initialize rows with data passed from the server
-onMounted(() => {
-    rows.value = props.items.map(item => ({
-        input1: item.input1,
-        zeitraum: item.zeitraum,
-        sachlicheAbgrenzung: item.sachliche_abgrnzung,
-        
-    }));
-});
 </script>
 
 
+
 <template>
-  <div>
-    <Head title="Abgrenzungsrechnung">
-    </Head>
+    <div>
+      <Head title="Abgrenzungsrechnung">
+      </Head>
+  
+      <AuthenticatedLayout>
+          <template #header>
+              <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abgrenzungsrechnung</h2>
+          </template>
+  
+          <div class="py-12">
+              <div class="input-area">
+                  <label for="input1">Aufwand:</label>
+                  <input type="number" v-model="aufwand" id="input1" />
+                  
+                  <label for="input2">Zeitraum (Monate):</label>
+                  <input type="number" v-model="zeitraum" id="input2" />
+                  
+                  <label for="input3">Zeitliche Abgrenzung:</label>
+                  <input type="number" v-model="zeitlicheAbgrenzung" id="input3" />  
 
-    <AuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abgrenzungsrechnung</h2>
-        </template>
+                  <label for="input4">Sachliche Abgrenzung:</label>
+                  <input type="number" v-model="sachlicheAbgrenzung" id="input4" />
 
-        <div class="py-12">
+                  <label for="input5">zeitlich abgegrenzter Aufwand:</label>
+                  <input type="number" v-model="za_aw" id="input5" />
 
-            <div class="input-area">
-                <label for="input1">Input 1:</label>
-                <input type="number" v-model="input1" id="input1" />
-                
-                <label for="input2">Zeitraum (Monate):</label>
-                <input type="number" v-model="zeitraum" id="input2" />
-                
-                <label for="input3">Sachliche Abgrenzung:</label>
-                <input type="number" v-model="sachlicheAbgrenzung" id="input3" />
-                
-                <button @click="addRow">Add Row</button>
-            </div>
-
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Input 1</th>
-                        <th>Zeitraum</th>
-                        <th>Sachliche Abgrenzung</th>
-                        <th>Berechneter Wert</th>
-                        <th class="highlight">Neue Spalte</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(row, index) in rows" :key="index">
-                        <td>{{ row.input1 }}</td>
-                        <td>{{ row.zeitraum }}</td>
-                        <td>{{ row.sachlicheAbgrenzung }}</td>
-                        <td>{{ calculateWert(row) }}</td>
-                        <td>{{ row.neueSpalte }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </AuthenticatedLayout>
-  </div>
+                  <label for="input6">Kosten:</label>
+                  <input type="number" v-model="kosten" id="input6" />
+                  
+                  <button @click="addRow">Add Row</button>
+              </div>
+  
+              <table class="table">
+                  <thead>
+                      <tr>
+                          <th>Aufwand</th>
+                          <th>Zeitraum</th>
+                          <th>Zeitliche Abgrenzung</th>
+                          <th>Sachliche Abgrenzung</th>
+                          <th>zeitlich abgegrenzter Aufwand</th>
+                          <th>Kosten</th>
+                          <th>Berechneter Wert</th>
+                          <th class="highlight">Neue Spalte</th>
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr v-for="(row, index) in rows" :key="index">
+                          <td>{{ row.aufwand }}</td>
+                          <td>{{ row.zeitraum }}</td>
+                          <td>{{ row.zeitlicheAbgrenzung }}</td>
+                          <td>{{ row.sachlicheAbgrenzung }}</td>
+                          <td>{{ row.za_aw }}</td>
+                          <td>{{ row.kosten }}</td>
+                          <td>{{ calculateWert(row) }}</td>
+                          <td>{{ row.neueSpalte }}</td>
+                          <td><button @click="deleteRow(row.id, index)">Delete</button></td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+      </AuthenticatedLayout>
+    </div>
 </template>
 
 <style>

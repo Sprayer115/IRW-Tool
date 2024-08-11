@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Abgrenzungsrechnung;
+use App\Http\Controllers\AbgrenzungsrechnungController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -20,7 +21,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // abgrenzungsrechnung
-Route::get('/abgrenzungsrechnung', [Abgrenzungsrechnung::class, 'show'])->middleware(['auth', 'verified'])->name('abgrenzungsrechnung');
+Route::resource('abgrenzungsrechnung', AbgrenzungsrechnungController::class)->only([
+    'index', 'store', 'destroy'
+])->middleware(['auth', 'verified'])->name('index','abgrenzungsrechnung');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
