@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 const emit = defineEmits(['update:checked']);
 
@@ -13,6 +13,10 @@ const props = defineProps({
     value: {
         default: null,
     },
+    items: {
+        type: Array,
+        default: () => [],
+    }
 });
 
 const proxyChecked = computed({
@@ -56,7 +60,18 @@ function calculateWert(row) {
     row.neueSpalte = wert;
     return wert;
 }
+
+// Initialize rows with data passed from the server
+onMounted(() => {
+    rows.value = props.items.map(item => ({
+        input1: item.input1,
+        zeitraum: item.zeitraum,
+        sachlicheAbgrenzung: item.sachliche_abgrnzung,
+        
+    }));
+});
 </script>
+
 
 <template>
   <div>

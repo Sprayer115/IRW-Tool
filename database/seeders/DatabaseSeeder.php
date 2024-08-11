@@ -14,10 +14,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
+        $this->call(Abgrenzungsrechnung::class);
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'test1234',
+            'email' => 'test1@example.com',
+            'password' => bcrypt('password'),
         ]);
+
     }
 }
