@@ -29,12 +29,12 @@ class AbgrenzungsrechnungController extends Controller
     {
         try {
             $request->validate([
-                'aufwand' => 'required',
-                'zeitliche_abgrenzung' => 'required',
-                'za_aw' => 'required',
-                'sachliche_abgrenzung' => 'required',
-                'kosten' => 'required',
-                'zeitraum' => 'required',
+                'aufwand' => 'nullable',
+                'zeitliche_abgrenzung' => 'nullable',
+                'za_aw' => 'nullable',
+                'sachliche_abgrenzung' => 'nullable',
+                'kosten' => 'nullable',
+                'zeitraum' => 'nullable',
             ]);
     
             $r = ModelsAbgrenzungsrechnung::create($request->all());
