@@ -69,7 +69,8 @@ async function addRow() {
                 ...newRow,
                 id: response.data.id,  
                 neueSpalte: calculateWert(newRow),
-                zeitlicheAbgrenzung: calculateZA(newRow)
+                zeitlicheAbgrenzung: calculateZA(newRow),
+                za_aw: calculateZAAW(newRow)
             });
             clearInputs();
         }
@@ -120,6 +121,16 @@ function calculateZA(row){
     row.zeitlicheAbgrenzung = wert;
     return wert;
 }
+
+function calculateZAAW(row){
+    let wert = 0;
+    if(row.aufwand && row.zeitlicheAbgrenzung)
+    {
+        wert = row.aufwand + row.zeitlicheAbgrenzung;
+    }
+    row.za_aw = wert;
+    return wert;
+}
 </script>
 
 
@@ -148,13 +159,10 @@ function calculateZA(row){
                   <label for="input4">Sachliche Abgrenzung:</label>
                   <input type="number" v-model="sachlicheAbgrenzung" id="input4" />
 
-                  <label for="input5">zeitlich abgegrenzter Aufwand:</label>
-                  <input type="number" v-model="za_aw" id="input5" />
-
                   <label for="input6">Kosten:</label>
                   <input type="number" v-model="kosten" id="input6" />
                   
-                  <button @click="addRow">Add Row</button>
+                  <button @click="addRow"> Add Row </button>
               </div>
   
               <table class="table">
