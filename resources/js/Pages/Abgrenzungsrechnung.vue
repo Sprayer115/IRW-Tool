@@ -68,7 +68,8 @@ async function addRow() {
             rows.value.push({
                 ...newRow,
                 id: response.data.id,  
-                neueSpalte: calculateWert(newRow)
+                neueSpalte: calculateWert(newRow),
+                zeitlicheAbgrenzung: calculateZA(newRow)
             });
             clearInputs();
         }
@@ -106,6 +107,17 @@ function calculateWert(row) {
         wert = row.sachlicheAbgrenzung * 1.2;
     }
     row.neueSpalte = wert;
+    return wert;
+}
+
+function calculateZA(row){
+    let wert = 0;
+    if (row.aufwand && row.zeitraum)
+    {
+        let x = row.aufwand / 12;
+        wert = x * row.zeitraum;
+    }
+    row.zeitlicheAbgrenzung = wert;
     return wert;
 }
 </script>
