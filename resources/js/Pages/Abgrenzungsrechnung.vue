@@ -62,6 +62,18 @@ async function addRow() {
             kosten: kosten.value,
         };
 
+        try{
+            newRow.zeitliche_abgrenzung = calculateZA(newRow);
+            newRow.za_aw = calculateZAAW(newRow);
+            newRow.kosten = calculateWert(newRow);
+            if(newRow.sachliche_abgrenzung == ''){
+                newRow.sachliche_abgrenzung = '-';
+            }
+        }catch(error){
+            console.error('Error setting functions:', error)
+        }
+        
+
         const response = await axios.post('/abgrenzungsrechnung', newRow);
         
         if (response.data) {
@@ -69,8 +81,6 @@ async function addRow() {
                 ...newRow,
                 id: response.data.id,  
                 neueSpalte: calculateWert(newRow),
-                zeitlicheAbgrenzung: calculateZA(newRow),
-                za_aw: calculateZAAW(newRow)
             });
             clearInputs();
         }
@@ -113,13 +123,17 @@ function calculateWert(row) {
 
 function calculateZA(row){
     let wert = 0;
-    if (row.aufwand && row.zeitraum)
+    if(row.zeitlicheAbgrenzung)
+    {
+        wert = zeitlicheAbgrenzung;
+    }
+    else if(row.aufwand && row.zeitraum)
     {
         let x = row.aufwand / 12;
         wert = x * row.zeitraum;
     }
-    row.zeitlicheAbgrenzung = wert;
-    return wert;
+    row.zeitlicheAbgrenzung = -(wert);
+    return -(wert);
 }
 
 function calculateZAAW(row){
@@ -144,7 +158,7 @@ function calculateZAAW(row){
           <template #header>
               <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abgrenzungsrechnung</h2>
           </template>
-  
+          
           <div class="py-12">
               <div class="input-area">
                   <label for="input1">Aufwand:</label>
@@ -152,9 +166,6 @@ function calculateZAAW(row){
                   
                   <label for="input2">Zeitraum (Monate):</label>
                   <input type="number" v-model="zeitraum" id="input2" />
-                  
-                  <label for="input3">Zeitliche Abgrenzung:</label>
-                  <input type="number" v-model="zeitlicheAbgrenzung" id="input3" />  
 
                   <label for="input4">Sachliche Abgrenzung:</label>
                   <input type="number" v-model="sachlicheAbgrenzung" id="input4" />
@@ -162,20 +173,18 @@ function calculateZAAW(row){
                   <label for="input6">Kosten:</label>
                   <input type="number" v-model="kosten" id="input6" />
                   
-                  <button @click="addRow"> Add Row </button>
+                  <button class="button" @click="addRow"> Add Row </button>
               </div>
   
               <table class="table">
                   <thead>
                       <tr>
-                          <th>Aufwand</th>
-                          <th>Zeitraum</th>
+                          <th class="success">Aufwand</th>
+                          <th class = "highlight">Zeitraum</th>
                           <th>Zeitliche Abgrenzung</th>
                           <th>Sachliche Abgrenzung</th>
                           <th>zeitlich abgegrenzter Aufwand</th>
-                          <th>Kosten</th>
-                          <th>Berechneter Wert</th>
-                          <th class="highlight">Neue Spalte</th>
+                          <th class="warning">Kosten</th>
                           <th>Actions</th>
                       </tr>
                   </thead>
@@ -187,9 +196,7 @@ function calculateZAAW(row){
                           <td>{{ row.sachlicheAbgrenzung }}</td>
                           <td>{{ row.za_aw }}</td>
                           <td>{{ row.kosten }}</td>
-                          <td>{{ calculateWert(row) }}</td>
-                          <td>{{ row.neueSpalte }}</td>
-                          <td><button @click="deleteRow(row.id, index)">Delete</button></td>
+                          <td><button class = "button" @click="deleteRow(row.id, index)">Delete</button></td>
                       </tr>
                   </tbody>
               </table>
@@ -214,6 +221,14 @@ th, td {
     background-color: yellow;
 }
 
+.success{
+    background-color: green;
+}
+
+.warning{
+    background-color: red;
+}
+
 .input-area {
     margin-bottom: 20px;
 }
@@ -222,12 +237,28 @@ label {
     margin-right: 10px;
 }
 
+.button{
+  background-color: #ffffff;
+  border: none;
+  color: rgb(0, 0, 0);
+  padding: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  outline-color: black;
+  outline: auto;
+  
+}
+
 input {
     margin-right: 10px;
 }
 
 button {
     margin-top: 10px;
+    
 }
 
 .tooltip {
