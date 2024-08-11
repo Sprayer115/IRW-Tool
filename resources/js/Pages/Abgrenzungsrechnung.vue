@@ -7,10 +7,6 @@ import axios from 'axios';
 const emit = defineEmits(['update:checked']);
 
 const props = defineProps({
-    checked: {
-        type: [Array, Boolean],
-        required: true,
-    },
     value: {
         default: null,
     },
@@ -32,8 +28,8 @@ const proxyChecked = computed({
 
 const aufwand = ref(null);
 const zeitraum = ref(null);
-const zeitlicheAbgrenzung = ref(null);
-const sachlicheAbgrenzung = ref(null);
+const zeitliche_abgrenzung = ref(null);
+const sachliche_abgrenzung = ref(null);
 const za_aw = ref(null);
 const kosten = ref(null);
 const rows = ref([]);
@@ -43,8 +39,8 @@ onMounted(() => {
         id: item.id,  // Ensure you have an ID field for deleting rows later
         aufwand: item.aufwand,
         zeitraum: item.zeitraum,
-        zeitlicheAbgrenzung: item.zeitliche_abgrenzung,
-        sachlicheAbgrenzung: item.sachliche_abgrenzung,
+        zeitliche_abgrenzung: item.zeitliche_abgrenzung,
+        sachliche_abgrenzung: item.sachliche_abgrenzung,
         za_aw: item.za_aw,
         kosten: item.kosten,
         neueSpalte: null,
@@ -56,8 +52,8 @@ async function addRow() {
         const newRow = {
             aufwand: aufwand.value,
             zeitraum: zeitraum.value,
-            zeitliche_abgrenzung: zeitlicheAbgrenzung.value,
-            sachliche_abgrenzung: sachlicheAbgrenzung.value,
+            zeitliche_abgrenzung: zeitliche_abgrenzung.value,
+            sachliche_abgrenzung: sachliche_abgrenzung.value,
             za_aw: za_aw.value,
             kosten: kosten.value,
         };
@@ -66,6 +62,7 @@ async function addRow() {
             newRow.zeitliche_abgrenzung = calculateZA(newRow);
             newRow.za_aw = calculateZAAW(newRow);
             newRow.kosten = calculateWert(newRow);
+            console.log(newRow);
             if(newRow.sachliche_abgrenzung == ''){
                 newRow.sachliche_abgrenzung = '-';
             }
@@ -104,8 +101,8 @@ async function deleteRow(id, index) {
 function clearInputs() {
     aufwand.value = null;
     zeitraum.value = null;
-    zeitlicheAbgrenzung.value = null;
-    sachlicheAbgrenzung.value = null;
+    zeitliche_abgrenzung.value = null;
+    sachliche_abgrenzung.value = null;
     za_aw.value = null;
     kosten.value = null;
 }
@@ -114,8 +111,8 @@ function calculateWert(row) {
     let wert = 0;
     if (row.zeitraum && row.aufwand) {
         wert = (row.aufwand / 12) * row.zeitraum - row.aufwand;
-    } else if (row.sachlicheAbgrenzung) {
-        wert = row.sachlicheAbgrenzung * 1.2;
+    } else if (row.sachliche_abgrenzung) {
+        wert = row.sachliche_abgrenzung * 1.2;
     }
     row.neueSpalte = wert;
     return wert;
@@ -123,24 +120,24 @@ function calculateWert(row) {
 
 function calculateZA(row){
     let wert = 0;
-    if(row.zeitlicheAbgrenzung)
+    if(row.zeitliche_abgrenzung)
     {
-        wert = zeitlicheAbgrenzung;
+        wert = zeitliche_abgrenzung;
     }
     else if(row.aufwand && row.zeitraum)
     {
         let x = row.aufwand / 12;
         wert = x * row.zeitraum;
     }
-    row.zeitlicheAbgrenzung = -(wert);
+    row.zeitliche_abgrenzung = -(wert);
     return -(wert);
 }
 
 function calculateZAAW(row){
     let wert = 0;
-    if(row.aufwand && row.zeitlicheAbgrenzung)
+    if(row.aufwand && row.zeitliche_abgrenzung)
     {
-        wert = row.aufwand + row.zeitlicheAbgrenzung;
+        wert = row.aufwand + row.zeitliche_abgrenzung;
     }
     row.za_aw = wert;
     return wert;
@@ -168,7 +165,7 @@ function calculateZAAW(row){
                   <input type="number" v-model="zeitraum" id="input2" />
 
                   <label for="input4">Sachliche Abgrenzung:</label>
-                  <input type="number" v-model="sachlicheAbgrenzung" id="input4" />
+                  <input type="number" v-model="sachliche_abgrenzung" id="input4" />
 
                   <label for="input6">Kosten:</label>
                   <input type="number" v-model="kosten" id="input6" />
@@ -192,8 +189,8 @@ function calculateZAAW(row){
                       <tr v-for="(row, index) in rows" :key="index">
                           <td>{{ row.aufwand }}</td>
                           <td>{{ row.zeitraum }}</td>
-                          <td>{{ row.zeitlicheAbgrenzung }}</td>
-                          <td>{{ row.sachlicheAbgrenzung }}</td>
+                          <td>{{ row.zeitliche_abgrenzung }}</td>
+                          <td>{{ row.sachliche_abgrenzung }}</td>
                           <td>{{ row.za_aw }}</td>
                           <td>{{ row.kosten }}</td>
                           <td><button class = "button" @click="deleteRow(row.id, index)">Delete</button></td>
