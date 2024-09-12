@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Abgrenzungsrechnung as ModelsAbgrenzungsrechnung;
+use App\Models\Plankostenrechnung;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
 
-class AbgrenzungsrechnungController extends Controller
+class PlankostenrechnungController extends Controller
 {
-    /**
+     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         return Inertia::render('Abgrenzungsrechnung', [
-            'items' => ModelsAbgrenzungsrechnung::all(),
+            'items' => Plankostenrechnung::all(),
         ]);
     }
 
@@ -27,15 +27,14 @@ class AbgrenzungsrechnungController extends Controller
     {
         try {
             $request->validate([
-                'aufwand' => 'nullable',
-                'zeitliche_abgrenzung' => 'nullable',
-                'za_aw' => 'nullable',
-                'sachliche_abgrenzung' => 'nullable',
-                'kosten' => 'nullable',
-                'zeitraum' => 'nullable',
+                'plankosten_variabel' => 'nullable',
+                'plankosten_gesamt' => 'nullable',
+                'istkosten' => 'nullable',
+                'stueck_soll' => 'nullable',
+                'stueck_ist' => 'nullable',
             ]);
     
-            $r = ModelsAbgrenzungsrechnung::create($request->all());
+            $r = Plankostenrechnung::create($request->all());
     
             return $r;
         } catch (Exception $e) {
@@ -49,7 +48,7 @@ class AbgrenzungsrechnungController extends Controller
     public function destroy(string $id)
     {
         try {
-            ModelsAbgrenzungsrechnung::destroy($id);
+            Plankostenrechnung::destroy($id);
     
             return true;
         } catch (Exception $e) {

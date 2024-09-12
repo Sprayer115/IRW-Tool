@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Abgrenzungsrechnung extends Model
 {
-    use HasFactory;
+    protected $table = 'abgrenzungsrechnungen';
 
     protected $fillable = [
         'aufwand',

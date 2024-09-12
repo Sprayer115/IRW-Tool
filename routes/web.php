@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Abgrenzungsrechnung;
 use App\Http\Controllers\AbgrenzungsrechnungController;
+use App\Http\Controllers\PlankostenrechnungController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,11 @@ Route::get('/dashboard', function () {
 Route::resource('abgrenzungsrechnung', AbgrenzungsrechnungController::class)->only([
     'index', 'store', 'destroy'
 ])->middleware(['auth', 'verified'])->name('index','abgrenzungsrechnung');
+
+// abgrenzungsrechnung
+Route::resource('plankostenrechnung', PlankostenrechnungController::class)->only([
+    'index', 'store', 'destroy'
+])->middleware(['auth', 'verified'])->name('index','plankostenabrechnung');
 
 
 Route::middleware('auth')->group(function () {

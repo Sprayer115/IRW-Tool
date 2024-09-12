@@ -35,6 +35,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('abgrenzungsrechnung')" :active="route().current('abgrenzungsrechnung')">
                                     Abgrenzungsrechnung
                                 </NavLink>
+                                <NavLink :href="route('abgrenzungsrechnung')" :active="route().current('plankostenrechnung')">
+                                    Plankostenrechnung
+                                </NavLink>
                             </div>
                         </div>
 
