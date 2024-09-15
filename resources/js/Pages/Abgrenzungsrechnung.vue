@@ -3,6 +3,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
 
 const emit = defineEmits(['update:checked']);
 
@@ -27,12 +30,26 @@ const proxyChecked = computed({
 });
 
 const aufwand = ref(null);
-const zeitraum = ref(null);
+const selectedRange = ref(null); // For date range picker (months)
 const zeitliche_abgrenzung = ref(null);
 const sachliche_abgrenzung = ref(null);
 const za_aw = ref(null);
 const kosten = ref(null);
 const rows = ref([]);
+
+const monthDifference = computed(() => {
+    console.log(selectedRange)
+    if (selectedRange.value && selectedRange.value.length === 2) {
+        const [startDate, endDate] = selectedRange.value;
+
+        // Extract month and year from both startDate and endDate
+        const startMonth = startDate.year * 12 + startDate.month; // Convert year and month into total months
+        const endMonth = endDate.year * 12 + endDate.month;
+
+        return endMonth - startMonth + 1; // +1 to include the start month
+    }
+    return 0;
+});
 
 onMounted(() => {
     rows.value = props.items.map(item => ({
@@ -51,7 +68,7 @@ async function addRow() {
     try {
         const newRow = {
             aufwand: aufwand.value,
-            zeitraum: zeitraum.value,
+            zeitraum: monthDifference.value, // Use month difference
             zeitliche_abgrenzung: zeitliche_abgrenzung.value,
             sachliche_abgrenzung: sachliche_abgrenzung.value,
             za_aw: za_aw.value,
@@ -100,7 +117,7 @@ async function deleteRow(id, index) {
 
 function clearInputs() {
     aufwand.value = null;
-    zeitraum.value = null;
+    selectedRange.value = null;
     zeitliche_abgrenzung.value = null;
     sachliche_abgrenzung.value = null;
     za_aw.value = null;
@@ -155,34 +172,64 @@ function calculateZAAW(row){
           <template #header>
               <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abgrenzungsrechnung</h2>
           </template>
-          
-          <div class="py-12">
-              <div class="input-area">
-                  <label for="input1">Aufwand:</label>
-                  <input type="number" v-model="aufwand" id="input1" />
-                  
-                  <label for="input2">Zeitraum (Monate):</label>
-                  <input type="number" v-model="zeitraum" id="input2" />
+          <div style="background: red;">
+            <li>Tooltips hover oder click?</li>
+          </div>
+          <div class="py-12 m-lg-4">
+            <div class="input-area"
+                style="display: grid; grid-template-columns: 3fr 2fr; grid-gap: 20px; align-items: center; justify-content: center; justify-items: center; max-width: 600px; margin: 0 auto;">
+                <!-- Label and Date Picker in Grid -->
+                <label for="input2" style="justify-self: start;">Für welchen Zeitraum soll abgegrenzt werden?</label>
+                <VueDatePicker v-model="selectedRange" auto-apply month-picker range style="max-width: 250px;" />
 
-                  <label for="input4">Sachliche Abgrenzung:</label>
-                  <input type="number" v-model="sachliche_abgrenzung" id="input4" />
+                <!-- Aufwand Input -->
+                <label for="input1" style="justify-self: start;">Bitte trage den <span id="tooltip-aufwand" class="tooltip-container">
+                    Aufwand<sup class="information">i</sup>
+                    <span class="tooltip-text">Definition für den Aufwand</span>
+                </span>
+                ein:</label>
+                <input type="number" v-model="aufwand" id="input1" style="max-width: 250px;" />
+                
+                <!-- Sachliche Abgrenzung Input -->
+                <label for="input4" style="justify-self: start;">Gibt es eine sachliche <span id="tooltip-aufwand" class="tooltip-container">
+                    Abgrenzung<sup class="information">i</sup>
+                    <span class="tooltip-text">Definition für Abgrenzung</span>
+                </span>?</label>
+                <input type="number" v-model="sachliche_abgrenzung" id="input4" style="max-width: 250px;" />
 
-                  <label for="input6">Kosten:</label>
-                  <input type="number" v-model="kosten" id="input6" />
-                  
-                  <button class="button" @click="addRow"> Add Row </button>
-              </div>
+                <!-- Kosten Input -->
+                <label for="input6" style="justify-self: start;">Gibt es schon die fertigen Kosten?</label>
+                <input type="number" v-model="kosten" id="input6" style="max-width: 250px;" />
+
+                <!-- Empty space to align button -->
+                <div></div>
+                <button class="button bg-primary" style="justify-self: start; max-width: 150px;" @click="addRow">Berechnen</button>
+            </div>
+
+
+
+
   
               <table class="table">
                   <thead>
                       <tr>
-                          <th class="success">Aufwand</th>
-                          <th class = "highlight">Zeitraum</th>
-                          <th>Zeitliche Abgrenzung</th>
-                          <th>Sachliche Abgrenzung</th>
-                          <th>zeitlich abgegrenzter Aufwand</th>
-                          <th class="warning">Kosten</th>
-                          <th>Actions</th>
+                            <th class="bg-success">Aufwand</th>
+                            <th class = "bg-warning">Zeitraum</th>
+                            <th>Zeitliche Abgrenzung</th>
+                            <th>Sachliche Abgrenzung</th>
+                            <th>
+                                <span id="tooltip-aufwand" class="tooltip-container">
+                                    zeitlich abgegrenzter Aufwand<sup class="information">i</sup>
+                                    <span class="tooltip-text">Definition/Rechnung für den zeitlich abgegrenzter Aufwand</span>
+                                </span>
+                            </th>
+                            <th class="bg-danger">
+                                <span id="tooltip-aufwand" class="tooltip-container">
+                                    Kosten<sup class="information">i</sup>
+                                    <span class="tooltip-text">Definition/Rechnung für die Kosten</span>
+                                </span>
+                            </th>
+                            <th>Actions</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -193,7 +240,7 @@ function calculateZAAW(row){
                           <td>{{ row.sachliche_abgrenzung }}</td>
                           <td>{{ row.za_aw }}</td>
                           <td>{{ row.kosten }}</td>
-                          <td><button class = "button" @click="deleteRow(row.id, index)">Delete</button></td>
+                          <td><button class = "button bg-danger" @click="deleteRow(row.id, index)">löschen</button></td>
                       </tr>
                   </tbody>
               </table>
@@ -214,17 +261,6 @@ th, td {
     text-align: left;
 }
 
-.highlight {
-    background-color: yellow;
-}
-
-.success{
-    background-color: green;
-}
-
-.warning{
-    background-color: red;
-}
 
 .input-area {
     margin-bottom: 20px;
@@ -286,4 +322,48 @@ button {
     visibility: visible;
     opacity: 1;
 }
+
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.information {
+    border: 1px solid;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 10px;
+    height: 10px;
+    font-size: 8px;
+    margin-left: 1px;
+}
+
+/* Tooltip text - hidden by default */
+.tooltip-text {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%; /* Adjust to position above the element */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out; /* Animation */
+    white-space: nowrap;
+}
+
+/* Show the tooltip when hovering over the container */
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0.1s; /* Delay before showing the tooltip */
+}
+
 </style>
