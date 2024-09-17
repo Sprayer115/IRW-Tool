@@ -13,13 +13,10 @@ createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, App, props, plugin }) {
-        const app = createApp({ render: () => h(App, props) });
-        
-        // Use Inertia, Ziggy, and BootstrapVueNext
-        app.use(plugin);
-        app.use(ZiggyVue);
-        
-        app.mount(el);
+        return createApp({ render: () => h(App, props) })
+            .use(plugin)
+            .use(ZiggyVue)
+            .mount(el);
     },
     progress: {
         color: '#4B5563',

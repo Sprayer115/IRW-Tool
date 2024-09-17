@@ -21,16 +21,23 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// abgrenzungsrechnung
+// Abgrenzungsrechnung
 Route::resource('abgrenzungsrechnung', AbgrenzungsrechnungController::class)->only([
     'index', 'store', 'destroy'
-])->middleware(['auth', 'verified'])->name('index','abgrenzungsrechnung');
+])->middleware(['auth', 'verified'])->names([
+    'index' => 'abgrenzungsrechnung.index',  // Set route names correctly
+    'store' => 'abgrenzungsrechnung.store',
+    'destroy' => 'abgrenzungsrechnung.destroy'
+]);
 
-// plankostenrechnung
+// Plankostenrechnung
 Route::resource('plankostenrechnung', PlankostenrechnungController::class)->only([
     'index', 'store', 'destroy'
-])->middleware(['auth', 'verified'])->name('index','plankostenabrechnung');
-
+])->middleware(['auth', 'verified'])->names([
+    'index' => 'plankostenrechnung.index',  // Ensure correct naming here
+    'store' => 'plankostenrechnung.store',
+    'destroy' => 'plankostenrechnung.destroy'
+]);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
