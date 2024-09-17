@@ -26,7 +26,7 @@ Route::resource('abgrenzungsrechnung', AbgrenzungsrechnungController::class)->on
     'index', 'store', 'destroy'
 ])->middleware(['auth', 'verified'])->name('index','abgrenzungsrechnung');
 
-// abgrenzungsrechnung
+// plankostenrechnung
 Route::resource('plankostenrechnung', PlankostenrechnungController::class)->only([
     'index', 'store', 'destroy'
 ])->middleware(['auth', 'verified'])->name('index','plankostenabrechnung');

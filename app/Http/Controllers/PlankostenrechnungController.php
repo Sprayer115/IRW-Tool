@@ -15,7 +15,7 @@ class PlankostenrechnungController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Abgrenzungsrechnung', [
+        return Inertia::render('Plankostenrechnung', [
             'items' => Plankostenrechnung::all(),
         ]);
     }
