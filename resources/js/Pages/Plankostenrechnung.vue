@@ -97,8 +97,7 @@ async function addRow() {
         if (response.data) {
             rows.value.push({
                 ...newRow,
-                id: response.data.id,  
-                neueSpalte: calculateWert(newRow),
+                id: response.data.id, 
             });
             clearInputs();
         }
@@ -120,12 +119,12 @@ async function deleteRow(id, index) {
 }
 
 function clearInputs() {
-    aufwand.value = null;
-    selectedRange.value = null;
-    zeitliche_abgrenzung.value = null;
-    sachliche_abgrenzung.value = null;
-    za_aw.value = null;
-    kosten.value = null;
+    fixkosten.value = null;
+    varPlanverrechnungssatz.value = null;
+    istLeistung.value = null;
+    istKosten.value = null;
+    sollKosten.value = null;
+    istKostenVerechneteLeistung.value = null;
 }
 
 function calculateBA(row) {
@@ -189,7 +188,7 @@ function calculateVA(row){
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="aufwand" id="input1" style="max-width: 250px;" />
+                <input type="number" v-model="fixkosten" id="input1" style="max-width: 250px;" />
 
                 <!-- variabler Planverrechnungssatz Input -->
                 <label for="input2" style="justify-self: start;">variabler Planverrechnungssatz:  
@@ -198,7 +197,7 @@ function calculateVA(row){
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="aufwand" id="input2" style="max-width: 250px;" />
+                <input type="number" v-model="varPlanverrechnungssatz" id="input2" style="max-width: 250px;" />
                 
                 <!-- IstLeistung Input -->
                 <label for="input3" style="justify-self: start;">Ist Leistung:  
@@ -207,7 +206,7 @@ function calculateVA(row){
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="aufwand" id="input3" style="max-width: 250px;" />
+                <input type="number" v-model="istLeistung" id="input3" style="max-width: 250px;" />
 
                 <!-- IstKosten Input -->
                 <label for="input4" style="justify-self: start;">Ist Kosten:  
@@ -216,7 +215,7 @@ function calculateVA(row){
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="aufwand" id="input4" style="max-width: 250px;" />
+                <input type="number" v-model="istKosten" id="input4" style="max-width: 250px;" />
 
                 <!-- sollKosten Input -->
                 <label for="input5" style="justify-self: start;">Soll Kosten:  
@@ -225,7 +224,7 @@ function calculateVA(row){
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="aufwand" id="input5" style="max-width: 250px;" />
+                <input type="number" v-model="sollKosten" id="input5" style="max-width: 250px;" />
 
                 <!-- istKostenVerrechneteLeistung Input -->
                 <label for="input1" style="justify-self: start;">IstKosten verrechnete Leistung:  
@@ -234,7 +233,7 @@ function calculateVA(row){
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="aufwand" id="input6" style="max-width: 250px;" />
+                <input type="number" v-model="istKostenVerechneteLeistung" id="input6" style="max-width: 250px;" />
 
                 <!-- Empty space to align button -->
                 <div></div>
