@@ -144,10 +144,14 @@ function calculateGA(row) {
 
 function calculateSK(row){
     let wert = 0;
-    if(row.fixKosten && row.varPlanverrechnungssatz && row.istLeistung)
+    console.log("fixKosten"+row.fixkosten);
+    console.log("varPlanverrechnungssatz"+row.varPlanverrechnungssatz);
+    console.log("istLeistung"+row.istLeistung);
+    if(row.fixkosten && row.varPlanverrechnungssatz && row.istLeistung)
     {
-        wert = row.fixKosten + (row.varPlanverrechnungssatz * istLeistung);
+        wert = row.fixkosten + (row.varPlanverrechnungssatz * row.istLeistung);
     }
+    console.log("wert:"+ wert)
     row.sollKosten = wert;
     return wert;
 }
