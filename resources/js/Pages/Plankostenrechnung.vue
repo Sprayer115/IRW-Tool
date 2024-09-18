@@ -235,10 +235,30 @@ function calculateVA(row){
               <table class="table">
                   <thead>
                       <tr>
-                            <th class="bg-success">SollKosten</th>
-                            <th class = "bg-warning">Verbrauchsabweichung</th>
-                            <th>Beschäftigungsabweichung</th>
-                            <th>Gesamtabweichung</th>
+                            <th class="bg-success">SollKosten
+                                <span id="tooltip-sollKosten" class="tooltip-container">
+                        <sup class="information">i</sup>
+                        <span class="tooltip-text">SollKosten: Fixkosten + variabler Planverrechnungssatz * IstLeistung</span>
+                    </span>
+                            </th>
+                            <th class = "bg-warning">Verbrauchsabweichung
+                                <span id="tooltip-verbrauchsabweichung" class="tooltip-container">
+                        <sup class="information">i</sup>
+                        <span class="tooltip-text">Verbrauchsabweichung: IstKosten - SollKosten</span>
+                    </span>
+                            </th>
+                            <th>Beschäftigungsabweichung
+                                <span id="tooltip-beschaeftAbweichung" class="tooltip-container">
+                        <sup class="information">i</sup>
+                        <span class="tooltip-text">Beschäftigungsabweichung: SollKosten - IstKosten verrechnete Leistung</span>
+                    </span>
+                            </th>
+                            <th>Gesamtabweichung
+                                <span id="tooltip-gesamtabweichung" class="tooltip-container">
+                        <sup class="information">i</sup>
+                        <span class="tooltip-text">Gesamtabweichung: Beschäftigungsabweichung - Verbrauchsabweichung</span>
+                    </span>
+                            </th>
                             <th>Actions</th>
                       </tr>
                   </thead>
@@ -254,6 +274,9 @@ function calculateVA(row){
               </table>
           </div>
       </AuthenticatedLayout>
+    </div>
+    <div> 
+        
     </div>
 </template>
 
