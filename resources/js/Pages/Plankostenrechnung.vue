@@ -52,7 +52,6 @@ const rows = ref([]);
 onMounted(() => {
     rows.value = props.items.map(item => ({
         id: item.id,  // Ensure you have an ID field for deleting rows later
-        sollkosten: item.sollkosten,
         fixkosten: item.fixkosten,
         varPlanverrechnungssatz: item.varPlanverrechnungssatz,
         istLeistung: item.istLeistung,
@@ -69,7 +68,6 @@ onMounted(() => {
 async function addRow() {
     try {
         const newRow = {
-            sollkosten: sollkosten.value,
             fixkosten: fixkosten.value, // Use month difference
             varPlanverrechnungssatz: varPlanverrechnungssatz.value,
             istLeistung: istLeistung.value,
@@ -123,7 +121,6 @@ function clearInputs() {
     varPlanverrechnungssatz.value = null;
     istLeistung.value = null;
     istKosten.value = null;
-    sollKosten.value = null;
     istKostenVerechneteLeistung.value = null;
 }
 
@@ -147,9 +144,9 @@ function calculateGA(row) {
 
 function calculateSK(row){
     let wert = 0;
-    if(row.fixkosten && row. varPlanverrechnungssatz && row.istLeistung)
+    if(row.fixKosten && row.varPlanverrechnungssatz && row.istLeistung)
     {
-        wert = row.fixkosten + (row.varPlanverrechnungssatz * istLeistung);
+        wert = row.fixKosten + (row.varPlanverrechnungssatz * istLeistung);
     }
     row.sollKosten = wert;
     return wert;
@@ -216,15 +213,6 @@ function calculateVA(row){
                     </span>
                 </label>
                 <input type="number" v-model="istKosten" id="input4" style="max-width: 250px;" />
-
-                <!-- sollKosten Input -->
-                <label for="input5" style="justify-self: start;">Soll Kosten:  
-                    <span id="tooltip-aufwand" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">Definition für den Aufwand</span>
-                    </span>
-                </label>
-                <input type="number" v-model="sollKosten" id="input5" style="max-width: 250px;" />
 
                 <!-- istKostenVerrechneteLeistung Input -->
                 <label for="input1" style="justify-self: start;">IstKosten verrechnete Leistung:  
