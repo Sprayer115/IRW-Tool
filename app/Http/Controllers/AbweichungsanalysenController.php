@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Plankostenrechnung;
+use App\Models\Abweichungsanalysen;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
 
-class PlankostenrechnungController extends Controller
+class AbweichungsanalysenController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('Plankostenrechnung', [
-            'items' => Plankostenrechnung::all(),
+        return Inertia::render('Abweichungsanalyse', [
+            'items' => Abweichungsanalysen::all(),
         ]);
     }
 
@@ -27,14 +27,18 @@ class PlankostenrechnungController extends Controller
     {
         try {
             $request->validate([
-                'plankosten_variabel' => 'nullable',
-                'plankosten_gesamt' => 'nullable',
-                'istkosten' => 'nullable',
-                'stueck_soll' => 'nullable',
-                'stueck_ist' => 'nullable',
+                'beschaeftAbweichung' => 'nullable|integer',
+                'fixkosten' => 'nullable|integer',
+                'gesamtabweichung' => 'nullable|integer',
+                'istKosten' => 'nullable|integer',
+                'istKostenVerechneteLeistung' => 'nullable|integer',
+                'istLeistung' => 'nullable|integer',
+                'sollKosten' => 'nullable|integer',
+                'varPlanverrechnungssatz' => 'nullable|integer',
+                'verbrauchsabweichung' => 'nullable|integer',
             ]);
     
-            $r = Plankostenrechnung::create($request->all());
+            $r = Abweichungsanalysen::create($request->all());
     
             return $r;
         } catch (Exception $e) {
@@ -48,7 +52,7 @@ class PlankostenrechnungController extends Controller
     public function destroy(string $id)
     {
         try {
-            Plankostenrechnung::destroy($id);
+            Abweichungsanalysen::destroy($id);
     
             return true;
         } catch (Exception $e) {

@@ -90,7 +90,7 @@ async function addRow() {
         }
         
 
-        const response = await axios.post('/plankostenrechnung', newRow);
+        const response = await axios.post('/abweichungsanalyse', newRow);
         
         if (response.data) {
             rows.value.push({
@@ -106,7 +106,7 @@ async function addRow() {
 
 async function deleteRow(id, index) {
     try {
-        const response = await axios.delete(`/plankostenrechnung/${id}`);
+        const response = await axios.delete(`/abweichungsanalyse/${id}`);
         
         if (response.data) {
             rows.value.splice(index, 1); // Remove row from the array
@@ -167,12 +167,12 @@ function calculateVA(row){
 
 <template>
     <div>
-      <Head title="Plankostenrechnung">
+      <Head title="Abweichungsanalyse">
       </Head>
   
       <AuthenticatedLayout>
           <template #header>
-              <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Plakostenrechnung</h2>
+              <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abweichungsanalyse</h2>
           </template>
           <div class="py-12 m-lg-4">
             <div class="input-area"

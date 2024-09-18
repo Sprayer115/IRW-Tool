@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\Abgrenzungsrechnung;
 use App\Http\Controllers\AbgrenzungsrechnungController;
-use App\Http\Controllers\PlankostenrechnungController;
+use App\Http\Controllers\AbweichungsanalysenController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -30,13 +29,13 @@ Route::resource('abgrenzungsrechnung', AbgrenzungsrechnungController::class)->on
     'destroy' => 'abgrenzungsrechnung.destroy'
 ]);
 
-// Plankostenrechnung
-Route::resource('plankostenrechnung', PlankostenrechnungController::class)->only([
+// abweichungsanalyse
+Route::resource('abweichungsanalyse', AbweichungsanalysenController::class)->only([
     'index', 'store', 'destroy'
 ])->middleware(['auth', 'verified'])->names([
-    'index' => 'plankostenrechnung.index',  // Ensure correct naming here
-    'store' => 'plankostenrechnung.store',
-    'destroy' => 'plankostenrechnung.destroy'
+    'index' => 'abweichungsanalyse.index',  // Ensure correct naming here
+    'store' => 'abweichungsanalyse.store',
+    'destroy' => 'abweichungsanalyse.destroy'
 ]);
 
 Route::middleware('auth')->group(function () {
