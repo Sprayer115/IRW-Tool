@@ -40,6 +40,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('abweichungsanalyse.index')" :active="route().current('abweichungsanalyse.index')">
                                     Abweichungsanalyse
                                 </NavLink>
+                                <NavLink :href="route('makeOrBuy')" :active="route().current('makeOrBuy')">
+                                    Make or Buy
+                                </NavLink>
                             </div>
                         </div>
 

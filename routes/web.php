@@ -38,6 +38,12 @@ Route::resource('abweichungsanalyse', AbweichungsanalysenController::class)->onl
     'destroy' => 'abweichungsanalyse.destroy'
 ]);
 
+//Make-or-Buy
+Route::get('/make-or-buy', function () {
+    return Inertia::render('MakeOrBuy');
+})->middleware(['auth', 'verified'])->name('makeOrBuy');
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
