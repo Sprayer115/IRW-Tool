@@ -1,220 +1,152 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
-import { ref, computed, onMounted } from "vue";
-import axios from "axios";
-/**
- * Interne Produktionskosten
- * @type {Ref<number>}
- */
-const internalCost = ref(0);
+import { ref, computed, watch } from "vue";
 
-/**
- * Externe Beschaffungskosten
- * @type {Ref<number>}
- */
-const externalCost = ref(0);
+// Fixed costs
+const internalFixedCost = ref(0);
+const externalFixedCost = ref(0);
 
-/**
- * Opportunitätskosten
- * @type {Ref<number>}
- */
-const opportunityCost = ref(0);
+// Variable costs
+const includeVariableCosts = ref(false);
+const internalVariableCost = ref(0);
+const externalVariableCost = ref(0);
 
-/**
- * Qualitätsunterschied
- * @type {Ref<number>}
- */
-const qualityDifference = ref(0);
+// Units and max units
+const units = ref(1);
+const maxUnitsValue = ref(100000);
 
-/**
- * Flexibilitätsauswirkung
- * @type {Ref<number>}
- */
-const flexibilityImpact = ref(0);
-
-/**
- * Empfohlene Entscheidung
- * @type {Ref<string>}
- */
-const decision = ref("");
-
-/**
- * Kostendifferenz
- * @type {Ref<number>}
- */
-const costDifference = ref(0);
-
-/**
- * Bereinigte Kostendifferenz
- * @type {Ref<number>}
- */
-const adjustedCostDifference = ref(0);
-
-/**
- * Berechnet die Make-or-Buy-Entscheidung basierend auf den eingegebenen Werten
- */
-function calculateDecision() {
-    costDifference.value = internalCost.value - externalCost.value;
-
-    adjustedCostDifference.value =
-        costDifference.value +
-        opportunityCost.value +
-        qualityDifference.value +
-        flexibilityImpact.value;
-
-    if (adjustedCostDifference.value < 0) {
-        decision.value = "Kaufen";
-    } else {
-        decision.value = "Selbst herstellen";
+// Watch for changes in maxUnitsValue and adjust units if necessary
+watch(maxUnitsValue, (newMax) => {
+    if (units.value > newMax) {
+        units.value = newMax;
     }
-}
+});
+
+// Computed properties
+const totalInternalCost = computed(() => {
+    return internalFixedCost.value + (includeVariableCosts.value ? internalVariableCost.value * units.value : 0);
+});
+
+const totalExternalCost = computed(() => {
+    return externalFixedCost.value + (includeVariableCosts.value ? externalVariableCost.value * units.value : 0);
+});
+
+const costDifference = computed(() => {
+    return totalInternalCost.value - totalExternalCost.value;
+});
+
+const decision = computed(() => {
+    return costDifference.value > 0 ? "Kaufen" : (costDifference.value == 0 ? "Kaufen/Selbst herstellen" : "Selbst herstellen");
+});
+
+const breakEvenPoint = computed(() => {
+    if (!includeVariableCosts.value || internalVariableCost.value === externalVariableCost.value) {
+        return "N/A";
+    }
+    const fixedCostDifference = externalFixedCost.value - internalFixedCost.value;
+    const variableCostDifference = internalVariableCost.value - externalVariableCost.value;
+    return Math.ceil(fixedCostDifference / variableCostDifference);
+});
 </script>
+
 <template>
-    <div>
-        <Head title="Abweichungsanalyse"> </Head>
-<div style="color:red">
-    TODO:
-    - Remove Opportunitätskosten and not used values
-    - Add a second "Tab" for calculation with not fixed external cost and more by x cost
-</div>
-        <AuthenticatedLayout>
-            <template #header>
-                <h2
-                    class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
-                >
-                    Abweichungsanalyse
-                </h2>
-            </template>
-            <div class="make-or-buy-container">
-                <h2 class="title">Make-or-Buy-Entscheidung</h2>
-                <div class="input-area">
-                    <div class="input-group">
-                        <label for="internalCost"
-                            >Interne Produktionskosten:</label
-                        >
-                        <input
-                            type="number"
-                            v-model="internalCost"
-                            id="internalCost"
-                            class="input-field"
-                        />
-                        <span class="tooltip-container">
-                            <sup class="information">i</sup>
-                            <span class="tooltip-text"
-                                >Kosten für die interne Produktion des
-                                Artikels</span
-                            >
-                        </span>
+    <AuthenticatedLayout>
+        <Head title="Make-or-Buy Kalkulator" />
+
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                Make-or-Buy Kalkulator
+            </h2>
+        </template>
+
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                        <div class="make-or-buy-container">
+                            <h2 class="title">Make-or-Buy-Entscheidung</h2>
+                            <div class="input-area">
+                                <div class="input-group">
+                                    <label for="internalFixedCost">Fixkosten Intern:</label>
+                                    <input v-model.number="internalFixedCost" type="number" id="internalFixedCost" class="input-field">
+                                    <span class="tooltip-container">
+                                        <sup class="information">i</sup>
+                                        <span class="tooltip-text">Fixkosten für die interne Produktion</span>
+                                    </span>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="externalFixedCost">Fixkosten Extern:</label>
+                                    <input v-model.number="externalFixedCost" type="number" id="externalFixedCost" class="input-field">
+                                    <span class="tooltip-container">
+                                        <sup class="information">i</sup>
+                                        <span class="tooltip-text">Fixkosten für den externen Kauf</span>
+                                    </span>
+                                </div>
+
+                                <div class="input-group">
+                                    <label class="flex items-center">
+                                        <input v-model="includeVariableCosts" type="checkbox" class="mr-2">
+                                        Variable Kosten einbeziehen
+                                    </label>
+                                </div>
+
+                                <template v-if="includeVariableCosts">
+                                    <div class="input-group">
+                                        <label for="internalVariableCost">Variable Kosten Intern (pro Einheit):</label>
+                                        <input v-model.number="internalVariableCost" type="number" id="internalVariableCost" class="input-field">
+                                        <span class="tooltip-container">
+                                            <sup class="information">i</sup>
+                                            <span class="tooltip-text">Variable Kosten pro Einheit für interne Produktion</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="input-group">
+                                        <label for="externalVariableCost">Variable Kosten Extern (pro Einheit):</label>
+                                        <input v-model.number="externalVariableCost" type="number" id="externalVariableCost" class="input-field">
+                                        <span class="tooltip-container">
+                                            <sup class="information">i</sup>
+                                            <span class="tooltip-text">Variable Kosten pro Einheit für externen Kauf</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="input-group flex items-center justify-between">
+                                        <div class="flex-grow mr-4">
+                                            <label for="units" class="block mb-1">Anzahl der Einheiten:</label>
+                                            <div class="flex items-center">
+                                                <input v-model.number="units" type="number" :min="1" :max="maxUnitsValue" id="units" class="w-20 p-1 border rounded mr-2">
+                                                <input v-model.number="units" type="range" :min="1" :max="maxUnitsValue" class="flex-grow">
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <label for="maxUnitsValue" class="mr-2">Max:</label>
+                                            <select v-model.number="maxUnitsValue" id="maxUnitsValue" class="p-1 border rounded w-32">
+                                                <option :value="1000">1,000</option>
+                                                <option :value="10000">10,000</option>
+                                                <option :value="100000">100,000</option>
+                                                <option :value="1000000">1,000,000</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <div class="result-area">
+                                <h3 class="result-title">Ergebnis der Make-or-Buy-Entscheidung</h3>
+                                <p class="result-item">Gesamtkosten Intern: <span class="highlight">{{ totalInternalCost }}</span></p>
+                                <p class="result-item">Gesamtkosten Extern: <span class="highlight">{{ totalExternalCost }}</span></p>
+                                <p class="result-item">Kostendifferenz: <span class="highlight">{{ costDifference }}</span></p>
+                                <p class="result-item">Empfehlung: <span class="highlight">{{ decision }}</span></p>
+                                <p v-if="includeVariableCosts" class="result-item">Break-Even Punkt (Einheiten): <span class="highlight">{{ breakEvenPoint }}</span></p>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="input-group">
-                        <label for="externalCost"
-                            >Externe Beschaffungskosten:</label
-                        >
-                        <input
-                            type="number"
-                            v-model="externalCost"
-                            id="externalCost"
-                            class="input-field"
-                        />
-                        <span class="tooltip-container">
-                            <sup class="information">i</sup>
-                            <span class="tooltip-text"
-                                >Kosten für den Kauf des Artikels von einem
-                                externen Lieferanten</span
-                            >
-                        </span>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="opportunityCost"
-                            >Opportunitätskosten:</label
-                        >
-                        <input
-                            type="number"
-                            v-model="opportunityCost"
-                            id="opportunityCost"
-                            class="input-field"
-                        />
-                        <span class="tooltip-container">
-                            <sup class="information">i</sup>
-                            <span class="tooltip-text"
-                                >Potenzieller entgangener Nutzen durch die Wahl
-                                einer Option gegenüber einer anderen</span
-                            >
-                        </span>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="qualityDifference"
-                            >Qualitätsunterschied:</label
-                        >
-                        <input
-                            type="number"
-                            v-model="qualityDifference"
-                            id="qualityDifference"
-                            class="input-field"
-                        />
-                        <span class="tooltip-container">
-                            <sup class="information">i</sup>
-                            <span class="tooltip-text"
-                                >Unterschied in der Qualität zwischen dem intern
-                                produzierten und dem extern gekauften
-                                Artikel</span
-                            >
-                        </span>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="flexibilityImpact"
-                            >Flexibilitätsauswirkung:</label
-                        >
-                        <input
-                            type="number"
-                            v-model="flexibilityImpact"
-                            id="flexibilityImpact"
-                            class="input-field"
-                        />
-                        <span class="tooltip-container">
-                            <sup class="information">i</sup>
-                            <span class="tooltip-text"
-                                >Auswirkung auf die Flexibilität durch die
-                                Entscheidung für Make oder Buy</span
-                            >
-                        </span>
-                    </div>
-
-                    <button @click="calculateDecision" class="calculate-button">
-                        Entscheidung berechnen
-                    </button>
-                </div>
-
-                <div class="result-area">
-                    <h3 class="result-title">
-                        Ergebnis der Make-or-Buy-Entscheidung
-                    </h3>
-                    <p class="result-item">
-                        Empfohlene Entscheidung:
-                        <span class="highlight">{{ decision }}</span>
-                    </p>
-                    <p class="result-item">
-                        Kostendifferenz:
-                        <span class="highlight">{{ costDifference }}</span>
-                    </p>
-                    <p class="result-item">
-                        Bereinigte Kostendifferenz:
-                        <span class="highlight">{{
-                            adjustedCostDifference
-                        }}</span>
-                    </p>
                 </div>
             </div>
-        </AuthenticatedLayout>
-    </div>
+        </div>
+    </AuthenticatedLayout>
 </template>
-
-
 
 <style scoped>
 .make-or-buy-container {
@@ -251,17 +183,6 @@ label {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-}
-
-.calculate-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
 .result-area {
@@ -324,5 +245,49 @@ label {
     visibility: visible;
     opacity: 1;
     transition-delay: 0.1s;
+}
+
+.input-group {
+    margin-bottom: 10px;
+}
+
+/* Add these new styles */
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.mr-4 {
+    margin-right: 1rem;
+}
+
+.mr-2 {
+    margin-right: 0.5rem;
+}
+
+.p-1 {
+    padding: 0.25rem;
+}
+
+.border {
+    border-width: 1px;
+}
+
+.rounded {
+    border-radius: 0.25rem;
+}
+.w-32 {
+    width: 8rem;
 }
 </style>
