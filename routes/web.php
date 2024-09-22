@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AbgrenzungsrechnungController;
 use App\Http\Controllers\AbweichungsanalysenController;
+use App\Http\Controllers\BreakEvensController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,15 @@ Route::resource('abweichungsanalyse', AbweichungsanalysenController::class)->onl
 Route::get('/make-or-buy', function () {
     return Inertia::render('MakeOrBuy');
 })->middleware(['auth', 'verified'])->name('makeOrBuy');
+
+// Break-Even
+Route::resource('/break-even', BreakEvensController::class)->only([
+    'index', 'store', 'destroy'
+])->middleware(['auth', 'verified'])->names([
+    'index' => 'breakEven.index',  // Ensure correct naming here
+    'store' => 'breakEven.store',
+    'destroy' => 'BreakEven.destroy'
+]); 
 
 
 Route::middleware('auth')->group(function () {
