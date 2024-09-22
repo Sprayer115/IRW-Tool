@@ -28,7 +28,7 @@ class BreakEvensController extends Controller
         try {
             $request->validate([
                 'stueckPreis' => 'nullable|decimal',
-                'geplantePMenge' => 'nullable|integer',
+                'geplantePMenge' => 'nullable|decimal',
                 'KTZrechnung' => 'nullable|decimal',
                 'deckungsBeitrag' => 'nullable|decimal',
                 'varKosten' => 'nullable|decimal',
@@ -50,7 +50,7 @@ class BreakEvensController extends Controller
     public function destroy(string $id)
     {
         try {
-            BreakEvens::destroy($id);
+            breakevens::destroy($id);
     
             return true;
         } catch (Exception $e) {

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BreakEvens extends Model
 {
-    protected $table = 'breakeven';
+    protected $table = 'breakevens';
 
     protected $fillable = [
         'stueckPreis',
