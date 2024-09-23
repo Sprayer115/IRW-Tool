@@ -46,6 +46,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('breakEven.index')" :active="route().current('breakEven.index')">
                                     Break Even
                                 </NavLink>
+                                <NavLink :href="route('InnerbetrieblicheLeistungsverrechnung')" :active="route().current('InnerbetrieblicheLeistungsverrechnung')">
+                                    Innerbetriebliche Leistungsverrechnung
+                                </NavLink>
                             </div>
                         </div>
 
