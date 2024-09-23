@@ -154,7 +154,7 @@ const breakEvenPoint = computed(() => {
     max-width: 500px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #c4b5fd;
+    background-color: #bfdbfe;
     border-radius: 5px;
     color: #374151;
 }
