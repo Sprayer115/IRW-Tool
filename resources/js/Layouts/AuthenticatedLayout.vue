@@ -43,6 +43,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('makeOrBuy')" :active="route().current('makeOrBuy')">
                                     Make or Buy
                                 </NavLink>
+                                <NavLink :href="route('breakEven.index')" :active="route().current('breakEven.index')">
+                                    Break Even
+                                </NavLink>
                             </div>
                         </div>
 

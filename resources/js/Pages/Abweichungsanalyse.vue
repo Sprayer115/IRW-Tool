@@ -5,6 +5,8 @@ import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
 const emit = defineEmits(['update:checked']);
@@ -172,6 +174,9 @@ function calculateVA(row){
 <template>
     <div>
       <Head title="Abweichungsanalyse">
+        <!-- Bootstrap CSS (via CDN) -->
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
       </Head>
   
       <AuthenticatedLayout>
@@ -231,11 +236,6 @@ function calculateVA(row){
                 <div></div>
                 <button class="button bg-primary" style="justify-self: start; max-width: 150px;" @click="addRow">Berechnen</button>
             </div>
-
-
-
-
-  
               <table class="table">
                   <thead>
                       <tr>
@@ -273,6 +273,22 @@ function calculateVA(row){
                           <td>{{ row.beschaeftAbweichung }}</td>
                           <td>{{ row.gesamtabweichung }}</td>
                           <td><button class = "button bg-danger" @click="deleteRow(row.id, index)">löschen</button></td>
+                          <td>
+                            <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Test
+                                </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <strong>This is the first item's accordion body.</strong> It is shown by default until the collapse plugin adds the appropriate classes to handle the animation.
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </td>
                       </tr>
                   </tbody>
               </table>
@@ -285,6 +301,49 @@ function calculateVA(row){
 </template>
 
 <style>
+/* Styles for accordion button, border, and icons */
+.accordion-button {
+  padding: var(--accordion-button-padding-y) var(--accordion-button-padding-x);
+  color: var(--accordion-button-color);
+  background-color: var(--accordion-button-bg);
+  border: var(--accordion-border-width) solid var(--accordion-border-color);
+  border-radius: var(--accordion-border-radius);
+  transition: var(--accordion-transition);
+}
+
+.accordion-button:focus {
+  border-color: var(--accordion-button-focus-border-color);
+  box-shadow: var(--accordion-button-focus-box-shadow);
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: var(--accordion-button-active-bg);
+  color: var(--accordion-button-active-color);
+}
+
+.accordion-button::after {
+  width: var(--accordion-icon-width);
+  height: var(--accordion-icon-width);
+  background-image: var(--accordion-button-icon);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  transform: var(--accordion-icon-transform);
+  transition: var(--accordion-icon-transition);
+}
+
+.accordion-button:not(.collapsed)::after {
+  background-image: var(--accordion-button-active-icon);
+  transform: none;
+}
+
+.accordion-body {
+  padding: var(--accordion-body-padding-y) var(--accordion-body-padding-x);
+}
+
+.accordion-collapse {
+  border-radius: var(--accordion-inner-border-radius);
+}
+
 .table {
     width: 100%;
     border-collapse: collapse;
