@@ -17,5 +17,9 @@ class BreakEvens extends Model
         'varKosten',
         'fixkosten',
         'opErgebnis',
+        'deckungsBeitragProStueck',
+        'breakEvenMenge',
+        'breakEvenUmsatz',
+        'stueckkosten'
     ];
 }

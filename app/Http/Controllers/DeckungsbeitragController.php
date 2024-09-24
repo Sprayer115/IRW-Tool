@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BreakEvens;
+use App\Models\Deckungsbeitragrechnungen;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
 
-class BreakEvensController extends Controller
+class DeckungsbeitragController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('BreakEven', [
-            'items' => BreakEvens::all(),
+        return Inertia::render('Deckungsbeitragrechnung', [
+            'items' => Deckungsbeitragrechnungen::all(),
         ]);
     }
 
@@ -27,20 +27,17 @@ class BreakEvensController extends Controller
     {
         try {
             $request->validate([
-                'stueckPreis' => 'nullable|numeric',
-                'geplantePMenge' => 'nullable|numeric',
-                'KTZrechnung' => 'nullable|numeric',
-                'deckungsBeitrag' => 'nullable|numeric',
-                'varKosten' => 'nullable|numeric',
+                'name' => 'nullable|string',
+                'preisProStueck' => 'nullable|numeric',
+                'stueckZahl' => 'nullable|numeric',
+                'varKostenProStueck' => 'nullable|numeric',
                 'fixkosten' => 'nullable|numeric',
-                'opErgebnis' => 'nullable|numeric',
-                'deckungsBeitragProStueck' => 'nullable|numeric',
-                'breakEvenMenge' => 'nullable|numeric',
-                'breakEvenUmsatz' => 'nullable|numeric',
-                'stueckkosten' => 'nullable|numeric',
+                'umsatz' => 'nullable|numeric',
+                'deckungsBeitrag' => 'nullable|numeric',
+                'gewinn' => 'nullable|numeric',
             ]);
     
-            $r = BreakEvens::create($request->all());
+            $r = Deckungsbeitragrechnungen::create($request->all());
     
             return $r;
         } catch (Exception $e) {
@@ -54,7 +51,7 @@ class BreakEvensController extends Controller
     public function destroy(string $id)
     {
         try {
-            breakevens::destroy($id);
+            Deckungsbeitragrechnungen::destroy($id);
     
             return true;
         } catch (Exception $e) {

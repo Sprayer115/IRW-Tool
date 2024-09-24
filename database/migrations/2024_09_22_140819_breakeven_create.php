@@ -21,6 +21,10 @@ return new class extends Migration
             $table->double('varKosten');
             $table->double('fixkosten');
             $table->double('opErgebnis');
+            $table->double('deckungsBeitragProStueck');
+            $table->double('breakEvenMenge');
+            $table->double('breakEvenUmsatz');
+            $table->double('stueckkosten');
             $table->timestamps(); // Erstellt die Felder created_at und updated_at
         });
     }

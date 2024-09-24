@@ -1,7 +1,12 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Head } from '@inertiajs/vue3';
 import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 
 const emit = defineEmits(['update:checked']);
 
@@ -25,41 +30,31 @@ const proxyChecked = computed({
     },
 });
 
-// Kostentraegerzeitrechnung
-const stueckPreis = ref(0); //enter
-const geplantePMenge = ref(0); //enter
-const KTZrechnung = ref(0);
+//Input
+const name = ref(null);
+const preisProStueck = ref(null);
+const stueckZahl = ref(null);
+const varKostenProStueck = ref(null);
+const fixkosten = ref(null);
 
-// Deckungsbeitrag
-const deckungsBeitrag = ref(0);
-const varKosten = ref(0); //enter
- 
-// operative Ergebnis
-const fixkosten = ref(0); //enter
-const opErgebnis = ref(0);
-
-//Berechnungen
-const stueckkosten = ref(0);
-const deckungsBeitragProStueck = ref(0);
-const breakEvenMenge = ref(0);
-const breakEvenUmsatz = ref(0);
+//Ergebniss
+const umsatz = ref(null);
+const deckungsBeitrag = ref(null);
+const gewinn = ref(null);
 
 const rows = ref([]);
 
 onMounted(() => {
     rows.value = props.items.map(item => ({
         id: item.id,  // Ensure you have an ID field for deleting rows later
-        stueckPreis: item.stueckPreis,
-        geplantePMenge: item.geplantePMenge,
-        KTZrechnung: item.KTZrechnung,
-        deckungsBeitrag: item.deckungsBeitrag,
-        varKosten: item.varKosten,
+        name: item.name,
+        preisProStueck: item.preisProStueck,
+        stueckZahl: item.stueckZahl,
+        varKostenProStueck: item.varKostenProStueck,
         fixkosten: item.fixkosten,
-        opErgebnis: item.opErgebnis,
-        deckungsBeitragProStueck: item.deckungsBeitragProStueck,
-        breakEvenMenge: item.breakEvenMenge,
-        breakEvenUmsatz: item.breakEvenUmsatz,
-        stueckkosten: item.stueckkosten,
+        umsatz: item.umsatz,
+        deckungsBeitrag: item.deckungsBeitrag,
+        gewinn: item.gewinn,
         neueSpalte: null,
     }));
 });
@@ -67,34 +62,26 @@ onMounted(() => {
 async function addRow() {
     try {
         const newRow = {
-            stueckPreis: stueckPreis.value, // Use month difference
-            geplantePMenge: geplantePMenge.value,
-            KTZrechnung: KTZrechnung.value,
-            deckungsBeitrag: deckungsBeitrag.value,
-            varKosten: varKosten.value,
+            name: name.value, // Use month difference
+            preisProStueck: preisProStueck.value,
+            stueckZahl: stueckZahl.value,
+            varKostenProStueck: varKostenProStueck.value,
             fixkosten: fixkosten.value,
-            opErgebnis: opErgebnis.value,
-            deckungsBeitragProStueck: deckungsBeitragProStueck.value,
-            breakEvenMenge: breakEvenMenge.value,
-            breakEvenUmsatz: breakEvenUmsatz.value,
-            stueckkosten: stueckkosten.value
+            umsatz: umsatz.value,
+            deckungsBeitrag: deckungsBeitrag.value,
+            gewinn: gewinn.value
         };
 
         try{
-            newRow.KTZrechnung = calculateKTZ(newRow);
             newRow.deckungsBeitrag = calculateDB(newRow);
-            newRow.opErgebnis = calculateOP(newRow);
-            newRow.stueckkosten = calculateSK(newRow);
-            newRow.deckungsBeitragProStueck = calculateDPS(newRow);
-            newRow.breakEvenMenge = calculateBEM(newRow);
-            newRow.breakEvenUmsatz = calculateBEU(newRow);
+            newRow.gewinn = calculateGewinn(newRow);
             console.log(newRow);
         }catch(error){
             console.error('Error setting functions:', error)
         }
         
 
-        const response = await axios.post('/break-even', newRow);
+        const response = await axios.post('/deckungsbeitrag', newRow);
         
         if (response.data) {
             rows.value.push({
@@ -110,7 +97,7 @@ async function addRow() {
 
 async function deleteRow(id, index) {
     try {
-        const response = await axios.delete(`/break-even/${id}`);
+        const response = await axios.delete(`/deckungsbeitrag/${id}`);
         
         if (response.data) {
             rows.value.splice(index, 1); // Remove row from the array
@@ -121,78 +108,39 @@ async function deleteRow(id, index) {
 }
 
 function clearInputs() {
+    name.value = null;
+    preisProStueck.value = null;
+    stueckZahl.value = null;
+    varKostenProStueck.value = null;
     fixkosten.value = null;
-    varKosten.value = null;
-    geplantePMenge.value = null;
-    stueckPreis.value = null;
 }
 
-function calculateKTZ(row){
-    let wert = 0;
-    if(row.stueckPreis && row.geplantePMenge)
-    {
-        wert = row.stueckPreis * row.geplantePMenge;
-    }
-    row.KTZrechnung = wert;
-    return wert;
-}
-
-function calculateOP(row) {
+function calculateUmsatz(row) {
     let wert = 0;
     if (row.deckungsBeitrag && row.fixkosten) {
         wert = row.deckungsBeitrag - row.fixkosten;
     }
-    row.opErgebnis = wert;
-    return wert;
-}
-
-function calculateSK(row){
-    let wert = 0;
-    if(row.varKosten && row.geplantePMenge)
-    {
-        wert = row.varKosten / row.geplantePMenge;
-    }
-    row.stueckkosten = wert;
+    row.gewinn = wert;
     return wert;
 }
 
 function calculateDB(row){
     let wert = 0;
-    if(row.KTZrechnung && row.varKosten)
+    if(row.preisProStueck && row.varKostenProStueck && row.stueckZahl)
     {
-        wert = row.KTZrechnung - row.varKosten;
+        wert = (row.preisProStueck - row.varKostenProStueck) * row.stueckZahl;
     }
     row.deckungsBeitrag = wert;
     return wert;
 }
 
-function calculateDPS(row){
+function calculateGewinn(row){
     let wert = 0;
-    if(row.stueckPreis && row.stueckkosten)
+    if(row.deckungsBeitrag && row.fixkosten)
     {
-        wert = row.stueckPreis - row.stueckkosten;
+        wert = row.istKosten - row.sollKosten;
     }
-    row.deckungsBeitragProStueck = wert;
-    return wert;
-}
-
-function calculateBEM(row){
-    let wert = 0;
-    if(row.fixkosten && row.deckungsBeitragProStueck)
-    {
-        wert = row.fixkosten / row.deckungsBeitragProStueck;
-    }
-    row.breakEvenMenge = wert;
-    return wert;
-}
-
-function calculateBEU(row){
-    let wert = 0;
-    if(row.breakEvenMenge && row.stueckPreis)
-    {
-        wert = row.breakEvenMenge * row.stueckPreis;
-    }
-    row.breakEvenUmsatz = wert;
+    row.verbrauchsabweichung = wert;
     return wert;
 }
 </script>
@@ -201,113 +149,111 @@ function calculateBEU(row){
 
 <template>
     <div>
-      <Head title="Break-Even">
+      <Head title="Deckungsbeitragrechnung">
       </Head>
   
       <AuthenticatedLayout>
           <template #header>
-              <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Break-Even</h2>
+              <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abweichungsanalyse</h2>
           </template>
           <div class="py-12 m-lg-4">
             <div class="input-area"
                 style="display: grid; grid-template-columns: 3fr 2fr; grid-gap: 20px; align-items: center; justify-content: center; justify-items: center; max-width: 600px; margin: 0 auto;">
 
-                <!-- stueckPreis Label -->
-                <label for="input1" style="justify-self: start;">Stückpreis:
+                <!-- name -->
+                <label for="input1" style="justify-self: start;">Bezeichnung:
                     <span id="tooltip-aufwand" class="tooltip-container">
                         <sup class="information">i</sup>
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="stueckPreis" id="input1" style="max-width: 250px;" />
+                <input type="text" v-model="name" id="input1" style="max-width: 250px;" />
 
-                <!-- geplantePMenge Input -->
-                <label for="input2" style="justify-self: start;">geplante Produktionsmenge:  
+                <!-- preisProStueck Input -->
+                <label for="input2" style="justify-self: start;">Preis pro Stück:  
                     <span id="tooltip-aufwand" class="tooltip-container">
                         <sup class="information">i</sup>
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="geplantePMenge" id="input2" style="max-width: 250px;" />
+                <input type="number" v-model="preisProStueck" id="input2" style="max-width: 250px;" />
                 
-                <!-- varKosten Input -->
-                <label for="input3" style="justify-self: start;">Variable Kosten:  
+                <!-- stueckZahl Input -->
+                <label for="input3" style="justify-self: start;">Stückanzahl:  
                     <span id="tooltip-aufwand" class="tooltip-container">
                         <sup class="information">i</sup>
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="varKosten" id="input3" style="max-width: 250px;" />
+                <input type="number" v-model="stueckZahl" id="input3" style="max-width: 250px;" />
 
-                <!-- fixkosten Input -->
-                <label for="input4" style="justify-self: start;">fix Kosten:  
+                <!-- varKostenProStueck Input -->
+                <label for="input4" style="justify-self: start;">variable Kosten pro Stück:  
                     <span id="tooltip-aufwand" class="tooltip-container">
                         <sup class="information">i</sup>
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="fixkosten" id="input4" style="max-width: 250px;" />
+                <input type="number" v-model="varKostenProStueck" id="input4" style="max-width: 250px;" />
+
+                <!-- Fixkosten Input -->
+                <label for="input1" style="justify-self: start;">Fixkosten:  
+                    <span id="tooltip-aufwand" class="tooltip-container">
+                        <sup class="information">i</sup>
+                        <span class="tooltip-text">Definition für den Aufwand</span>
+                    </span>
+                </label>
+                <input type="number" v-model="fixkosten" id="input6" style="max-width: 250px;" />
 
                 <!-- Empty space to align button -->
                 <div></div>
                 <button class="button bg-primary" style="justify-self: start; max-width: 150px;" @click="addRow">Berechnen</button>
             </div>
-
-
-
-
-  
               <table class="table">
                   <thead>
                       <tr>
-                            <th class="bg-success">KTZrechnung
+                            <th class="bg-success">Umsatz
                                 <span id="tooltip-sollKosten" class="tooltip-container">
                         <sup class="information">i</sup>
                         <span class="tooltip-text">SollKosten: Fixkosten + variabler Planverrechnungssatz * IstLeistung</span>
                     </span>
                             </th>
-                            <th class = "bg-warning">deckungsBeitrag
+                            <th class = "bg-warning">Deckungsbeitrag
                                 <span id="tooltip-verbrauchsabweichung" class="tooltip-container">
                         <sup class="information">i</sup>
                         <span class="tooltip-text">Verbrauchsabweichung: IstKosten - SollKosten</span>
                     </span>
                             </th>
-                            <th>opErgebnis
+                            <th>Gewinn
                                 <span id="tooltip-beschaeftAbweichung" class="tooltip-container">
                         <sup class="information">i</sup>
                         <span class="tooltip-text">Beschäftigungsabweichung: SollKosten - IstKosten verrechnete Leistung</span>
                     </span>
                             </th>
-                            <th>Deckungsbeitrag pro Stück:
-                                <span id="tooltip-beschaeftAbweichung" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">Beschäftigungsabweichung: SollKosten - IstKosten verrechnete Leistung</span>
-                    </span>
-                            </th>
-                            <th>Break Even Menge:
-                                <span id="tooltip-beschaeftAbweichung" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">Beschäftigungsabweichung: SollKosten - IstKosten verrechnete Leistung</span>
-                    </span>
-                            </th>
-                            <th>Break Even Umsatz:
-                                <span id="tooltip-beschaeftAbweichung" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">Beschäftigungsabweichung: SollKosten - IstKosten verrechnete Leistung</span>
-                    </span>
-                            </th>
-                            <th>Actions</th>
                       </tr>
                   </thead>
                   <tbody>
                       <tr v-for="(row, index) in rows" :key="index">
-                          <td>{{ row.KTZrechnung }}</td>
+                          <td>{{ row.umsatz }}</td>
                           <td>{{ row.deckungsBeitrag }}</td>
-                          <td>{{ row.opErgebnis }}</td>
-                          <td>{{ row.deckungsBeitragProStueck }}</td>
-                          <td>{{ row.breakEvenMenge }}</td>
-                          <td>{{ row.breakEvenUmsatz }}</td>
+                          <td>{{ row.gewinn }}</td>
                           <td><button class = "button bg-danger" @click="deleteRow(row.id, index)">löschen</button></td>
+                          <td>
+                            <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Test
+                                </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <strong>This is the first item's accordion body.</strong> It is shown by default until the collapse plugin adds the appropriate classes to handle the animation.
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </td>
                       </tr>
                   </tbody>
               </table>
@@ -320,6 +266,49 @@ function calculateBEU(row){
 </template>
 
 <style>
+/* Styles for accordion button, border, and icons */
+.accordion-button {
+  padding: var(--accordion-button-padding-y) var(--accordion-button-padding-x);
+  color: var(--accordion-button-color);
+  background-color: var(--accordion-button-bg);
+  border: var(--accordion-border-width) solid var(--accordion-border-color);
+  border-radius: var(--accordion-border-radius);
+  transition: var(--accordion-transition);
+}
+
+.accordion-button:focus {
+  border-color: var(--accordion-button-focus-border-color);
+  box-shadow: var(--accordion-button-focus-box-shadow);
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: var(--accordion-button-active-bg);
+  color: var(--accordion-button-active-color);
+}
+
+.accordion-button::after {
+  width: var(--accordion-icon-width);
+  height: var(--accordion-icon-width);
+  background-image: var(--accordion-button-icon);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  transform: var(--accordion-icon-transform);
+  transition: var(--accordion-icon-transition);
+}
+
+.accordion-button:not(.collapsed)::after {
+  background-image: var(--accordion-button-active-icon);
+  transform: none;
+}
+
+.accordion-body {
+  padding: var(--accordion-body-padding-y) var(--accordion-body-padding-x);
+}
+
+.accordion-collapse {
+  border-radius: var(--accordion-inner-border-radius);
+}
+
 .table {
     width: 100%;
     border-collapse: collapse;
