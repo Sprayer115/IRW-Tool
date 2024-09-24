@@ -45,6 +45,11 @@ Route::get('/make-or-buy', function () {
     return Inertia::render('MakeOrBuy');
 })->middleware(['auth', 'verified'])->name('makeOrBuy');
 
+//Innerbetriebliche Leistungsverrechnung
+Route::get('/iblv', function () {
+    return Inertia::render('InnerbetrieblicheLeistungsverrechnung');
+})->middleware(['auth', 'verified'])->name('InnerbetrieblicheLeistungsverrechnung');
+
 // Break-Even
 Route::resource('break-even', BreakEvensController::class)->only([
     'index', 'store', 'destroy'
