@@ -9,8 +9,9 @@ const externalFixedCost = ref(0);
 
 // Variable costs
 const includeVariableCosts = ref(false);
-const internalVariableCost = ref(0);
 const externalVariableCost = ref(0);
+const internalAmount = ref(0);
+const internalVariableCosts = ref(0);
 
 // Units and max units
 const units = ref(1);
@@ -24,7 +25,13 @@ watch(maxUnitsValue, (newMax) => {
 });
 
 // Computed properties
+const internalVariableCost = computed(() => {
+    return internalVariableCosts.value / internalAmount.value;
+});
+
 const totalInternalCost = computed(() => {
+    console.log(internalVariableCost.value, units.value);
+
     return internalFixedCost.value + (includeVariableCosts.value ? internalVariableCost.value * units.value : 0);
 });
 
@@ -48,6 +55,10 @@ const breakEvenPoint = computed(() => {
     const variableCostDifference = internalVariableCost.value - externalVariableCost.value;
     return Math.ceil(fixedCostDifference / variableCostDifference);
 });
+
+const setUnit = () => {
+   units.value = internalAmount.value;
+};
 </script>
 
 <template>
@@ -68,11 +79,11 @@ const breakEvenPoint = computed(() => {
                             <h2 class="title">Make-or-Buy-Entscheidung</h2>
                             <div class="input-area">
                                 <div class="input-group">
-                                    <label for="internalFixedCost">Fix Plankoste:</label>
+                                    <label for="internalFixedCost">Fix Plankosten:</label>
                                     <input v-model.number="internalFixedCost" type="number" id="internalFixedCost" class="input-field">
                                     <span class="tooltip-container">
                                         <sup class="information">i</sup>
-                                        <span class="tooltip-text">Fixkosten für die interne Produktion</span>
+                                        <span class="tooltip-text">Fixkosten für die interne Produktion(Summe aller Kostenarten)</span>
                                     </span>
                                 </div>
 
@@ -94,11 +105,20 @@ const breakEvenPoint = computed(() => {
 
                                 <template v-if="includeVariableCosts">
                                     <div class="input-group">
-                                        <label for="internalVariableCost">Variable Plankosten (pro Einheit):</label>
-                                        <input v-model.number="internalVariableCost" type="number" id="internalVariableCost" class="input-field">
+                                        <label for="internalVariableCost">Variable Plankosten:</label>
+                                        <input v-model.number="internalVariableCosts" type="number" id="internalVariableCost" class="input-field">
                                         <span class="tooltip-container">
                                             <sup class="information">i</sup>
-                                            <span class="tooltip-text">Variable Kosten pro Einheit für interne Produktion</span>
+                                            <span class="tooltip-text">Variable Plankosten für alle Einheiten (Summe aller Kostenarten)</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="input-group">
+                                        <label for="internalAmount">Anzahl Einheiten:</label>
+                                        <input v-model.number="internalAmount" type="number" id="internalAmount" class="input-field" v-on:change="setUnit()">
+                                        <span class="tooltip-container">
+                                            <sup class="information">i</sup>
+                                            <span class="tooltip-text">Anzahl Einheiten, für welche die variablen Plankosten gelten</span>
                                         </span>
                                     </div>
 
