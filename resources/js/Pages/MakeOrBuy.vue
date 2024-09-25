@@ -68,7 +68,7 @@ const breakEvenPoint = computed(() => {
                             <h2 class="title">Make-or-Buy-Entscheidung</h2>
                             <div class="input-area">
                                 <div class="input-group">
-                                    <label for="internalFixedCost">Fixkosten Intern:</label>
+                                    <label for="internalFixedCost">Fix Plankoste:</label>
                                     <input v-model.number="internalFixedCost" type="number" id="internalFixedCost" class="input-field">
                                     <span class="tooltip-container">
                                         <sup class="information">i</sup>
@@ -77,7 +77,7 @@ const breakEvenPoint = computed(() => {
                                 </div>
 
                                 <div class="input-group">
-                                    <label for="externalFixedCost">Fixkosten Extern:</label>
+                                    <label for="externalFixedCost">Anschaffungskosten:</label>
                                     <input v-model.number="externalFixedCost" type="number" id="externalFixedCost" class="input-field">
                                     <span class="tooltip-container">
                                         <sup class="information">i</sup>
@@ -94,7 +94,7 @@ const breakEvenPoint = computed(() => {
 
                                 <template v-if="includeVariableCosts">
                                     <div class="input-group">
-                                        <label for="internalVariableCost">Variable Kosten Intern (pro Einheit):</label>
+                                        <label for="internalVariableCost">Variable Plankosten (pro Einheit):</label>
                                         <input v-model.number="internalVariableCost" type="number" id="internalVariableCost" class="input-field">
                                         <span class="tooltip-container">
                                             <sup class="information">i</sup>
@@ -103,7 +103,7 @@ const breakEvenPoint = computed(() => {
                                     </div>
 
                                     <div class="input-group">
-                                        <label for="externalVariableCost">Variable Kosten Extern (pro Einheit):</label>
+                                        <label for="externalVariableCost">Variable Kosten bei Kauf (pro Einheit):</label>
                                         <input v-model.number="externalVariableCost" type="number" id="externalVariableCost" class="input-field">
                                         <span class="tooltip-container">
                                             <sup class="information">i</sup>
@@ -138,7 +138,7 @@ const breakEvenPoint = computed(() => {
                                 <p class="result-item">Gesamtkosten Extern: <span class="highlight">{{ totalExternalCost }}</span></p>
                                 <p class="result-item">Kostendifferenz: <span class="highlight">{{ costDifference }}</span></p>
                                 <p class="result-item">Empfehlung: <span class="highlight">{{ decision }}</span></p>
-                                <p v-if="includeVariableCosts" class="result-item">Break-Even Punkt (Einheiten): <span class="highlight">{{ breakEvenPoint }}</span></p>
+                                <p v-if="includeVariableCosts" class="result-item">Kritische Menge (Einheiten): <span class="highlight">{{ breakEvenPoint }}</span></p>
                             </div>
                         </div>
                     </div>
