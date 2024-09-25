@@ -89,7 +89,7 @@ async function addRow() {
 
 async function fetchRowsFromDeckungsbeitrag() {
     try {
-        const response = await axios.get('/deckungsbeitragrechnung.index');
+        const response = await axios.get('/getDeckungsbeitragsrechnungen');
         console.log(("response"));
         console.log((response));
     } catch (error) {
