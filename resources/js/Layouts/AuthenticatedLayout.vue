@@ -52,6 +52,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('deckungsbeitragrechnung.index')" :active="route().current('deckungsbeitragrechnung.index')">
                                     Deckungsbeitrag
                                 </NavLink>
+                                <NavLink :href="route('preisuntergrenze.index')" :active="route().current('preisuntergrenze.index')">
+                                    Preisuntergrenze
+                                </NavLink>
                             </div>
                         </div>
 

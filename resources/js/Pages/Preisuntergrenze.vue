@@ -4,9 +4,8 @@ import { Head } from '@inertiajs/vue3';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
+import '@vuepic/vue-datepicker/dist/main.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
 
 const emit = defineEmits(['update:checked']);
 
@@ -24,7 +23,6 @@ const proxyChecked = computed({
     get() {
         return props.checked;
     },
-
     set(val) {
         emit('update:checked', val);
     },
@@ -32,27 +30,28 @@ const proxyChecked = computed({
 
 //Input
 const name = ref(null);
-const preisProStueck = ref(null);
 const stueckZahl = ref(null);
 const varKostenProStueck = ref(null);
 const fixkosten = ref(null);
 
 //Ergebniss
-const deckungsBeitrag = ref(null);
-const gewinn = ref(null);
+const kurzPreisUG = ref(null);
+const langPreisUG = ref(null);
 
 const rows = ref([]);
+const rowsP = ref([]);
+const selectedRow = ref(null); // To hold the selected row in the modal
+const showModal = ref(false);  // Controls the modal visibility
 
 onMounted(() => {
     rows.value = props.items.map(item => ({
-        id: item.id,  // Ensure you have an ID field for deleting rows later
+        id: item.id,
         name: item.name,
-        preisProStueck: item.preisProStueck,
         stueckZahl: item.stueckZahl,
         varKostenProStueck: item.varKostenProStueck,
         fixkosten: item.fixkosten,
-        deckungsBeitrag: item.deckungsBeitrag,
-        gewinn: item.gewinn,
+        kurzPreisUG: item.kurzPreisUG,
+        langPreisUG: item.langPreisUG,
         neueSpalte: null,
     }));
 });
@@ -60,30 +59,26 @@ onMounted(() => {
 async function addRow() {
     try {
         const newRow = {
-            name: name.value, // Use month difference
-            preisProStueck: preisProStueck.value,
+            name: name.value,
             stueckZahl: stueckZahl.value,
             varKostenProStueck: varKostenProStueck.value,
             fixkosten: fixkosten.value,
-            deckungsBeitrag: deckungsBeitrag.value,
-            gewinn: gewinn.value
+            kurzPreisUG: kurzPreisUG.value,
+            langPreisUG: langPreisUG.value,
         };
 
         try{
-            newRow.deckungsBeitrag = calculateDB(newRow);
-            newRow.gewinn = calculateGewinn(newRow);
-            console.log(newRow);
+        newRow.kurzPreisUG = calculateKurz(newRow);
+        newRow.langPreisUG = calculateLang(newRow);
         }catch(error){
             console.error('Error setting functions:', error)
         }
-        
 
-        const response = await axios.post('/deckungsbeitrag', newRow);
-        
+        const response = await axios.post('/preisuntergrenze', newRow);
         if (response.data) {
             rows.value.push({
                 ...newRow,
-                id: response.data.id, 
+                id: response.data.id,
             });
             clearInputs();
         }
@@ -92,9 +87,36 @@ async function addRow() {
     }
 }
 
+async function fetchRowsFromDeckungsbeitrag() {
+    try {
+        const response = await axios.get('/deckungsbeitragrechnung.index');
+        console.log(("response"));
+        console.log((response));
+    } catch (error) {
+        console.error('Error fetching rows:', error);
+    }
+}
+
+async function addRowFromExist() {
+    showModal.value = true; // Open modal to select the row
+    await fetchRowsFromDeckungsbeitrag();
+}
+
+function applySelectedRow() {
+    if (selectedRow.value) {
+        name.value = selectedRow.value.name;
+        stueckZahl.value = selectedRow.value.stueckZahl;
+        varKostenProStueck.value = selectedRow.value.varKostenProStueck;
+        fixkosten.value = selectedRow.value.fixkosten;
+        showModal.value = false; // Close modal
+    } else {
+        alert("Please select a row to apply.");
+    }
+}
+
 async function deleteRow(id, index) {
     try {
-        const response = await axios.delete(`/deckungsbeitrag/${id}`);
+        const response = await axios.delete(`/preisuntergrenze/${id}`);
         if (response.data) {
             rows.value.splice(index, 1); // Remove row from the array
         }
@@ -105,97 +127,90 @@ async function deleteRow(id, index) {
 
 function clearInputs() {
     name.value = null;
-    preisProStueck.value = null;
     stueckZahl.value = null;
     varKostenProStueck.value = null;
     fixkosten.value = null;
 }
 
-function calculateDB(row){
-    let wert = 0;
-    if(row.preisProStueck && row.varKostenProStueck && row.stueckZahl)
-    {
-        wert = (row.preisProStueck - row.varKostenProStueck) * row.stueckZahl;
-    }
-    row.deckungsBeitrag = wert;
+function calculateKurz(row) {
+    let wert = row.varKostenProStueck || 0;
+    row.kurzPreisUG = wert;
     return wert;
 }
 
-function calculateGewinn(row){
+function calculateLang(row) {
     let wert = 0;
-    if(row.deckungsBeitrag && row.fixkosten)
-    {
-        wert = row.deckungsBeitrag - row.fixkosten;
+    if (row.varKostenProStueck && row.fixkosten && row.stueckZahl) {
+        wert = (row.fixkosten + row.varKostenProStueck * row.stueckZahl) / row.stueckZahl;
     }
-    row.gewinn = wert;
+    row.langPreisUG = wert;
     return wert;
 }
 </script>
 
-
-
 <template>
     <div>
-      <Head title="Deckungsbeitragrechnung">
-      </Head>
-  
+      <Head title="Preisuntergrenze">
+    </Head>
       <AuthenticatedLayout>
           <template #header>
               <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abweichungsanalyse</h2>
           </template>
+
           <div class="py-12 m-lg-4">
+            <!-- Input Fields -->
             <div class="input-area"
                 style="display: grid; grid-template-columns: 3fr 2fr; grid-gap: 20px; align-items: center; justify-content: center; justify-items: center; max-width: 600px; margin: 0 auto;">
-
-                <!-- name -->
-                <label for="input1" style="justify-self: start;">Bezeichnung:
-                    <span id="tooltip-aufwand" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">Definition für den Aufwand</span>
-                    </span>
-                </label>
+                <!-- Name Input -->
+                <label for="input1" style="justify-self: start;">Bezeichnung:</label>
                 <input type="text" v-model="name" id="input1" style="max-width: 250px;" />
 
-                <!-- preisProStueck Input -->
-                <label for="input2" style="justify-self: start;">Preis pro Stück:  
-                    <span id="tooltip-aufwand" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">Definition für den Aufwand</span>
-                    </span>
-                </label>
-                <input type="number" v-model="preisProStueck" id="input2" style="max-width: 250px;" />
-                
-                <!-- stueckZahl Input -->
-                <label for="input3" style="justify-self: start;">Stückanzahl:  
-                    <span id="tooltip-aufwand" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">Definition für den Aufwand</span>
-                    </span>
-                </label>
+                <!-- Stückanzahl Input -->
+                <label for="input3" style="justify-self: start;">Stückanzahl:</label>
                 <input type="number" v-model="stueckZahl" id="input3" style="max-width: 250px;" />
 
-                <!-- varKostenProStueck Input -->
-                <label for="input4" style="justify-self: start;">variable Kosten pro Stück:  
-                    <span id="tooltip-aufwand" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">Definition für den Aufwand</span>
-                    </span>
-                </label>
+                <!-- Variable Kosten pro Stück Input -->
+                <label for="input4" style="justify-self: start;">variable Kosten pro Stück:</label>
                 <input type="number" v-model="varKostenProStueck" id="input4" style="max-width: 250px;" />
 
                 <!-- Fixkosten Input -->
-                <label for="input1" style="justify-self: start;">Fixkosten:  
-                    <span id="tooltip-aufwand" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">Definition für den Aufwand</span>
-                    </span>
-                </label>
+                <label for="input1" style="justify-self: start;">Fixkosten:</label>
                 <input type="number" v-model="fixkosten" id="input6" style="max-width: 250px;" />
 
-                <!-- Empty space to align button -->
-                <div></div>
-                <button class="button bg-primary" style="justify-self: start; max-width: 150px;" @click="addRow">Berechnen</button>
+                <!-- Buttons -->
+                <button class="button bg-primary" style="justify-self: start;" @click="addRow">Berechnen</button>
+                <button class="button bg-primary" style="justify-self: end;" @click="addRowFromExist">Zeile hinzufügen</button>
             </div>
+
+<!-- Modal Window -->
+<div v-if="showModal" class="modal-overlay">
+      <div class="modal-content">
+        <h3>Select a Row</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Name</th>
+              <th>Stückzahl</th>
+              <th>VarKosten</th>
+              <th>Fixkosten</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, index) in rows" :key="index">
+              <td><input type="radio" :value="row" v-model="selectedRow" /></td>
+              <td>{{ row.name }}</td>
+              <td>{{ row.stueckZahl }}</td>
+              <td>{{ row.varKostenProStueck }}</td>
+              <td>{{ row.fixkosten }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <button @click="applySelectedRow">Apply</button>
+        <button @click="showModal = false">Close</button>
+      </div>
+    </div>
+            
             <table class="table">
     <thead>
         <tr>
@@ -205,13 +220,13 @@ function calculateGewinn(row){
                     <span class="tooltip-text">SollKosten: Fixkosten + variabler Planverrechnungssatz * IstLeistung</span>
                 </span>
             </th>
-            <th class="bg-warning">Deckungsbeitrag
+            <th class="bg-warning">kurzfristige Untergrenze
                 <span id="tooltip-verbrauchsabweichung" class="tooltip-container">
                     <sup class="information">i</sup>
                     <span class="tooltip-text">Verbrauchsabweichung: IstKosten - SollKosten</span>
                 </span>
             </th>
-            <th>Gewinn
+            <th>langfristige Untergrenze
                 <span id="tooltip-beschaeftAbweichung" class="tooltip-container">
                     <sup class="information">i</sup>
                     <span class="tooltip-text">Beschäftigungsabweichung: SollKosten - IstKosten verrechnete Leistung</span>
@@ -222,8 +237,8 @@ function calculateGewinn(row){
     <tbody>
         <tr v-for="(row, index) in rows" :key="index">
             <td>{{ row.name }}</td>
-            <td>{{ row.deckungsBeitrag }}</td>
-            <td>{{ row.gewinn }}</td>
+            <td>{{ row.kurzPreisUG }}</td>
+            <td>{{ row.langPreisUG }}</td>
             <td><button class="button bg-danger" @click="deleteRow(row.id, index)">löschen</button></td>
             <td>
                 <div class="accordion" :id="'accordionExample' + index">
@@ -236,16 +251,16 @@ function calculateGewinn(row){
                         <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" :data-bs-parent="'#accordionExample' + index">
                             <div class="accordion-body">
                                 <br>
-                                <strong>Deckungsbeitrag für {{ row.name }}:</strong>
+                                <strong>kurzfristige Preisuntergrenze für {{ row.name }}:</strong>
                                  
-                                <p> Deckungsbeitrag = ( Verkaufspreis pro Stück₍<sub>{{ row.name }}</sub>₎ – Variable Kosten pro Stück₍<sub>{{ row.name }}</sub>₎ ) × Stückzahl₍<sub>{{ row.name }}</sub>₎</p>
-                                <p> Deckungsbeitrag = {{ row.preisProStueck }} – {{ row.varKostenProStueck }} × {{ row.stueckZahl }}</p>
-                                <p> Deckungsbeitrag = {{ row.deckungsBeitrag }} </p>
+                                <p> kurzfristige Preisuntergrenze = ( Verkaufspreis pro Stück₍<sub>{{ row.name }}</sub>₎ – Variable Kosten pro Stück₍<sub>{{ row.name }}</sub>₎ ) × Stückzahl₍<sub>{{ row.name }}</sub>₎</p>
+                                <!-- <p> Deckungsbeitrag = {{ row.preisProStueck }} – {{ row.varKostenProStueck }} × {{ row.stueckZahl }}</p>-->
+                                <p> kurzfristige Preisuntergrenze = {{ row.kurzPreisUG }} </p>
                                 <br> 
-                                <strong>Gewinn für {{ row.name }}:</strong>
-                                <p> Gewinn = Deckungsbeitrag₍<sub>{{ row.name }}</sub>₎ – Fixkosten₍<sub>{{ row.name }}</sub>₎</p>
-                                <p> Gewinn = {{ row.deckungsBeitrag }} – {{ row.fixkosten }}</p>
-                                <p> Gewinn = {{ row.gewinn }}</p>
+                                <strong>langfristige Preisuntergrenze für {{ row.name }}:</strong>
+                                <p> langfristige Preisuntergrenze = Deckungsbeitrag₍<sub>{{ row.name }}</sub>₎ – Fixkosten₍<sub>{{ row.name }}</sub>₎</p>
+                                <p> langfristige Preisuntergrenze = {{ row.stueckZahl }} – {{ row.stueckZahl }}</p>
+                                <p> langfristige Preisuntergrenze = {{ row.langPreisUG }}</p>
                             </div>
                         </div>
                     </div>
@@ -264,6 +279,29 @@ function calculateGewinn(row){
 </template>
 
 <style>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Black background with opacity */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 600px;   /* Set a fixed width for the modal */
+  max-height: 80%; /* Set a maximum height and enable scrolling if needed */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a box shadow for a popup effect */
+}
+
+
 /* Styles for accordion button, border, and icons */
 .accordion-button {
   padding: var(--accordion-button-padding-y) var(--accordion-button-padding-x);

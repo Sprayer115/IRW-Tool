@@ -4,6 +4,7 @@ use App\Http\Controllers\AbgrenzungsrechnungController;
 use App\Http\Controllers\AbweichungsanalysenController;
 use App\Http\Controllers\BreakEvensController;
 use App\Http\Controllers\DeckungsbeitragController;
+use App\Http\Controllers\PreisuntergrenzenController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -60,12 +61,21 @@ Route::resource('break-even', BreakEvensController::class)->only([
 ]); 
 
 // Deckungsbeitragrechnung
-Route::resource('deckungsbeitrag', DeckungsbeitragController::class)->only([
+Route::resource('/deckungsbeitrag', DeckungsbeitragController::class)->only([
     'index', 'store', 'destroy'
 ])->middleware(['auth', 'verified'])->names([
     'index' => 'deckungsbeitragrechnung.index',  // Ensure correct naming here
     'store' => 'deckungsbeitragrechnung.store',
     'destroy' => 'deckungsbeitragrechnung.destroy'
+]); 
+
+// Preisuntergrenze
+Route::resource('/preisuntergrenze', PreisuntergrenzenController::class)->only([
+    'index', 'store', 'destroy'
+])->middleware(['auth', 'verified'])->names([
+    'index' => 'preisuntergrenze.index',  // Ensure correct naming here
+    'store' => 'preisuntergrenze.store',
+    'destroy' => 'preisuntergrenze.destroy'
 ]); 
 
 

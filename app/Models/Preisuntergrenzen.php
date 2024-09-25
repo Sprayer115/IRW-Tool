@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Deckungsbeitragrechnungen extends Model
+class Preisuntergrenzen extends Model
 {
-    protected $table = 'deckungsbeitragrechnungen';
+    protected $table = 'preisuntergrenzen';
     
     protected $fillable = [
         'name',
-        'preisProStueck',
         'stueckZahl',
         'varKostenProStueck',
         'fixkosten',
-        'deckungsBeitrag',
-        'gewinn'
+        'kurzPreisUG',
+        'langPreisUG'
     ];
 }
