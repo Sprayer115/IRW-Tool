@@ -1,64 +1,101 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 
-const departments = ref([
-  { name: 'Abteilung 1', primaryCosts: 0, allocation: { 'Abteilung 2': 0, 'Abteilung 3': 0 } },
-  { name: 'Abteilung 2', primaryCosts: 0, allocation: { 'Abteilung 3': 0 } },
-  { name: 'Abteilung 3', primaryCosts: 0, allocation: {} },
-]);
-
-const totalCosts = computed(() => {
-  return departments.value.reduce((sum, dept) => sum + dept.primaryCosts, 0);
+const props = defineProps({
+    preAuxiliaryCostCenters: Array,
+    primaryOverheadCosts: Array,
+    allocationMatrix: Object
 });
 
+const emit = defineEmits(['calculate']);
+
+const sortedCostCenters = computed(() => {
+    return [...props.preAuxiliaryCostCenters].sort((a, b) => a.order - b.order);
+});
+
+const performCalculations = () => {
+    console.log("Starting calculations");
+    console.log("Input data:", JSON.stringify(props, null, 2));
+
+    const results = {};
+
+    // Initialize results object
+    sortedCostCenters.value.forEach((cc) => {
+        results[cc.id] = {
+            name: cc.name,
+            primaryCosts: cc.value,
+            allocations: {},
+            secondaryCosts: 0,
+            totalCosts: cc.value,
+        };
+    });
+
+    props.primaryOverheadCosts.forEach((oc) => {
+        results[`oc${oc.id}`] = {
+            name: oc.name,
+            primaryCosts: oc.value,
+            allocations: {},
+            secondaryCosts: 0,
+            totalCosts: oc.value,
+        };
+    });
+
+    console.log("Initialized results:", JSON.stringify(results, null, 2));
+
+    // Calculate allocations
+    sortedCostCenters.value.forEach((currentCC, index) => {
+        console.log(`Processing cost center: ${currentCC.name}`);
+
+        const currentCCId = currentCC.id.toString();
+        const totalUnits = Object.values(props.allocationMatrix[currentCCId]).reduce((sum, value) => sum + value, 0);
+
+        console.log(`Total units for ${currentCC.name}: ${totalUnits}`);
+
+        if (totalUnits > 0) {
+            Object.entries(props.allocationMatrix[currentCCId]).forEach(([targetId, units]) => {
+                const allocationAmount = results[currentCCId].totalCosts * (units / totalUnits);
+                console.log(`Allocating ${allocationAmount} to ${targetId}`);
+
+                results[currentCCId].allocations[targetId] = allocationAmount;
+
+                if (targetId.startsWith('oc')) {
+                    results[targetId].secondaryCosts += allocationAmount;
+                    results[targetId].totalCosts += allocationAmount;
+                } else {
+                    results[targetId].secondaryCosts += allocationAmount;
+                    results[targetId].totalCosts += allocationAmount;
+                }
+            });
+
+            results[currentCCId].totalCosts = 0;
+        }
+
+        console.log(`After processing ${currentCC.name}:`, JSON.stringify(results, null, 2));
+    });
+
+    console.log("Final results:", JSON.stringify(results, null, 2));
+
+    emit('calculate', results);
+};
+
 const calculate = () => {
-  // Implement the Stufenleiterverfahren calculation logic here
-  // This is a simplified example and may need to be adjusted based on specific requirements
-  for (let i = 0; i < departments.value.length - 1; i++) {
-    const currentDept = departments.value[i];
-    const allocationSum = Object.values(currentDept.allocation).reduce((sum, value) => sum + value, 0);
-
-    for (let j = i + 1; j < departments.value.length; j++) {
-      const targetDept = departments.value[j];
-      const allocationAmount = (currentDept.primaryCosts * currentDept.allocation[targetDept.name]) / 100;
-      targetDept.primaryCosts += allocationAmount;
+    try {
+        performCalculations();
+    } catch (error) {
+        console.error("Error in calculation:", error);
+        console.error("Error details:", error.message, error.stack);
     }
-
-    currentDept.primaryCosts -= (currentDept.primaryCosts * allocationSum) / 100;
-  }
 };
 </script>
 
 <template>
-  <div>
-    <h3 class="text-lg font-semibold mb-4">Stufenleiterverfahren</h3>
-    
-    <div v-for="dept in departments" :key="dept.name" class="mb-4">
-      <h4 class="font-medium">{{ dept.name }}</h4>
-      <div class="flex space-x-4">
-        <div>
-          <label class="block text-sm">Primärkosten</label>
-          <input v-model.number="dept.primaryCosts" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-        </div>
-        <div v-for="(value, targetDept) in dept.allocation" :key="targetDept">
-          <label class="block text-sm">Umlage auf {{ targetDept }}</label>
-          <input v-model.number="dept.allocation[targetDept]" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-        </div>
-      </div>
+    <div>
+        <h2 class="text-2xl font-bold mb-6">Stufenleiterverfahren</h2>
+        <button
+            @click="calculate"
+            class="mt-4 p-2 bg-green-500 text-white rounded hover:bg-blue-600"
+        >
+            Berechnen
+        </button>
     </div>
-
-    <button @click="calculate" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-      Berechnen
-    </button>
-
-    <div class="mt-4">
-      <h4 class="font-medium">Ergebnisse:</h4>
-      <ul>
-        <li v-for="dept in departments" :key="dept.name">
-          {{ dept.name }}: {{ dept.primaryCosts.toFixed(2) }}
-        </li>
-      </ul>
-      <p class="mt-2">Gesamtkosten: {{ totalCosts.toFixed(2) }}</p>
-    </div>
-  </div>
 </template>

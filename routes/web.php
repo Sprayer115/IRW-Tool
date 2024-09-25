@@ -69,6 +69,8 @@ Route::resource('/deckungsbeitrag', DeckungsbeitragController::class)->only([
     'destroy' => 'deckungsbeitragrechnung.destroy'
 ]); 
 
+Route::get('/getDeckungsbeitragsrechnungen', [DeckungsbeitragController::class, 'getDeckungsbeitragsrechnungen'])->name('getDeckungsbeitragsrechnungen');
+
 // Preisuntergrenze
 Route::resource('/preisuntergrenze', PreisuntergrenzenController::class)->only([
     'index', 'store', 'destroy'
