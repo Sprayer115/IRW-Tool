@@ -8,6 +8,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 
+
 const emit = defineEmits(['update:checked']);
 
 const props = defineProps({
@@ -232,71 +233,83 @@ function calculateVA(row){
                 <div></div>
                 <button class="button bg-primary" style="justify-self: start; max-width: 150px;" @click="addRow">Berechnen</button>
             </div>
-              <table class="table">
-                  <thead>
-                      <tr>
-                            <th class="bg-success">SollKosten
-                                <span id="tooltip-sollKosten" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">SollKosten: Fixkosten + variabler Planverrechnungssatz * IstLeistung</span>
-                    </span>
-                            </th>
-                            <th class = "bg-warning">Verbrauchsabweichung
-                                <span id="tooltip-verbrauchsabweichung" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">Verbrauchsabweichung: IstKosten - SollKosten</span>
-                    </span>
-                            </th>
-                            <th>Beschäftigungsabweichung
-                                <span id="tooltip-beschaeftAbweichung" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">Beschäftigungsabweichung: SollKosten - IstKosten verrechnete Leistung</span>
-                    </span>
-                            </th>
-                            <th>Gesamtabweichung
-                                <span id="tooltip-gesamtabweichung" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">Gesamtabweichung: Beschäftigungsabweichung - Verbrauchsabweichung</span>
-                    </span>
-                            </th>
-                            <th>Actions</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr v-for="(row, index) in rows" :key="index">
-                          <td>{{ row.sollKosten }}</td>
-                          <td>{{ row.verbrauchsabweichung }}</td>
-                          <td>{{ row.beschaeftAbweichung }}</td>
-                          <td>{{ row.gesamtabweichung }}</td>
-                          <td><button class = "button bg-danger" @click="deleteRow(row.id, index)">löschen</button></td>
-                          <td>
-                            <div class="accordion" id="accordionExample">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingOne">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Test
-                                </button>
-                                </h2>
-                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    <strong>This is the first item's accordion body.</strong> It is shown by default until the collapse plugin adds the appropriate classes to handle the animation.
-                                </div>
-                                </div>
+            <table class="table">
+    <thead>
+        <tr>
+            <th class="bg-success">SollKosten
+                <span id="tooltip-sollKosten" class="tooltip-container">
+                    <sup class="information">i</sup>
+                    <span class="tooltip-text">SollKosten: Fixkosten + variabler Planverrechnungssatz * IstLeistung</span>
+                </span>
+            </th>
+            <th class="bg-warning">Verbrauchsabweichung
+                <span id="tooltip-verbrauchsabweichung" class="tooltip-container">
+                    <sup class="information">i</sup>
+                    <span class="tooltip-text">Verbrauchsabweichung: IstKosten - SollKosten</span>
+                </span>
+            </th>
+            <th>Beschäftigungsabweichung
+                <span id="tooltip-beschaeftAbweichung" class="tooltip-container">
+                    <sup class="information">i</sup>
+                    <span class="tooltip-text">Beschäftigungsabweichung: SollKosten - IstKosten verrechnete Leistung</span>
+                </span>
+            </th>
+            <th>Gesamtabweichung
+                <span id="tooltip-gesamtabweichung" class="tooltip-container">
+                    <sup class="information">i</sup>
+                    <span class="tooltip-text">Gesamtabweichung: Beschäftigungsabweichung - Verbrauchsabweichung</span>
+                </span>
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr v-for="(row, index) in rows" :key="index">
+            <td>{{ row.sollKosten }}</td>
+            <td>{{ row.verbrauchsabweichung }}</td>
+            <td>{{ row.beschaeftAbweichung }}</td>
+            <td>{{ row.gesamtabweichung }}</td>
+            <td>
+                <button class="button bg-danger" @click="deleteRow(row.id, index)">löschen</button>
+            </td>
+        </tr>
+        <!-- Collapsible details row immediately after each data row -->
+        <tr v-for="(row, index) in rows" :key="'collapse-row-' + index">
+            <td colspan="5">
+                <div class="accordion" :id="'accordionExample-' + index">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" :id="'heading-' + index">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-' + index" aria-expanded="false" :aria-controls="'collapse-' + index">
+                                Details for row {{ index + 1 }}
+                            </button>
+                        </h2>
+                        <div :id="'collapse-' + index" class="accordion-collapse collapse" :aria-labelledby="'heading-' + index">
+                            <div class="accordion-body">
+                                <strong>Daten:</strong> Idee ist das wir die Rechnung hier Abbilden. Sieht glaube ich einfach clean aus. Also ich mach das
+                                <ul>
+                                    <li>SollKosten: {{ row.sollKosten }}</li>
+                                    <li>Verbrauchsabweichung: {{ row.verbrauchsabweichung }}</li>
+                                    <li>Beschäftigungsabweichung: {{ row.beschaeftAbweichung }}</li>
+                                    <li>Gesamtabweichung: {{ row.gesamtabweichung }}</li>
+                                </ul>
                             </div>
-                            </div>
-                        </td>
-                      </tr>
-                  </tbody>
-              </table>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
           </div>
       </AuthenticatedLayout>
     </div>
-    <div> 
-        
-    </div>
+
 </template>
 
 <style>
+
 /* Styles for accordion button, border, and icons */
 .accordion-button {
   padding: var(--accordion-button-padding-y) var(--accordion-button-padding-x);
@@ -305,6 +318,11 @@ function calculateVA(row){
   border: var(--accordion-border-width) solid var(--accordion-border-color);
   border-radius: var(--accordion-border-radius);
   transition: var(--accordion-transition);
+}
+
+.accordion-collapse.collapse.show {
+    display: block !important;
+    visibility: visible !important;
 }
 
 .accordion-button:focus {

@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Deckungsbeitragrechnungen;
+use App\Models\Preisuntergrenzen;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
 
-class DeckungsbeitragController extends Controller
+class PreisuntergrenzenController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('Deckungsbeitragrechnung', [
-            'items' => Deckungsbeitragrechnungen::all(),
+        return Inertia::render('Preisuntergrenze', [
+            'items' => Preisuntergrenzen::all(),
         ]);
     }
 
@@ -28,15 +28,14 @@ class DeckungsbeitragController extends Controller
         try {
             $request->validate([
                 'name' => 'nullable|string',
-                'preisProStueck' => 'nullable|numeric',
                 'stueckZahl' => 'nullable|numeric',
                 'varKostenProStueck' => 'nullable|numeric',
                 'fixkosten' => 'nullable|numeric',
-                'deckungsBeitrag' => 'nullable|numeric',
-                'gewinn' => 'nullable|numeric',
+                'kurzPreisUG' => 'nullable|numeric',
+                'langPreisUG' => 'nullable|numeric',
             ]);
     
-            $r = Deckungsbeitragrechnungen::create($request->all());
+            $r = Preisuntergrenzen::create($request->all());
     
             return $r;
         } catch (Exception $e) {
@@ -50,7 +49,7 @@ class DeckungsbeitragController extends Controller
     public function destroy(string $id)
     {
         try {
-            Deckungsbeitragrechnungen::destroy($id);
+            Preisuntergrenzen::destroy($id);
     
             return true;
         } catch (Exception $e) {

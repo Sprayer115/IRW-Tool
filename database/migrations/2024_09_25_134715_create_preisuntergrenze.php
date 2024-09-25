@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('deckungsbeitragrechnungen', function (Blueprint $table) {
+        Schema::create('preisuntergrenzen', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->double('preisProStueck');
             $table->double('stueckZahl');
             $table->double('varKostenProStueck');
             $table->double('fixkosten');
-            $table->double('deckungsBeitrag');
-            $table->double('gewinn');
+            $table->double('kurzPreisUG');
+            $table->double('langPreisUG');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('deckungsbeitragrechnungen');
+        Schema::dropIfExists('preisuntergrenzen');
     }
 };
