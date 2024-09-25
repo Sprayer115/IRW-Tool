@@ -285,14 +285,14 @@ function calculateLang(row) {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Black background with opacity */
+  background: rgba(117, 117, 117, 0.6); /* Black background with opacity */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .modal-content {
-  background-color: white;
+  background-color: rgb(117, 117, 117);
   padding: 20px;
   border-radius: 10px;
   width: 600px;   /* Set a fixed width for the modal */
