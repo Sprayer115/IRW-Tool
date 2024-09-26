@@ -8,7 +8,6 @@ const internalFixedCost = ref(0);
 const externalFixedCost = ref(0);
 
 // Variable costs
-const includeVariableCosts = ref(false);
 const externalVariableCost = ref(0);
 const internalAmount = ref(0);
 const internalVariableCosts = ref(0);
@@ -30,13 +29,11 @@ const internalVariableCost = computed(() => {
 });
 
 const totalInternalCost = computed(() => {
-    console.log(internalVariableCost.value, units.value);
-
-    return internalFixedCost.value + (includeVariableCosts.value ? internalVariableCost.value * units.value : 0);
+    return internalFixedCost.value + internalVariableCost.value * units.value;
 });
 
 const totalExternalCost = computed(() => {
-    return externalFixedCost.value + (includeVariableCosts.value ? externalVariableCost.value * units.value : 0);
+    return externalFixedCost.value + externalVariableCost.value * units.value;
 });
 
 const costDifference = computed(() => {
@@ -44,20 +41,28 @@ const costDifference = computed(() => {
 });
 
 const decision = computed(() => {
-    return costDifference.value > 0 ? "Kaufen" : (costDifference.value == 0 ? "Kaufen/Selbst herstellen" : "Selbst herstellen");
+    return costDifference.value > 0
+        ? "Kaufen"
+        : costDifference.value == 0
+        ? "Kaufen/Selbst herstellen"
+        : "Selbst herstellen";
 });
 
 const breakEvenPoint = computed(() => {
-    if (!includeVariableCosts.value || internalVariableCost.value === externalVariableCost.value) {
+    if (
+        internalVariableCost.value === externalVariableCost.value
+    ) {
         return "N/A";
     }
-    const fixedCostDifference = externalFixedCost.value - internalFixedCost.value;
-    const variableCostDifference = internalVariableCost.value - externalVariableCost.value;
+    const fixedCostDifference =
+        externalFixedCost.value - internalFixedCost.value;
+    const variableCostDifference =
+        internalVariableCost.value - externalVariableCost.value;
     return Math.ceil(fixedCostDifference / variableCostDifference);
 });
 
 const setUnit = () => {
-   units.value = internalAmount.value;
+    units.value = internalAmount.value;
 };
 </script>
 
@@ -66,7 +71,9 @@ const setUnit = () => {
         <Head title="Make-or-Buy Kalkulator" />
 
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            <h2
+                class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
+            >
                 Make-or-Buy Kalkulator
             </h2>
         </template>
@@ -79,86 +86,205 @@ const setUnit = () => {
                             <h2 class="title">Make-or-Buy-Entscheidung</h2>
                             <div class="input-area">
                                 <div class="input-group">
-                                    <label for="internalFixedCost">Fix Plankosten:</label>
-                                    <input v-model.number="internalFixedCost" type="number" id="internalFixedCost" class="input-field">
+                                    <label for="internalFixedCost"
+                                        >Fix Plankosten:</label
+                                    >
+                                    <input
+                                        v-model.number="internalFixedCost"
+                                        type="number"
+                                        id="internalFixedCost"
+                                        class="input-field"
+                                    />
                                     <span class="tooltip-container">
                                         <sup class="information">i</sup>
-                                        <span class="tooltip-text">Fixkosten für die interne Produktion(Summe aller Kostenarten)</span>
+                                        <span class="tooltip-text"
+                                            >Fixkosten für die interne
+                                            Produktion(Summe aller
+                                            Kostenarten)</span
+                                        >
                                     </span>
                                 </div>
 
                                 <div class="input-group">
-                                    <label for="externalFixedCost">Anschaffungskosten:</label>
-                                    <input v-model.number="externalFixedCost" type="number" id="externalFixedCost" class="input-field">
+                                    <label for="internalVariableCost"
+                                        >Variable Plankosten:</label
+                                    >
+                                    <input
+                                        v-model.number="internalVariableCosts"
+                                        type="number"
+                                        id="internalVariableCost"
+                                        class="input-field"
+                                    />
                                     <span class="tooltip-container">
                                         <sup class="information">i</sup>
-                                        <span class="tooltip-text">Fixkosten für den externen Kauf</span>
+                                        <span class="tooltip-text"
+                                            >Variable Plankosten für alle
+                                            Einheiten (Summe aller
+                                            Kostenarten)</span
+                                        >
                                     </span>
                                 </div>
 
                                 <div class="input-group">
-                                    <label class="flex items-center">
-                                        <input v-model="includeVariableCosts" type="checkbox" class="mr-2">
-                                        Variable Kosten einbeziehen
-                                    </label>
+                                    <label for="internalAmount"
+                                        >Anzahl Einheiten:</label
+                                    >
+                                    <input
+                                        v-model.number="internalAmount"
+                                        type="number"
+                                        id="internalAmount"
+                                        class="input-field"
+                                        v-on:change="setUnit()"
+                                    />
+                                    <span class="tooltip-container">
+                                        <sup class="information">i</sup>
+                                        <span class="tooltip-text"
+                                            >Anzahl Einheiten, für welche die
+                                            variablen Plankosten gelten</span
+                                        >
+                                    </span>
                                 </div>
 
-                                <template v-if="includeVariableCosts">
-                                    <div class="input-group">
-                                        <label for="internalVariableCost">Variable Plankosten:</label>
-                                        <input v-model.number="internalVariableCosts" type="number" id="internalVariableCost" class="input-field">
-                                        <span class="tooltip-container">
-                                            <sup class="information">i</sup>
-                                            <span class="tooltip-text">Variable Plankosten für alle Einheiten (Summe aller Kostenarten)</span>
-                                        </span>
-                                    </div>
+                                <div class="input-group">
+                                    <label for="externalFixedCost"
+                                        >Anschaffungskosten:</label
+                                    >
+                                    <input
+                                        v-model.number="externalFixedCost"
+                                        type="number"
+                                        id="externalFixedCost"
+                                        class="input-field"
+                                    />
+                                    <span class="tooltip-container">
+                                        <sup class="information">i</sup>
+                                        <span class="tooltip-text"
+                                            >Fixkosten für den externen
+                                            Kauf</span
+                                        >
+                                    </span>
+                                </div>
 
-                                    <div class="input-group">
-                                        <label for="internalAmount">Anzahl Einheiten:</label>
-                                        <input v-model.number="internalAmount" type="number" id="internalAmount" class="input-field" v-on:change="setUnit()">
-                                        <span class="tooltip-container">
-                                            <sup class="information">i</sup>
-                                            <span class="tooltip-text">Anzahl Einheiten, für welche die variablen Plankosten gelten</span>
-                                        </span>
-                                    </div>
+                                <div class="input-group">
+                                    <label for="externalVariableCost"
+                                        >Variable Kosten bei Kauf (pro
+                                        Einheit):</label
+                                    >
+                                    <input
+                                        v-model.number="externalVariableCost"
+                                        type="number"
+                                        id="externalVariableCost"
+                                        class="input-field"
+                                    />
+                                    <span class="tooltip-container">
+                                        <sup class="information">i</sup>
+                                        <span class="tooltip-text"
+                                            >Variable Kosten pro Einheit für
+                                            externen Kauf</span
+                                        >
+                                    </span>
+                                </div>
 
-                                    <div class="input-group">
-                                        <label for="externalVariableCost">Variable Kosten bei Kauf (pro Einheit):</label>
-                                        <input v-model.number="externalVariableCost" type="number" id="externalVariableCost" class="input-field">
-                                        <span class="tooltip-container">
-                                            <sup class="information">i</sup>
-                                            <span class="tooltip-text">Variable Kosten pro Einheit für externen Kauf</span>
-                                        </span>
-                                    </div>
-
-                                    <div class="input-group flex items-center justify-between">
-                                        <div class="flex-grow mr-4">
-                                            <label for="units" class="block mb-1">Anzahl der Einheiten:</label>
-                                            <div class="flex items-center">
-                                                <input v-model.number="units" type="number" :min="1" :max="maxUnitsValue" id="units" class="w-20 p-1 border rounded mr-2">
-                                                <input v-model.number="units" type="range" :min="1" :max="maxUnitsValue" class="flex-grow">
-                                            </div>
-                                        </div>
+                                <div
+                                    class="input-group flex items-center justify-between"
+                                >
+                                    <div class="flex-grow mr-4">
+                                        <label for="units" class="block mb-1"
+                                            >Anzahl der Einheiten:</label
+                                        >
                                         <div class="flex items-center">
-                                            <label for="maxUnitsValue" class="mr-2">Max:</label>
-                                            <select v-model.number="maxUnitsValue" id="maxUnitsValue" class="p-1 border rounded w-32">
-                                                <option :value="1000">1,000</option>
-                                                <option :value="10000">10,000</option>
-                                                <option :value="100000">100,000</option>
-                                                <option :value="1000000">1,000,000</option>
-                                            </select>
+                                            <input
+                                                v-model.number="units"
+                                                type="number"
+                                                :min="1"
+                                                :max="maxUnitsValue"
+                                                id="units"
+                                                class="w-20 p-1 border rounded mr-2"
+                                            />
+                                            <input
+                                                v-model.number="units"
+                                                type="range"
+                                                :min="1"
+                                                :max="maxUnitsValue"
+                                                class="flex-grow"
+                                            />
                                         </div>
                                     </div>
-                                </template>
+                                    <div class="flex items-center">
+                                        <label for="maxUnitsValue" class="mr-2"
+                                            >Max:</label
+                                        >
+                                        <select
+                                            v-model.number="maxUnitsValue"
+                                            id="maxUnitsValue"
+                                            class="p-1 border rounded w-32"
+                                        >
+                                            <option :value="1000">1,000</option>
+                                            <option :value="10000">
+                                                10,000
+                                            </option>
+                                            <option :value="100000">
+                                                100,000
+                                            </option>
+                                            <option :value="1000000">
+                                                1,000,000
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="result-area">
-                                <h3 class="result-title">Ergebnis der Make-or-Buy-Entscheidung</h3>
-                                <p class="result-item">Gesamtkosten Intern: <span class="highlight">{{ totalInternalCost }}</span></p>
-                                <p class="result-item">Gesamtkosten Extern: <span class="highlight">{{ totalExternalCost }}</span></p>
-                                <p class="result-item">Kostendifferenz: <span class="highlight">{{ costDifference }}</span></p>
-                                <p class="result-item">Empfehlung: <span class="highlight">{{ decision }}</span></p>
-                                <p v-if="includeVariableCosts" class="result-item">Kritische Menge (Einheiten): <span class="highlight">{{ breakEvenPoint }}</span></p>
+                                <h3 class="result-title">
+                                    Ergebnis der Make-or-Buy-Entscheidung
+                                </h3>
+                                <p class="result-item">
+                                    Make
+                                    <span class="tooltip-container">
+                                        <sup class="information">i</sup>
+                                        <span class="tooltip-text"
+                                            >Fix Plankosten + variable
+                                            Plankosten</span
+                                        >
+                                    </span>
+                                    :
+                                    <span class="highlight">{{
+                                        totalInternalCost
+                                    }}</span>
+                                </p>
+
+                                <p class="result-item">
+                                    Buy
+                                    <span class="tooltip-container">
+                                        <sup class="information">i</sup>
+                                        <span class="tooltip-text"
+                                            >Anzahl Einheiten * Kosten pro
+                                            Einheit</span
+                                        >
+                                    </span>
+                                    :
+                                    <span class="highlight">{{
+                                        totalExternalCost
+                                    }}</span>
+                                </p>
+
+                                <p class="result-item">
+                                    Kostendifferenz:
+                                    <span class="highlight">{{
+                                        costDifference
+                                    }}</span>
+                                </p>
+                                <p class="result-item">
+                                    Empfehlung:
+                                    <span class="highlight">{{
+                                        decision
+                                    }}</span>
+                                </p>
+                                <p class="result-item">
+                                    Kritische Menge (Einheiten):
+                                    <span class="highlight">{{
+                                        breakEvenPoint
+                                    }}</span>
+                                </p>
                             </div>
                         </div>
                     </div>
