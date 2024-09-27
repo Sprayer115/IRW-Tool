@@ -70,6 +70,7 @@ Route::resource('/deckungsbeitrag', DeckungsbeitragController::class)->only([
 ]); 
 
 Route::get('/getDeckungsbeitragsrechnungen', [DeckungsbeitragController::class, 'getDeckungsbeitragsrechnungen'])->name('getDeckungsbeitragsrechnungen');
+Route::get('/getAbweichungsrechnung', [AbweichungsanalysenController::class, 'getAbweichungsrechnung'])->name('getAbweichungsrechnung');
 
 // Preisuntergrenze
 Route::resource('/preisuntergrenze', PreisuntergrenzenController::class)->only([
@@ -79,6 +80,16 @@ Route::resource('/preisuntergrenze', PreisuntergrenzenController::class)->only([
     'store' => 'preisuntergrenze.store',
     'destroy' => 'preisuntergrenze.destroy'
 ]); 
+
+//Innerbetriebliche Leistungsverrechnung
+Route::get('/AA', function () {
+    return Inertia::render('GanzeAbweichungsanalyse');
+})->middleware(['auth', 'verified'])->name('GanzeAbweichungsanalyse');
+
+// Define additional routes if needed
+//Route::get('/abweichungsanalyse-tabelle', [AbweichungsanalysenController::class, 'showTable'])->name('abweichungsanalyse.table');
+//Route::get('/abweichungsanalyse', [AbweichungsanalysenController::class, 'show'])->name('abweichungsanalyse.index');
+
 
 
 Route::middleware('auth')->group(function () {

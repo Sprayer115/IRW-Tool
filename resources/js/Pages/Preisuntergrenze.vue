@@ -194,6 +194,7 @@ function calculateLang(row) {
   
             <button class="button bg-primary" style="justify-self: start;" @click="addRow">Berechnen</button>
             <button class="button bg-primary" style="justify-self: end;" @click="addRowFromExist">Zeile hinzufügen</button>
+            <div></div>
           </div>
   
           <!-- Table with Rows -->
@@ -252,11 +253,11 @@ function calculateLang(row) {
         <!-- Modal Window for Adding a Row -->
         <div v-if="showModal" class="modal-overlay">
           <div class="modal-content">
-            <h3>Select a Row</h3>
+            <h3>Wählen Sie eine Zeile aus:</h3>
             <table class="table">
               <thead>
                 <tr>
-                  <th>Select</th>
+                  <th>Auswahl</th>
                   <th>Name</th>
                   <th>Stückzahl</th>
                   <th>VarKosten</th>
@@ -273,8 +274,8 @@ function calculateLang(row) {
                 </tr>
               </tbody>
             </table>
-            <button @click="applySelectedRow">Apply</button>
-            <button @click="showModal = false">Close</button>
+            <button @click="applySelectedRow">Anweden</button>
+            <button @click="showModal = false">Schließen</button>
           </div>
         </div>
   
@@ -315,15 +316,21 @@ function calculateLang(row) {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a box shadow for a popup effect */
 }
 
-.modal-content-details p {
-  color: #000000; /* Custom color for modal text */
+#modalContent * {
+  color: #2c3e50; /* Custom text color for all text elements in the modal */
+  font-family: Arial, sans-serif; /* Set a custom font family */
+  line-height: 1.5; /* Improve readability */
 }
 
-.modal-content-details h3 {
-  color: #000000; /* Custom color for modal text */
-}
 
 .modal-content-details button {
+  color: #000000; /* Custom color for modal text */
+  outline-color: #000000;
+  outline: auto;
+  outline-offset: 3px;
+}
+
+.modal-content button {
   color: #000000; /* Custom color for modal text */
   outline-color: #000000;
   outline: auto;
