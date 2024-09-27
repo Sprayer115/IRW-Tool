@@ -580,49 +580,47 @@ updateAllocationMatrix();
                                         </td>
                                     </tr>
                                     <tr
-                                        v-for="sourceCC in sortedPreAuxiliaryCostCenters"
-                                        :key="sourceCC.id"
-                                    >
-                                        <td class="border p-2 font-semibold">
-                                            Verrechnung
-                                            {{
-                                                calculationResults[sourceCC.id]
-                                                    ?.name ||
-                                                `Kostenstelle ${sourceCC.id}`
-                                            }}
-                                        </td>
-                                        <td
-    v-for="targetCC in sortedPreAuxiliaryCostCenters"
-    :key="targetCC.id"
-    class="border p-2"
-  >
-    {{
-      sourceCC.id === targetCC.id
-        ? `-${(
-            (calculationResults[sourceCC.id]?.primaryCosts || 0) +
-            (calculationResults[sourceCC.id]?.secondaryCosts || 0)
-          ).toFixed(2)} €`
-        : sourceCC.order < targetCC.order
-        ? (calculationResults[sourceCC.id]?.allocations?.[targetCC.id] || 0).toFixed(2) + " €"
-        : "-"
-    }}
-  </td>
-                                        <td
-                                            v-for="oc in primaryOverheadCosts"
-                                            :key="oc.id"
-                                            class="border p-2"
-                                        >
-                                            {{
-                                                (
-                                                    calculationResults[
-                                                        sourceCC.id
-                                                    ]?.allocations?.[
-                                                        `oc${oc.id}`
-                                                    ] || 0
-                                                ).toFixed(2) + " €"
-                                            }}
-                                        </td>
-                                    </tr>
+    v-for="sourceCC in sortedPreAuxiliaryCostCenters"
+    :key="sourceCC.id"
+>
+    <td class="border p-2 font-semibold">
+        Verrechnung
+        {{
+            calculationResults[sourceCC.id]
+                ?.name ||
+            `Kostenstelle ${sourceCC.id}`
+        }}
+    </td>
+    <td
+        v-for="targetCC in sortedPreAuxiliaryCostCenters"
+        :key="targetCC.id"
+        class="border p-2"
+    >
+        {{
+            sourceCC.id === targetCC.id
+                ? `-${(
+                    (calculationResults[sourceCC.id]?.primaryCosts || 0) +
+                    (calculationResults[sourceCC.id]?.secondaryCosts || 0)
+                ).toFixed(2)} €`
+                : (calculationResults[sourceCC.id]?.allocations?.[targetCC.id] || 0).toFixed(2) + " €"
+        }}
+    </td>
+    <td
+        v-for="oc in primaryOverheadCosts"
+        :key="oc.id"
+        class="border p-2"
+    >
+        {{
+            (
+                calculationResults[
+                    sourceCC.id
+                ]?.allocations?.[
+                    `oc${oc.id}`
+                ] || 0
+            ).toFixed(2) + " €"
+        }}
+    </td>
+</tr>
                                     <tr>
                                         <td class="border p-2 font-semibold">
                                             Sekundäre GK
@@ -664,13 +662,13 @@ updateAllocationMatrix();
                                             :key="cc.id"
                                             class="border p-2"
                                         >
-                                            {{
+                                            <!--{{
                                                 (
                                                     calculationResults[cc.id]
                                                         ?.totalCosts || 0
                                                 ).toFixed(2)
-                                            }}
-                                            €
+                                            }}-->
+                                            -
                                         </td>
                                         <td
                                             v-for="oc in primaryOverheadCosts"
