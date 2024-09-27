@@ -16,7 +16,44 @@ const components = {
 };
 
 const setActiveComponent = (component) => {
+    if (component === "Anbauverfahren") {
+        // In Anbauverfahren, there should be no allocations between Kostenstellen
+        preAuxiliaryCostCenters.value.forEach((costCenter) => {
+            preAuxiliaryCostCenters.value.forEach((targetCostCenter) => {
+                if (costCenter.id !== targetCostCenter.id) {
+                    // Remove allocations between cost centers
+                    delete allocationMatrix.value[costCenter.id]?.[targetCostCenter.id];
+                }
+            });
+        });
+    } else if (component === "Stufenleiterverfahren") {
+        // In Stufenleiterverfahren, only allow allocations to later cost centers
+        preAuxiliaryCostCenters.value.forEach((sourceCC) => {
+            preAuxiliaryCostCenters.value.forEach((targetCC) => {
+                if (sourceCC.order >= targetCC.order) {
+                    // Remove allocations to earlier or same cost centers
+                    delete allocationMatrix.value[sourceCC.id]?.[targetCC.id];
+                }
+            });
+        });
+    } else if (component === "Gleichungsverfahren") {
+        // In Gleichungsverfahren, allow allocations between all cost centers except self
+        preAuxiliaryCostCenters.value.forEach((sourceCC) => {
+            preAuxiliaryCostCenters.value.forEach((targetCC) => {
+                if (sourceCC.id === targetCC.id) {
+                    // Remove self-allocations
+                    delete allocationMatrix.value[sourceCC.id]?.[targetCC.id];
+                }
+            });
+        });
+    }
+
+    // Set the active component
     activeComponent.value = component;
+
+    // Update Mermaid diagram after clearing allocations
+    updateMermaidDiagram();
+    renderMermaidDiagram();
 };
 
 const preAuxiliaryCostCenters = ref([
@@ -47,14 +84,18 @@ const updateMermaidDiagram = () => {
     });
 
     // Add edges between pre-auxiliary cost centers
-    sortedPreAuxiliaryCostCenters.value.forEach((sourceCC, sourceIndex) => {
-        for (let targetIndex = sourceIndex + 1; targetIndex < sortedPreAuxiliaryCostCenters.value.length; targetIndex++) {
-            const targetCC = sortedPreAuxiliaryCostCenters.value[targetIndex];
-            const allocationValue = allocationMatrix.value[sourceCC.id]?.[targetCC.id] || 0;
-            if (allocationValue > 0) {
-                diagramCode += `CC${sourceCC.id} -->|"<div class='mermaid-edge-label'>${allocationValue}</div>"| CC${targetCC.id};\n`;
+    sortedPreAuxiliaryCostCenters.value.forEach((sourceCC) => {
+        sortedPreAuxiliaryCostCenters.value.forEach((targetCC) => {
+            if (sourceCC.id !== targetCC.id) {
+                const forwardAllocation = allocationMatrix.value[sourceCC.id]?.[targetCC.id] || 0;
+                const backwardAllocation = allocationMatrix.value[targetCC.id]?.[sourceCC.id] || 0;
+                
+                if (forwardAllocation > 0) {
+                    console.log(1);
+                    diagramCode += `CC${sourceCC.id} -->|"<div class='mermaid-edge-label'>${forwardAllocation}</div>"| CC${targetCC.id};\n`;
+                }
             }
-        }
+        });
     });
 
     // Add edges from pre-auxiliary cost centers to primary overhead costs
@@ -70,6 +111,22 @@ const updateMermaidDiagram = () => {
     mermaidDiagram.value = diagramCode;
 };
 
+const renderMermaidDiagram = async () => {
+  try {
+    const { svg } = await mermaid.render(
+      "mermaid-diagram",
+      mermaidDiagram.value
+    );
+    const diagramContainer = document.getElementById("mermaid-container");
+    if (diagramContainer) {
+      diagramContainer.innerHTML = svg;
+    }
+  } catch (error) {
+    console.error("Failed to render Mermaid diagram:", error);
+    console.log("Diagram code:", mermaidDiagram.value);
+  }
+};
+
 const isExtendedAllocationRequired = computed(() => {
     return (
         activeComponent.value === "Stufenleiterverfahren" ||
@@ -77,20 +134,6 @@ const isExtendedAllocationRequired = computed(() => {
     );
 });
 
-const renderMermaidDiagram = async () => {
-    try {
-        const { svg } = await mermaid.render(
-            "mermaid-diagram",
-            mermaidDiagram.value
-        );
-        const diagramContainer = document.getElementById("mermaid-container");
-        if (diagramContainer) {
-            diagramContainer.innerHTML = svg;
-        }
-    } catch (error) {
-        console.error("Failed to render Mermaid diagram:", error);
-    }
-};
 
 watch(
     [preAuxiliaryCostCenters, primaryOverheadCosts, allocationMatrix],
@@ -101,30 +144,40 @@ watch(
     { deep: true }
 );
 
-onMounted(() => {
-    mermaid.initialize({
-        startOnLoad: false,
-        theme: "neutral",
-        flowchart: {
-            nodeSpacing: 50,
-            rankSpacing: 100,
-            curve: "basis",
-            useMaxWidth: false,
-        },
-        themeVariables: {
-            edgeLabelBackground: "#ffffff",
-            lineColor: "#333333",
-        },
-        htmlLabels: true,
-        sequence: {
-            useMaxWidth: false,
-        },
-        graph: {
-            rankDir: "TB",
-        },
+const initMermaid = async () => {
+  try {
+    await mermaid.initialize({
+      startOnLoad: false,
+      theme: "neutral",
+      flowchart: {
+        nodeSpacing: 50,
+        rankSpacing: 100,
+        curve: "basis",
+        useMaxWidth: false,
+      },
+      themeVariables: {
+        edgeLabelBackground: "#ffffff",
+        lineColor: "#333333",
+      },
+      htmlLabels: true,
+      sequence: {
+        useMaxWidth: false,
+      },
+      graph: {
+        rankDir: "TD",
+      },
+      securityLevel: 'loose', // This allows the use of HTML in labels
     });
-    updateMermaidDiagram();
-    renderMermaidDiagram();
+    console.log("Mermaid initialized successfully");
+  } catch (error) {
+    console.error("Failed to initialize Mermaid:", error);
+  }
+};
+
+onMounted(async () => {
+  await initMermaid();
+  updateMermaidDiagram();
+  await renderMermaidDiagram();
 });
 
 const addPrimaryOverheadCost = () => {
@@ -580,49 +633,47 @@ updateAllocationMatrix();
                                         </td>
                                     </tr>
                                     <tr
-                                        v-for="sourceCC in sortedPreAuxiliaryCostCenters"
-                                        :key="sourceCC.id"
-                                    >
-                                        <td class="border p-2 font-semibold">
-                                            Verrechnung
-                                            {{
-                                                calculationResults[sourceCC.id]
-                                                    ?.name ||
-                                                `Kostenstelle ${sourceCC.id}`
-                                            }}
-                                        </td>
-                                        <td
-    v-for="targetCC in sortedPreAuxiliaryCostCenters"
-    :key="targetCC.id"
-    class="border p-2"
-  >
-    {{
-      sourceCC.id === targetCC.id
-        ? `-${(
-            (calculationResults[sourceCC.id]?.primaryCosts || 0) +
-            (calculationResults[sourceCC.id]?.secondaryCosts || 0)
-          ).toFixed(2)} €`
-        : sourceCC.order < targetCC.order
-        ? (calculationResults[sourceCC.id]?.allocations?.[targetCC.id] || 0).toFixed(2) + " €"
-        : "-"
-    }}
-  </td>
-                                        <td
-                                            v-for="oc in primaryOverheadCosts"
-                                            :key="oc.id"
-                                            class="border p-2"
-                                        >
-                                            {{
-                                                (
-                                                    calculationResults[
-                                                        sourceCC.id
-                                                    ]?.allocations?.[
-                                                        `oc${oc.id}`
-                                                    ] || 0
-                                                ).toFixed(2) + " €"
-                                            }}
-                                        </td>
-                                    </tr>
+    v-for="sourceCC in sortedPreAuxiliaryCostCenters"
+    :key="sourceCC.id"
+>
+    <td class="border p-2 font-semibold">
+        Verrechnung
+        {{
+            calculationResults[sourceCC.id]
+                ?.name ||
+            `Kostenstelle ${sourceCC.id}`
+        }}
+    </td>
+    <td
+        v-for="targetCC in sortedPreAuxiliaryCostCenters"
+        :key="targetCC.id"
+        class="border p-2"
+    >
+        {{
+            sourceCC.id === targetCC.id
+                ? `-${(
+                    (calculationResults[sourceCC.id]?.primaryCosts || 0) +
+                    (calculationResults[sourceCC.id]?.secondaryCosts || 0)
+                ).toFixed(2)} €`
+                : (calculationResults[sourceCC.id]?.allocations?.[targetCC.id] || 0).toFixed(2) + " €"
+        }}
+    </td>
+    <td
+        v-for="oc in primaryOverheadCosts"
+        :key="oc.id"
+        class="border p-2"
+    >
+        {{
+            (
+                calculationResults[
+                    sourceCC.id
+                ]?.allocations?.[
+                    `oc${oc.id}`
+                ] || 0
+            ).toFixed(2) + " €"
+        }}
+    </td>
+</tr>
                                     <tr>
                                         <td class="border p-2 font-semibold">
                                             Sekundäre GK
@@ -664,13 +715,13 @@ updateAllocationMatrix();
                                             :key="cc.id"
                                             class="border p-2"
                                         >
-                                            {{
+                                            <!--{{
                                                 (
                                                     calculationResults[cc.id]
                                                         ?.totalCosts || 0
                                                 ).toFixed(2)
-                                            }}
-                                            €
+                                            }}-->
+                                            -
                                         </td>
                                         <td
                                             v-for="oc in primaryOverheadCosts"

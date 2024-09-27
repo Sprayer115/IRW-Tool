@@ -1,90 +1,153 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 
-const departments = ref([
-  { name: 'Abteilung 1', primaryCosts: 0, allocation: { 'Abteilung 2': 0, 'Abteilung 3': 0 } },
-  { name: 'Abteilung 2', primaryCosts: 0, allocation: { 'Abteilung 1': 0, 'Abteilung 3': 0 } },
-  { name: 'Abteilung 3', primaryCosts: 0, allocation: { 'Abteilung 1': 0, 'Abteilung 2': 0 } },
-]);
-
-const totalCosts = computed(() => {
-  return departments.value.reduce((sum, dept) => sum + dept.primaryCosts, 0);
+const props = defineProps({
+    preAuxiliaryCostCenters: Array,
+    primaryOverheadCosts: Array,
+    allocationMatrix: Object
 });
 
+const emit = defineEmits(['calculate']);
+
+const performCalculations = () => {
+    console.log("Starting Gleichungsverfahren calculations");
+    console.log("Input data:", JSON.stringify(props, null, 2));
+
+    const results = {};
+    const costCenters = [...props.preAuxiliaryCostCenters];
+    const n = costCenters.length;
+
+    // Initialize results object
+    costCenters.forEach((cc) => {
+        results[cc.id] = {
+            name: cc.name,
+            primaryCosts: cc.value,
+            allocations: {},
+            secondaryCosts: 0,
+            totalCosts: 0,
+        };
+    });
+
+    props.primaryOverheadCosts.forEach((oc) => {
+        results[`oc${oc.id}`] = {
+            name: oc.name,
+            primaryCosts: oc.value,
+            allocations: {},
+            secondaryCosts: 0,
+            totalCosts: oc.value,
+        };
+    });
+
+    console.log("Initialized results:", JSON.stringify(results, null, 2));
+
+    // Calculate total allocations for each cost center
+    const totalAllocations = {};
+    costCenters.forEach((cc) => {
+        totalAllocations[cc.id] = Object.values(props.allocationMatrix[cc.id]).reduce((sum, val) => sum + val, 0);
+    });
+
+    // Set up equations: K1 = PK1 + a21*K2, K2 = PK2 + a12*K1
+    const A = Array(n).fill().map(() => Array(n).fill(0));
+    const b = Array(n).fill(0);
+
+    costCenters.forEach((cc, i) => {
+        A[i][i] = 1; // Coefficient for Ki
+        b[i] = cc.value; // PKi
+
+        costCenters.forEach((otherCC, j) => {
+            if (i !== j) {
+                // aij is the proportion of costs transferred from j to i
+                A[i][j] = -props.allocationMatrix[otherCC.id][cc.id] / totalAllocations[otherCC.id];
+            }
+        });
+    });
+
+    // Solve system of linear equations
+    const totalCosts = gaussianElimination(A, b);
+
+    // Update results with solved values and calculate allocations
+    costCenters.forEach((cc, i) => {
+        results[cc.id].totalCosts = totalCosts[i];
+        
+        Object.entries(props.allocationMatrix[cc.id]).forEach(([targetId, allocation]) => {
+            const allocationAmount = (allocation / totalAllocations[cc.id]) * totalCosts[i];
+            results[cc.id].allocations[targetId] = allocationAmount;
+
+            if (targetId.startsWith('oc')) {
+                results[targetId].secondaryCosts += allocationAmount;
+                results[targetId].totalCosts += allocationAmount;
+            } else {
+                results[targetId].secondaryCosts += allocationAmount;
+            }
+        });
+    });
+
+    console.log("Final results:", JSON.stringify(results, null, 2));
+
+    emit('calculate', results);
+};
+
+const gaussianElimination = (A, b) => {
+    const n = A.length;
+
+    for (let i = 0; i < n; i++) {
+        // Find pivot
+        let maxEl = Math.abs(A[i][i]);
+        let maxRow = i;
+        for (let k = i + 1; k < n; k++) {
+            if (Math.abs(A[k][i]) > maxEl) {
+                maxEl = Math.abs(A[k][i]);
+                maxRow = k;
+            }
+        }
+
+        // Swap maximum row with current row
+        [A[i], A[maxRow]] = [A[maxRow], A[i]];
+        [b[i], b[maxRow]] = [b[maxRow], b[i]];
+
+        // Make all rows below this one 0 in current column
+        for (let k = i + 1; k < n; k++) {
+            const c = -A[k][i] / A[i][i];
+            for (let j = i; j < n; j++) {
+                if (i === j) {
+                    A[k][j] = 0;
+                } else {
+                    A[k][j] += c * A[i][j];
+                }
+            }
+            b[k] += c * b[i];
+        }
+    }
+
+    // Solve equation Ax=b using back substitution
+    const x = new Array(n).fill(0);
+    for (let i = n - 1; i >= 0; i--) {
+        x[i] = b[i] / A[i][i];
+        for (let k = i - 1; k >= 0; k--) {
+            b[k] -= A[k][i] * x[i];
+        }
+    }
+    return x;
+};
+
 const calculate = () => {
-  // Implement the Gleichungsverfahren calculation logic here
-  // This is a simplified example and may need to be adjusted based on specific requirements
-  const n = departments.value.length;
-  const matrix = [];
-  const vector = [];
-
-  for (let i = 0; i < n; i++) {
-    matrix[i] = [];
-    for (let j = 0; j < n; j++) {
-      if (i === j) {
-        matrix[i][j] = 1;
-      } else {
-        matrix[i][j] = -departments.value[j].allocation[departments.value[i].name] / 100;
-      }
+    try {
+        performCalculations();
+    } catch (error) {
+        console.error("Error in calculation:", error);
+        console.error("Error details:", error.message, error.stack);
     }
-    vector[i] = departments.value[i].primaryCosts;
-  }
-
-  // Solve the system of linear equations (simplified Gaussian elimination)
-  for (let i = 0; i < n; i++) {
-    for (let j = i + 1; j < n; j++) {
-      const factor = matrix[j][i] / matrix[i][i];
-      for (let k = i; k < n; k++) {
-        matrix[j][k] -= factor * matrix[i][k];
-      }
-      vector[j] -= factor * vector[i];
-    }
-  }
-
-  for (let i = n - 1; i >= 0; i--) {
-    for (let j = i + 1; j < n; j++) {
-      vector[i] -= matrix[i][j] * vector[j];
-    }
-    vector[i] /= matrix[i][i];
-  }
-
-  // Update department costs with the calculated values
-  for (let i = 0; i < n; i++) {
-    departments.value[i].primaryCosts = vector[i];
-  }
 };
 </script>
 
 <template>
-  <div>
-    <h3 class="text-lg font-semibold mb-4">Gleichungsverfahren</h3>
-    
-    <div v-for="dept in departments" :key="dept.name" class="mb-4">
-      <h4 class="font-medium">{{ dept.name }}</h4>
-      <div class="flex space-x-4">  
-        <div>
-          <label class="block text-sm">Primärkosten</label>
-          <input v-model.number="dept.primaryCosts" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-        </div>
-        <div v-for="(value, targetDept) in dept.allocation" :key="targetDept">
-          <label class="block text-sm">Umlage auf {{ targetDept }}</label>
-          <input v-model.number="dept.allocation[targetDept]" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-        </div>
-      </div>
+    <div>
+        <h2 class="text-2xl font-bold mb-6">Gleichungsverfahren</h2>
+        <button
+            @click="calculate"
+            class="mt-4 p-2 bg-green-500 text-white rounded hover:bg-blue-600"
+        >
+            Berechnen
+        </button>
     </div>
-
-    <button @click="calculate" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-      Berechnen
-    </button>
-
-    <div class="mt-4">
-      <h4 class="font-medium">Ergebnisse:</h4>
-      <ul>
-        <li v-for="dept in departments" :key="dept.name">
-          {{ dept.name }}: {{ dept.primaryCosts.toFixed(2) }}
-        </li>
-      </ul>
-      <p class="mt-2">Gesamtkosten: {{ totalCosts.toFixed(2) }}</p>
-    </div>
-  </div>
 </template>
