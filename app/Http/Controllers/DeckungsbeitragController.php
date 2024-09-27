@@ -58,8 +58,13 @@ class DeckungsbeitragController extends Controller
         }
     }
 
-    public function getDeckungsbeitragsrechnungen() {
-        return "Hello";
-        //DO YOU SHIT HERE
+    public function getDeckungsbeitragsrechnungen() 
+    {
+        try {
+            $data = Deckungsbeitragrechnungen::all();
+            return response()->json([$data], HttpResponse::HTTP_OK);
+        } catch (Exception $e) {
+            return response()->json([$e->getMessage()], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
