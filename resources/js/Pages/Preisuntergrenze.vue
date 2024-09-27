@@ -6,6 +6,7 @@ import axios from 'axios';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import html2pdf from 'html2pdf.js';
 
 const emit = defineEmits(['update:checked']);
 
@@ -42,6 +43,7 @@ const rows = ref([]);
 const rowsP = ref([]);
 const selectedRow = ref(null); // To hold the selected row in the modal
 const showModal = ref(false);  // Controls the modal visibility
+const showModalDetail = ref(false);
 
 onMounted(() => {
     rows.value = props.items.map(item => ({
@@ -91,16 +93,34 @@ async function fetchRowsFromDeckungsbeitrag() {
     try {
         const response = await axios.get('/getDeckungsbeitragsrechnungen');
         console.log(("response"));
-        console.log((response));
+        console.log((response.data[0]));
+        rowsP.value = response.data[0];
     } catch (error) {
         console.error('Error fetching rows:', error);
     }
 }
 
 async function addRowFromExist() {
-    showModal.value = true; // Open modal to select the row
     await fetchRowsFromDeckungsbeitrag();
+    showModal.value = true; // Open modal to select the row
 }
+
+function openDetailModal(row) {
+      selectedRow.value = row; // Set the selected row for displaying details
+      showModalDetail.value = true; // Open the modal
+    }
+
+function exportToPDF() {
+    const element = document.getElementById('modalContent');
+  const opt = {
+    margin:       1,
+    filename:     'Modal_Details.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2 },
+    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+  html2pdf().from(element).set(opt).save();
+    }
 
 function applySelectedRow() {
     if (selectedRow.value) {
@@ -150,134 +170,118 @@ function calculateLang(row) {
 
 <template>
     <div>
-      <Head title="Preisuntergrenze">
-    </Head>
+      <Head title="Preisuntergrenze"></Head>
       <AuthenticatedLayout>
-          <template #header>
-              <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abweichungsanalyse</h2>
-          </template>
-
-          <div class="py-12 m-lg-4">
-            <!-- Input Fields -->
-            <div class="input-area"
-                style="display: grid; grid-template-columns: 3fr 2fr; grid-gap: 20px; align-items: center; justify-content: center; justify-items: center; max-width: 600px; margin: 0 auto;">
-                <!-- Name Input -->
-                <label for="input1" style="justify-self: start;">Bezeichnung:</label>
-                <input type="text" v-model="name" id="input1" style="max-width: 250px;" />
-
-                <!-- Stückanzahl Input -->
-                <label for="input3" style="justify-self: start;">Stückanzahl:</label>
-                <input type="number" v-model="stueckZahl" id="input3" style="max-width: 250px;" />
-
-                <!-- Variable Kosten pro Stück Input -->
-                <label for="input4" style="justify-self: start;">variable Kosten pro Stück:</label>
-                <input type="number" v-model="varKostenProStueck" id="input4" style="max-width: 250px;" />
-
-                <!-- Fixkosten Input -->
-                <label for="input1" style="justify-self: start;">Fixkosten:</label>
-                <input type="number" v-model="fixkosten" id="input6" style="max-width: 250px;" />
-
-                <!-- Buttons -->
-                <button class="button bg-primary" style="justify-self: start;" @click="addRow">Berechnen</button>
-                <button class="button bg-primary" style="justify-self: end;" @click="addRowFromExist">Zeile hinzufügen</button>
-            </div>
-
-<!-- Modal Window -->
-<div v-if="showModal" class="modal-overlay">
-      <div class="modal-content">
-        <h3>Select a Row</h3>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Select</th>
-              <th>Name</th>
-              <th>Stückzahl</th>
-              <th>VarKosten</th>
-              <th>Fixkosten</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(row, index) in rows" :key="index">
-              <td><input type="radio" :value="row" v-model="selectedRow" /></td>
-              <td>{{ row.name }}</td>
-              <td>{{ row.stueckZahl }}</td>
-              <td>{{ row.varKostenProStueck }}</td>
-              <td>{{ row.fixkosten }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <button @click="applySelectedRow">Apply</button>
-        <button @click="showModal = false">Close</button>
-      </div>
-    </div>
-            
-            <table class="table">
-    <thead>
-        <tr>
-            <th class="bg-success">Bezeichnung
-                <span id="tooltip-sollKosten" class="tooltip-container">
-                    <sup class="information">i</sup>
-                    <span class="tooltip-text">SollKosten: Fixkosten + variabler Planverrechnungssatz * IstLeistung</span>
-                </span>
-            </th>
-            <th class="bg-warning">kurzfristige Untergrenze
-                <span id="tooltip-verbrauchsabweichung" class="tooltip-container">
-                    <sup class="information">i</sup>
-                    <span class="tooltip-text">Verbrauchsabweichung: IstKosten - SollKosten</span>
-                </span>
-            </th>
-            <th>langfristige Untergrenze
-                <span id="tooltip-beschaeftAbweichung" class="tooltip-container">
-                    <sup class="information">i</sup>
-                    <span class="tooltip-text">Beschäftigungsabweichung: SollKosten - IstKosten verrechnete Leistung</span>
-                </span>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr v-for="(row, index) in rows" :key="index">
-            <td>{{ row.name }}</td>
-            <td>{{ row.kurzPreisUG }}</td>
-            <td>{{ row.langPreisUG }}</td>
-            <td><button class="button bg-danger" @click="deleteRow(row.id, index)">löschen</button></td>
-            <td>
-                <div class="accordion" :id="'accordionExample' + index">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" :id="'heading' + index">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse' + index" aria-expanded="true" :aria-controls="'collapse' + index">
-                                Rechnung {{ index + 1 }}
-                            </button>
-                        </h2>
-                        <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" :data-bs-parent="'#accordionExample' + index">
-                            <div class="accordion-body">
-                                <br>
-                                <strong>kurzfristige Preisuntergrenze für {{ row.name }}:</strong>
-                                 
-                                <p> kurzfristige Preisuntergrenze = ( Verkaufspreis pro Stück₍<sub>{{ row.name }}</sub>₎ – Variable Kosten pro Stück₍<sub>{{ row.name }}</sub>₎ ) × Stückzahl₍<sub>{{ row.name }}</sub>₎</p>
-                                <!-- <p> Deckungsbeitrag = {{ row.preisProStueck }} – {{ row.varKostenProStueck }} × {{ row.stueckZahl }}</p>-->
-                                <p> kurzfristige Preisuntergrenze = {{ row.kurzPreisUG }} </p>
-                                <br> 
-                                <strong>langfristige Preisuntergrenze für {{ row.name }}:</strong>
-                                <p> langfristige Preisuntergrenze = Deckungsbeitrag₍<sub>{{ row.name }}</sub>₎ – Fixkosten₍<sub>{{ row.name }}</sub>₎</p>
-                                <p> langfristige Preisuntergrenze = {{ row.stueckZahl }} – {{ row.stueckZahl }}</p>
-                                <p> langfristige Preisuntergrenze = {{ row.langPreisUG }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
+        <template #header>
+          <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abweichungsanalyse</h2>
+        </template>
+  
+        <div class="py-12 m-lg-4">
+          <!-- Input Fields -->
+          <div class="input-area"
+            style="display: grid; grid-template-columns: 3fr 2fr; grid-gap: 20px; align-items: center; justify-content: center; justify-items: center; max-width: 600px; margin: 0 auto;">
+            <label for="input1" style="justify-self: start;">Bezeichnung:</label>
+            <input type="text" v-model="name" id="input1" style="max-width: 250px;" />
+  
+            <label for="input3" style="justify-self: start;">Stückanzahl:</label>
+            <input type="number" v-model="stueckZahl" id="input3" style="max-width: 250px;" />
+  
+            <label for="input4" style="justify-self: start;">Variable Kosten pro Stück:</label>
+            <input type="number" v-model="varKostenProStueck" id="input4" style="max-width: 250px;" />
+  
+            <label for="input1" style="justify-self: start;">Fixkosten:</label>
+            <input type="number" v-model="fixkosten" id="input6" style="max-width: 250px;" />
+  
+            <button class="button bg-primary" style="justify-self: start;" @click="addRow">Berechnen</button>
+            <button class="button bg-primary" style="justify-self: end;" @click="addRowFromExist">Zeile hinzufügen</button>
           </div>
+  
+          <!-- Table with Rows -->
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="bg-success">Bezeichnung</th>
+                <th class="bg-warning">kurzfristige Untergrenze</th>
+                <th>langfristige Untergrenze</th>
+                <th>Aktionen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(row, index) in rows" :key="index">
+                <!-- Main Row Content -->
+                <td>{{ row?.name || '' }}</td>
+                <td>{{ row?.kurzPreisUG || '' }}</td>
+                <td>{{ row?.langPreisUG || '' }}</td>
+                <td>
+                  <!-- Button to open the modal with row details -->
+                  <button class="button bg-info" @click="openDetailModal(row)">Details</button>
+                  <button class="button bg-danger" @click.stop="deleteRow(row.id, index)">Löschen</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+        <!-- Modal Window for Row Details -->
+        <div v-if="showModalDetail" class="modal-overlay">
+          <div class="modal-content-details" id="modalContent">
+            <h3>Details für {{ selectedRow?.name || '' }}</h3>
+            <p><strong>kurzfristige Preisuntergrenze:</strong> {{ selectedRow?.kurzPreisUG || '' }}</p>
+
+            <br>
+            <strong>kurzfristige Preisuntergrenze für {{ selectedRow?.name }}:</strong>
+                                 
+            <p> kurzfristige Preisuntergrenze = ( Verkaufspreis pro Stück₍<sub>{{ selectedRow?.name }}</sub>₎ – Variable Kosten pro Stück₍<sub>{{ selectedRow?.name }}</sub>₎ ) × Stückzahl₍<sub>{{ selectedRow?.name }}</sub>₎</p>
+            <!-- <p> Deckungsbeitrag = {{ row.preisProStueck }} – {{ row.varKostenProStueck }} × {{ row.stueckZahl }}</p>-->
+             <p> kurzfristige Preisuntergrenze = {{ selectedRow?.kurzPreisUG }} </p>
+            <br> 
+            <strong>langfristige Preisuntergrenze für {{ selectedRow?.name }}:</strong>
+            <p> langfristige Preisuntergrenze = Deckungsbeitrag₍<sub>{{ selectedRow?.name }}</sub>₎ – Fixkosten₍<sub>{{ selectedRow?.name }}</sub>₎</p>
+            <p> langfristige Preisuntergrenze = {{ selectedRow?.stueckZahl }} – {{ selectedRow?.stueckZahl }}</p>
+            <p> langfristige Preisuntergrenze = {{ selectedRow?.langPreisUG }}</p>
+            
+            <p><strong>langfristige Preisuntergrenze:</strong> {{ selectedRow?.langPreisUG || '' }}</p>
+        <div>
+            <button @click="exportToPDF">Export as PDF</button>
+            <div></div>
+            <button @click="showModalDetail = false">Close</button>
+        </div>
+          </div>
+        </div>
+  
+        <!-- Modal Window for Adding a Row -->
+        <div v-if="showModal" class="modal-overlay">
+          <div class="modal-content">
+            <h3>Select a Row</h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Select</th>
+                  <th>Name</th>
+                  <th>Stückzahl</th>
+                  <th>VarKosten</th>
+                  <th>Fixkosten</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(row, index) in rowsP" :key="index">
+                  <td><input type="radio" :value="row" v-model="selectedRow" /></td>
+                  <td>{{ row?.name || '' }}</td>
+                  <td>{{ row?.stueckZahl || '' }}</td>
+                  <td>{{ row?.varKostenProStueck || '' }}</td>
+                  <td>{{ row?.fixkosten || '' }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <button @click="applySelectedRow">Apply</button>
+            <button @click="showModal = false">Close</button>
+          </div>
+        </div>
+  
       </AuthenticatedLayout>
     </div>
-    <div> 
-        
-    </div>
-</template>
-
+  </template>
+  
 <style>
 .modal-overlay {
   position: fixed;
@@ -285,20 +289,45 @@ function calculateLang(row) {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(117, 117, 117, 0.6); /* Black background with opacity */
+  background: rgba(255, 255, 255, 0); /* Black background with opacity */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .modal-content {
-  background-color: rgb(117, 117, 117);
+  background-color: rgb(141, 141, 141);
   padding: 20px;
   border-radius: 10px;
   width: 600px;   /* Set a fixed width for the modal */
   max-height: 80%; /* Set a maximum height and enable scrolling if needed */
   overflow-y: auto; /* Enable vertical scrolling if content overflows */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a box shadow for a popup effect */
+}
+
+.modal-content-details {
+  background-color: rgb(255, 255, 255);
+  padding: 20px;
+  border-radius: 10px;
+  width: 600px;   /* Set a fixed width for the modal */
+  max-height: 80%; /* Set a maximum height and enable scrolling if needed */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a box shadow for a popup effect */
+}
+
+.modal-content-details p {
+  color: #000000; /* Custom color for modal text */
+}
+
+.modal-content-details h3 {
+  color: #000000; /* Custom color for modal text */
+}
+
+.modal-content-details button {
+  color: #000000; /* Custom color for modal text */
+  outline-color: #000000;
+  outline: auto;
+  outline-offset: 3px;
 }
 
 
