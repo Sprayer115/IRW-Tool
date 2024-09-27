@@ -224,7 +224,7 @@ function calculateLang(row) {
   
         <!-- Modal Window for Row Details -->
         <div v-if="showModalDetail" class="modal-overlay">
-          <div class="modal-content" id="modalContent">
+          <div class="modal-content-details" id="modalContent">
             <h3>Details für {{ selectedRow?.name || '' }}</h3>
             <p><strong>kurzfristige Preisuntergrenze:</strong> {{ selectedRow?.kurzPreisUG || '' }}</p>
 
@@ -241,8 +241,11 @@ function calculateLang(row) {
             <p> langfristige Preisuntergrenze = {{ selectedRow?.langPreisUG }}</p>
             
             <p><strong>langfristige Preisuntergrenze:</strong> {{ selectedRow?.langPreisUG || '' }}</p>
+        <div>
             <button @click="exportToPDF">Export as PDF</button>
+            <div></div>
             <button @click="showModalDetail = false">Close</button>
+        </div>
           </div>
         </div>
   
@@ -293,6 +296,16 @@ function calculateLang(row) {
 }
 
 .modal-content {
+  background-color: rgb(141, 141, 141);
+  padding: 20px;
+  border-radius: 10px;
+  width: 600px;   /* Set a fixed width for the modal */
+  max-height: 80%; /* Set a maximum height and enable scrolling if needed */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a box shadow for a popup effect */
+}
+
+.modal-content-details {
   background-color: rgb(255, 255, 255);
   padding: 20px;
   border-radius: 10px;
@@ -302,18 +315,19 @@ function calculateLang(row) {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a box shadow for a popup effect */
 }
 
-.modal-content p {
+.modal-content-details p {
   color: #000000; /* Custom color for modal text */
 }
 
-.modal-content h3 {
+.modal-content-details h3 {
   color: #000000; /* Custom color for modal text */
 }
 
-.modal-content button {
+.modal-content-details button {
   color: #000000; /* Custom color for modal text */
   outline-color: #000000;
   outline: auto;
+  outline-offset: 3px;
 }
 
 
