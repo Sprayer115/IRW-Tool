@@ -185,7 +185,7 @@ function calculateZAAW(row){
                 <!-- Aufwand Input -->
                 <label for="input1" style="justify-self: start;">Bitte trage den <span id="tooltip-aufwand" class="tooltip-container">
                     Aufwand<sup class="information">i</sup>
-                    <span class="tooltip-text">Definition für den Aufwand</span>
+                    <span class="tooltip-text">Was wurde bezahlt</span>
                 </span>
                 ein:</label>
                 <input type="number" v-model="aufwand" id="input1" style="max-width: 250px;" />
@@ -193,7 +193,7 @@ function calculateZAAW(row){
                 <!-- Sachliche Abgrenzung Input -->
                 <label for="input4" style="justify-self: start;">Gibt es eine sachliche <span id="tooltip-aufwand" class="tooltip-container">
                     Abgrenzung<sup class="information">i</sup>
-                    <span class="tooltip-text">Definition für Abgrenzung</span>
+                    <span class="tooltip-text">betriebsfremde, außerordentliche und periodenfremde Aufwendungen</span>
                 </span>?</label>
                 <input type="number" v-model="sachliche_abgrenzung" id="input4" style="max-width: 250px;" />
 
@@ -226,7 +226,7 @@ function calculateZAAW(row){
                             <th class="bg-danger">
                                 <span id="tooltip-aufwand" class="tooltip-container">
                                     Kosten<sup class="information">i</sup>
-                                    <span class="tooltip-text">Definition/Rechnung für die Kosten</span>
+                                    <span class="tooltip-text">tatsächlich angefallene Kosten</span>
                                 </span>
                             </th>
                             <th>Actions</th>

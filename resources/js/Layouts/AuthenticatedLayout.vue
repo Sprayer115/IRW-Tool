@@ -55,6 +55,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('preisuntergrenze.index')" :active="route().current('preisuntergrenze.index')">
                                     Preisuntergrenze
                                 </NavLink>
+                                <NavLink :href="route('Maschinenstundensatzrechnung')" :active="route().current('Maschinenstundensatzrechnung')">
+                                    Maschinenstundensatzrechnung
+                                </NavLink>
                             </div>
                         </div>
 

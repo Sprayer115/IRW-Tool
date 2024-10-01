@@ -321,6 +321,18 @@ updateAllocationMatrix();
                     </li>
                 </ul>
             </nav>
+            <div class="mt-2"> 
+                <p v-if="(activeComponent == 'Anbauverfahren')">
+                    Leistungsaustausch zwischen vor und Hilfskostenstellen wird nicht berücksichtigt. Alle Leistungen werden direkt mit den 
+                    Hauptkostenstellen verrechnet.      
+                </p>
+                <p v-if="(activeComponent == 'Stufenleiterverfahren')">
+                    Leistungsverrechnung der Vor-/Hilfskostenstellen nur in eine Richtung. Eine Vor-/Hilfskostenstelle aussuchen und ausrechnen, was sie der anderen bringt.
+                </p>
+                <p v-if="(activeComponent == 'Gleichungsverfahren')">
+                    Berücksichtigung beider Vor-/Hilfskostenstellen, genaustes Ergebnis.
+                </p>
+            </div>
         </template>
 
         <div class="py-12">
@@ -328,6 +340,7 @@ updateAllocationMatrix();
                 <div
                     class="bg-white2 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6"
                 >
+                    
                     <div class="flex flex-wrap -mx-2 mb-8">
                         <div class="w-full md:w-1/2 px-2 mb-4 md:mb-0">
                             <h3 class="text-xl font-semibold mb-4">
