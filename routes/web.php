@@ -12,12 +12,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect()->route('dashboard');
 });
 
 Route::get('/dashboard', function () {
@@ -101,6 +96,11 @@ Route::get('/AA', function () {
 //Route::get('/abweichungsanalyse-tabelle', [AbweichungsanalysenController::class, 'showTable'])->name('abweichungsanalyse.table');
 //Route::get('/abweichungsanalyse', [AbweichungsanalysenController::class, 'show'])->name('abweichungsanalyse.index');
 
+
+//Maschinenstundensatzrechnung
+Route::get('/Maschinenstundensatzrechnung', function () {
+    return Inertia::render('Maschinenstundensatzrechnung');
+})->middleware(['auth', 'verified'])->name('Maschinenstundensatzrechnung');
 
 
 Route::middleware('auth')->group(function () {

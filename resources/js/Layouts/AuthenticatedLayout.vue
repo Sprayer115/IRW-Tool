@@ -62,6 +62,9 @@ const props = defineProps({
                                 <NavLink :href="route('GanzeAbweichungsanalyse')" :active="route().current('GanzeAbweichungsanalyse')">
                                     AbweichungsanalyseGanz
                                 </NavLink>
+                                <NavLink :href="route('Maschinenstundensatzrechnung')" :active="route().current('Maschinenstundensatzrechnung')">
+                                    Maschinenstundensatzrechnung
+                                </NavLink>
                             </div>
                         </div>
 
