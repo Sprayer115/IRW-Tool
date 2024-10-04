@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AbgrenzungsrechnungController;
 use App\Http\Controllers\AbweichungsanalysenController;
+use App\Http\Controllers\TabelleAbweichungsanalysenController;
 use App\Http\Controllers\BreakEvensController;
 use App\Http\Controllers\DeckungsbeitragController;
 use App\Http\Controllers\PreisuntergrenzenController;
@@ -41,6 +42,15 @@ Route::resource('abweichungsanalyse', AbweichungsanalysenController::class)->onl
     'destroy' => 'abweichungsanalyse.destroy'
 ]);
 
+// abweichungsanalyse tabelle
+Route::resource('abweichungsanalysetabelle', TabelleAbweichungsanalysenController::class)->only([
+    'index', 'store', 'destroy'
+])->middleware(['auth', 'verified'])->names([
+    'index' => 'tabelleabweichungsanalyse.index',  // Ensure correct naming here
+    'store' => 'tabelleabweichungsanalyse.store',
+    'destroy' => 'tabelleabweichungsanalyse.destroy'
+]);
+
 //Make-or-Buy
 Route::get('/make-or-buy', function () {
     return Inertia::render('MakeOrBuy');
@@ -71,6 +81,7 @@ Route::resource('/deckungsbeitrag', DeckungsbeitragController::class)->only([
 
 Route::get('/getDeckungsbeitragsrechnungen', [DeckungsbeitragController::class, 'getDeckungsbeitragsrechnungen'])->name('getDeckungsbeitragsrechnungen');
 Route::get('/getAbweichungsrechnung', [AbweichungsanalysenController::class, 'getAbweichungsrechnung'])->name('getAbweichungsrechnung');
+Route::get('/getAbweichungsrechnungTabelle', [TabelleAbweichungsanalysenController::class, 'getAbweichungsrechnungTabelle'])->name('getAbweichungsrechnungTabelle');
 
 // Preisuntergrenze
 Route::resource('/preisuntergrenze', PreisuntergrenzenController::class)->only([

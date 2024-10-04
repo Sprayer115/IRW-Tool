@@ -253,11 +253,11 @@ function calculateLang(row) {
         <!-- Modal Window for Adding a Row -->
         <div v-if="showModal" class="modal-overlay">
           <div class="modal-content">
-            <h3>Wählen Sie eine Zeile aus:</h3>
+            <h3>Select a Row</h3>
             <table class="table">
               <thead>
                 <tr>
-                  <th>Auswahl</th>
+                  <th>Select</th>
                   <th>Name</th>
                   <th>Stückzahl</th>
                   <th>VarKosten</th>
@@ -274,8 +274,8 @@ function calculateLang(row) {
                 </tr>
               </tbody>
             </table>
-            <button @click="applySelectedRow">Anweden</button>
-            <button @click="showModal = false">Schließen</button>
+            <button @click="applySelectedRow">Apply</button>
+            <button @click="showModal = false">Close</button>
           </div>
         </div>
   
@@ -300,7 +300,7 @@ function calculateLang(row) {
   background-color: rgb(141, 141, 141);
   padding: 20px;
   border-radius: 10px;
-  width: 800px;   /* Set a fixed width for the modal */
+  width: 600px;   /* Set a fixed width for the modal */
   max-height: 80%; /* Set a maximum height and enable scrolling if needed */
   overflow-y: auto; /* Enable vertical scrolling if content overflows */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a box shadow for a popup effect */
@@ -310,7 +310,7 @@ function calculateLang(row) {
   background-color: rgb(255, 255, 255);
   padding: 20px;
   border-radius: 10px;
-  width: calc(100vw - 2 * 200px);   /* Set a fixed width for the modal */
+  width: 600px;   /* Set a fixed width for the modal */
   max-height: 80%; /* Set a maximum height and enable scrolling if needed */
   overflow-y: auto; /* Enable vertical scrolling if content overflows */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a box shadow for a popup effect */

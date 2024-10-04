@@ -31,38 +31,38 @@ const proxyChecked = computed({
     },
 });
 
-//Sollkosten
-const sollkosten = ref(null);
-const fixkosten = ref(null);
+//Eingeben
+const varSummeKosten = ref(null);
+const geplanteLeistung = ref(null);
+const IstLeistung = ref(null);
+const SummeIstKosten = ref(null);
+const verrechneteLeistungGesamt = ref(null);
+//Berechnen
+
 const varPlanverrechnungssatz = ref(null);
-const istLeistung = ref(null);
+const gesPlanverrechnungssatz = ref(null);
+const verrechneteLeistungIst = ref(null);
+const abweichung = ref(null);
+const IstKostensatz = ref(null);
 
-//Verbrauchsabweichung
-const verbrauchsabweichung = ref(null);
-const istKosten = ref(null);
-const sollKosten = ref(null);
-
-//Beschäftigungsabweichung
-const beschaeftAbweichung = ref(null);
-const istKostenVerechneteLeistung = ref(null);
-
-//Gesamtabweichung
-const gesamtabweichung = ref(null);
-
+const selectedRow = ref(null); // To hold the selected row in the modal
 const rows = ref([]);
+const rowsP = ref([]);
+const showModalDetail = ref(false);
 
 onMounted(() => {
     rows.value = props.items.map(item => ({
         id: item.id,  // Ensure you have an ID field for deleting rows later
-        fixkosten: item.fixkosten,
+        varSummeKosten: item.varSummeKosten,
+        geplanteLeistung: item.geplanteLeistung,
+        IstLeistung: item.IstLeistung,
+        SummeIstKosten: item.SummeIstKosten,
+        verrechneteLeistungGesamt: item.verrechneteLeistungGesamt,
         varPlanverrechnungssatz: item.varPlanverrechnungssatz,
-        istLeistung: item.istLeistung,
-        verbrauchsabweichung: item.verbrauchsabweichung,
-        istKosten: item.istKosten,
-        sollKosten: item.sollKosten,
-        beschaeftAbweichung: item.beschaeftAbweichung,
-        istKostenVerechneteLeistung: item.istKostenVerechneteLeistung,
-        gesamtabweichung: item.gesamtabweichung,
+        gesPlanverrechnungssatz: item.gesPlanverrechnungssatz,
+        verrechneteLeistungIst: item.verrechneteLeistungIst,
+        abweichung: item.abweichung,
+        IstKostensatz: item.IstKostensatz,
         neueSpalte: null,
     }));
 });
@@ -70,29 +70,31 @@ onMounted(() => {
 async function addRow() {
     try {
         const newRow = {
-            fixkosten: fixkosten.value, // Use month difference
+            varSummeKosten: varSummeKosten.value, // Use month difference
+            geplanteLeistung: geplanteLeistung.value,
+            IstLeistung: IstLeistung.value,
+            SummeIstKosten: SummeIstKosten.value,
+            verrechneteLeistungGesamt: verrechneteLeistungGesamt.value,
             varPlanverrechnungssatz: varPlanverrechnungssatz.value,
-            istLeistung: istLeistung.value,
-            verbrauchsabweichung: verbrauchsabweichung.value,
-            istKosten: istKosten.value,
-            sollKosten: sollKosten.value,
-            beschaeftAbweichung: beschaeftAbweichung.value,
-            istKostenVerechneteLeistung: istKostenVerechneteLeistung.value,
-            gesamtabweichung: gesamtabweichung.value,
+            gesPlanverrechnungssatz: gesPlanverrechnungssatz.value,
+            verrechneteLeistungIst: verrechneteLeistungIst.value,
+            abweichung: abweichung.value,
+            IstKostensatz: IstKostensatz.value,
         };
 
         try{
-            newRow.sollKosten = calculateSK(newRow);
-            newRow.verbrauchsabweichung = calculateVA(newRow);
-            newRow.beschaeftAbweichung = calculateBA(newRow);
-            newRow.gesamtabweichung = calculateGA(newRow);
+            newRow.varPlanverrechnungssatz = calculateVPRS(newRow);
+            newRow.gesPlanverrechnungssatz = calculateGPRS(newRow);
+            newRow.verrechneteLeistungIst = calculateVLI(newRow);
+            newRow.abweichung = calculateA(newRow);
+            newRow.IstKostensatz = calculateIKS(newRow);
             console.log(newRow);
         }catch(error){
             console.error('Error setting functions:', error)
         }
         
 
-        const response = await axios.post('/abweichungsanalyse', newRow);
+        const response = await axios.post('/abweichungsanalysetabelle', newRow);
         
         if (response.data) {
             rows.value.push({
@@ -104,11 +106,12 @@ async function addRow() {
     } catch (error) {
         console.error('Error adding row:', error);
     }
+    rowsP.value = addRowFromExist();
 }
 
 async function deleteRow(id, index) {
     try {
-        const response = await axios.delete(`/abweichungsanalyse/${id}`);
+        const response = await axios.delete(`/abweichungsanalysetabelle/${id}`);
         
         if (response.data) {
             rows.value.splice(index, 1); // Remove row from the array
@@ -116,57 +119,95 @@ async function deleteRow(id, index) {
     } catch (error) {
         console.error('Error deleting row:', error);
     }
+    rowsP.value = addRowFromExist();
+}
+
+async function addRowFromExist() {
+    await fetchRowsFromAbweichungsanalyse();
+}
+
+async function fetchRowsFromAbweichungsanalyse() {
+    try {
+        const response = await axios.get('/getAbweichungsrechnungTabelle');
+        rowsP.value = response.data[0];
+    } catch (error) {
+        console.error('Error fetching rows:', error);
+    }
 }
 
 function clearInputs() {
-    fixkosten.value = null;
-    varPlanverrechnungssatz.value = null;
-    istLeistung.value = null;
-    istKosten.value = null;
-    istKostenVerechneteLeistung.value = null;
+    verrechneteLeistungGesamt.value = null;
+    varSummeKosten.value = null;
+    geplanteLeistung.value = null;
+    IstLeistung.value = null;
+    SummeIstKosten.value = null;
 }
 
-function calculateBA(row) {
+function calculateVPRS(row) {
     let wert = 0;
-    if (row.sollKosten && row.istKostenVerechneteLeistung) {
-        wert = row.sollKosten - row.istKostenVerechneteLeistung;
+    if (row.varSummeKosten && row.geplanteLeistung) {
+        wert = row.varSummeKosten / row.geplanteLeistung;
     }
-    row.beschaeftAbweichung = wert;
+    row.varPlanverrechnungssatz = wert;
     return wert;
 }
 
-function calculateGA(row) {
+function calculateGPRS(row) {
     let wert = 0;
-    if (row.beschaeftAbweichung && row.verbrauchsabweichung) {
-        wert = row.beschaeftAbweichung - row.verbrauchsabweichung;
+    if (row.verrechneteLeistungGesamt && row.geplanteLeistung) {
+        wert = row.verrechneteLeistungGesamt / row.geplanteLeistung;
     }
-    row.gesamtabweichung = wert;
+    row.gesPlanverrechnungssatz = wert;
     return wert;
 }
 
-function calculateSK(row){
+function calculateVLI(row) {
     let wert = 0;
-    console.log("fixKosten"+row.fixkosten);
-    console.log("varPlanverrechnungssatz"+row.varPlanverrechnungssatz);
-    console.log("istLeistung"+row.istLeistung);
-    if(row.fixkosten && row.varPlanverrechnungssatz && row.istLeistung)
-    {
-        wert = row.fixkosten + (row.varPlanverrechnungssatz * row.istLeistung);
+    if (row.IstLeistung && row.gesPlanverrechnungssatz) {
+        wert = row.IstLeistung * row.gesPlanverrechnungssatz;
     }
-    console.log("wert:"+ wert)
-    row.sollKosten = wert;
+    row.verrechneteLeistungIst = wert;
     return wert;
 }
 
-function calculateVA(row){
+function calculateA(row) {
     let wert = 0;
-    if(row.istKosten && row.sollKosten)
-    {
-        wert = row.istKosten - row.sollKosten;
+    if (row.SummeIstKosten && row.verrechneteLeistungIst) {
+        wert = row.SummeIstKosten - row.verrechneteLeistungIst;
     }
-    row.verbrauchsabweichung = wert;
+    row.abweichung = wert;
     return wert;
 }
+
+function calculateIKS(row) {
+    let wert = 0;
+    if (row.SummeIstKosten && row.IstLeistung) {
+        wert = row.SummeIstKosten / row.IstLeistung;
+    }
+    row.IstKostensatz = wert;
+    return wert;
+}
+
+
+
+function openDetailModal(row) {
+      selectedRow.value = row; // Set the selected row for displaying details
+      showModalDetail.value = true; // Open the modal
+    }
+
+function applySelectedRow() {
+    if (selectedRow.value) {
+        name.value = selectedRow.value.name;
+        stueckZahl.value = selectedRow.value.stueckZahl;
+        varKostenProStueck.value = selectedRow.value.varKostenProStueck;
+        fixkosten.value = selectedRow.value.fixkosten;
+        showModal.value = false; // Close modal
+    } else {
+        alert("Please select a row to apply.");
+    }
+}
+
+rowsP.value = addRowFromExist();
 </script>
 
 
@@ -183,108 +224,112 @@ function calculateVA(row){
           <div class="py-12 m-lg-4">
             <div class="input-area"
                 style="display: grid; grid-template-columns: 3fr 2fr; grid-gap: 20px; align-items: center; justify-content: center; justify-items: center; max-width: 600px; margin: 0 auto;">
-
+                <img src='/images/klausur.png' style="justify-self: stretch; max-width: 500px;">
+                <div></div>
                 <!-- Label and Date Picker in Grid -->
-                <label for="input1" style="justify-self: start;">Fixkosten:
+                <label for="input1" style="justify-self: start;">verrechneteLeistungGesamt:
                     <span id="tooltip-aufwand" class="tooltip-container">
                         <sup class="information">i</sup>
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="fixkosten" id="input1" style="max-width: 250px;" />
+                <input type="number" v-model="verrechneteLeistungGesamt" id="input1" style="max-width: 250px;" />
 
                 <!-- variabler Planverrechnungssatz Input -->
-                <label for="input2" style="justify-self: start;">variabler Planverrechnungssatz:  
+                <label for="input2" style="justify-self: start;">varSummeKosten:  
                     <span id="tooltip-aufwand" class="tooltip-container">
                         <sup class="information">i</sup>
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="varPlanverrechnungssatz" id="input2" style="max-width: 250px;" />
+                <input type="number" v-model="varSummeKosten" id="input2" style="max-width: 250px;" />
                 
                 <!-- IstLeistung Input -->
-                <label for="input3" style="justify-self: start;">Ist Leistung:  
+                <label for="input3" style="justify-self: start;">geplanteLeistung:  
                     <span id="tooltip-aufwand" class="tooltip-container">
                         <sup class="information">i</sup>
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="istLeistung" id="input3" style="max-width: 250px;" />
-
-                <!-- IstKosten Input -->
-                <label for="input4" style="justify-self: start;">Ist Kosten:  
-                    <span id="tooltip-aufwand" class="tooltip-container">
-                        <sup class="information">i</sup>
-                        <span class="tooltip-text">Definition für den Aufwand</span>
-                    </span>
-                </label>
-                <input type="number" v-model="istKosten" id="input4" style="max-width: 250px;" />
+                <input type="number" v-model="geplanteLeistung" id="input3" style="max-width: 250px;" />
 
                 <!-- istKostenVerrechneteLeistung Input -->
-                <label for="input1" style="justify-self: start;">IstKosten verrechnete Leistung:  
+                <label for="input1" style="justify-self: start;">IstLeistung:  
                     <span id="tooltip-aufwand" class="tooltip-container">
                         <sup class="information">i</sup>
                         <span class="tooltip-text">Definition für den Aufwand</span>
                     </span>
                 </label>
-                <input type="number" v-model="istKostenVerechneteLeistung" id="input6" style="max-width: 250px;" />
+                <input type="number" v-model="IstLeistung" id="input6" style="max-width: 250px;" />
+
+                <!-- istKostenVerrechneteLeistung Input -->
+                <label for="input1" style="justify-self: start;">SummeIstKosten:  
+                    <span id="tooltip-aufwand" class="tooltip-container">
+                        <sup class="information">i</sup>
+                        <span class="tooltip-text">Definition für den Aufwand</span>
+                    </span>
+                </label>
+                <input type="number" v-model="SummeIstKosten" id="input6" style="max-width: 250px;" />
 
                 <!-- Empty space to align button -->
                 <div></div>
                 <button class="button bg-primary" style="justify-self: start; max-width: 150px;" @click="addRow">Berechnen</button>
+                <div></div>
             </div>
             <table class="table">
-    <thead>
-        <tr>
-            <th class="bg-success">SollKosten</th>
-            <th class="bg-warning">Verbrauchsabweichung</th>
-            <th>Beschäftigungsabweichung</th>
-            <th>Gesamtabweichung</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr v-for="(row, index) in rows" :key="index">
-            <!-- Render first table's row -->
-            <td>{{ row.sollKosten }}</td>
-            <td>{{ row.verbrauchsabweichung }}</td>
-            <td>{{ row.beschaeftAbweichung }}</td>
-            <td>{{ row.gesamtabweichung }}</td>
-            <td>
-                <button class="button bg-danger" @click="deleteRow(row.id, index)">löschen</button>
-            </td>
-        </tr>
-
-        <!-- Collapsible details row immediately after each data row -->
-        <tr v-for="(row, index) in rows" :key="'collapse-row-' + index">
-            <td colspan="5">
-                <div class="accordion" :id="'accordionExample-' + index">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" :id="'heading-' + index">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-' + index" aria-expanded="false" :aria-controls="'collapse-' + index">
-                                Details for row {{ index + 1 }}
-                            </button>
-                        </h2>
-                        <div :id="'collapse-' + index" class="accordion-collapse collapse" :aria-labelledby="'heading-' + index">
-                            <div class="accordion-body">
-                                <strong>Daten:</strong> Hier die Details anzeigen
-                                <ul>
-                                    <li>SollKosten: {{ row.sollKosten }}</li>
-                                    <li>Verbrauchsabweichung: {{ row.verbrauchsabweichung }}</li>
-                                    <li>Beschäftigungsabweichung: {{ row.beschaeftAbweichung }}</li>
-                                    <li>Gesamtabweichung: {{ row.gesamtabweichung }}</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-
+          <thead>
+            <tr>
+              <th class="bg-success">verrechneteLeistungGesamt</th>
+              <th class="bg-warning">varPlanverrechnungssatz</th>
+              <th>gesPlanverrechnungssatz</th>
+              <th>verrechneteLeistungIst</th>
+              <th>abweichung</th>
+              <th>IstKostensatz</th>
+              <th>Aktionen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, index) in rowsP" :key="index">
+              <td>{{ row.verrechneteLeistungGesamt }}</td>
+              <td>{{ row.varPlanverrechnungssatz }}</td>
+              <td>{{ row.gesPlanverrechnungssatz }}</td>
+              <td>{{ row.verrechneteLeistungIst }}</td>
+              <td>{{ row.abweichung }}</td>
+              <td>{{ row.IstKostensatz }}</td>
+              <td>
+                <button class="button bg-info" @click="openDetailModal(row)">Details</button>
+                <button class="button bg-danger" @click="deleteRow(row.id, index)">Löschen</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
           </div>
+                  <!-- Modal Window for Row Details -->
+        <div v-if="showModalDetail" class="modal-overlay">
+          <div class="modal-content-details" id="modalContent">
+            <h3>Details für {{ selectedRow?.name || '' }}</h3>
+            <p><strong>kurzfristige Preisuntergrenze:</strong> {{ selectedRow?.kurzPreisUG || '' }}</p>
+
+            <br>
+            <strong>kurzfristige Preisuntergrenze für {{ selectedRow?.name }}:</strong>
+                                 
+            <p> kurzfristige Preisuntergrenze = ( Verkaufspreis pro Stück₍<sub>{{ selectedRow?.name }}</sub>₎ – Variable Kosten pro Stück₍<sub>{{ selectedRow?.name }}</sub>₎ ) × Stückzahl₍<sub>{{ selectedRow?.name }}</sub>₎</p>
+            <!-- <p> Deckungsbeitrag = {{ row.preisProStueck }} – {{ row.varKostenProStueck }} × {{ row.stueckZahl }}</p>-->
+             <p> kurzfristige Preisuntergrenze = {{ selectedRow?.kurzPreisUG }} </p>
+            <br> 
+            <strong>langfristige Preisuntergrenze für {{ selectedRow?.name }}:</strong>
+            <p> langfristige Preisuntergrenze = Deckungsbeitrag₍<sub>{{ selectedRow?.name }}</sub>₎ – Fixkosten₍<sub>{{ selectedRow?.name }}</sub>₎</p>
+            <p> langfristige Preisuntergrenze = {{ selectedRow?.stueckZahl }} – {{ selectedRow?.stueckZahl }}</p>
+            <p> langfristige Preisuntergrenze = {{ selectedRow?.langPreisUG }}</p>
+            
+            <p><strong>langfristige Preisuntergrenze:</strong> {{ selectedRow?.langPreisUG || '' }}</p>
+        <div>
+            <button @click="exportToPDF">Export as PDF</button>
+            <div></div>
+            <button @click="showModalDetail = false">Close</button>
+        </div>
+          </div>
+        </div>
       </AuthenticatedLayout>
     </div>
 

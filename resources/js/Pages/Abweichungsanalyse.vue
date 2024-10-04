@@ -122,8 +122,6 @@ async function deleteRow(id, index) {
 async function fetchRowsFromAbweichungsanalyse() {
     try {
         const response = await axios.get('/getAbweichungsrechnung');
-        console.log(("response"));
-        console.log((response.data[0]));
         rowsP.value = response.data[0];
     } catch (error) {
         console.error('Error fetching rows:', error);
