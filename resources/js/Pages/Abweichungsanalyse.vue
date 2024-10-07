@@ -3,11 +3,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
-
 
 const emit = defineEmits(['update:checked']);
 
@@ -25,7 +20,6 @@ const proxyChecked = computed({
     get() {
         return props.checked;
     },
-
     set(val) {
         emit('update:checked', val);
     },
@@ -48,29 +42,34 @@ const istKostenVerechneteLeistung = ref(null);
 
 //Gesamtabweichung
 const gesamtabweichung = ref(null);
-
 const rows = ref([]);
+const rowsP = ref([]);
 
+// Populating rows on component mount
 onMounted(() => {
-    rows.value = props.items.map(item => ({
-        id: item.id,  // Ensure you have an ID field for deleting rows later
-        fixkosten: item.fixkosten,
-        varPlanverrechnungssatz: item.varPlanverrechnungssatz,
-        istLeistung: item.istLeistung,
-        verbrauchsabweichung: item.verbrauchsabweichung,
-        istKosten: item.istKosten,
-        sollKosten: item.sollKosten,
-        beschaeftAbweichung: item.beschaeftAbweichung,
-        istKostenVerechneteLeistung: item.istKostenVerechneteLeistung,
-        gesamtabweichung: item.gesamtabweichung,
-        neueSpalte: null,
-    }));
+    if (props.items && props.items.length > 0) {
+        rows.value = props.items.map(item => ({
+            id: item.id,
+            fixkosten: item.fixkosten,
+            varPlanverrechnungssatz: item.varPlanverrechnungssatz,
+            istLeistung: item.istLeistung,
+            verbrauchsabweichung: item.verbrauchsabweichung,
+            istKosten: item.istKosten,
+            sollKosten: item.sollKosten,
+            beschaeftAbweichung: item.beschaeftAbweichung,
+            istKostenVerechneteLeistung: item.istKostenVerechneteLeistung,
+            gesamtabweichung: item.gesamtabweichung,
+            neueSpalte: null,
+        }));
+    } else {
+        console.warn("No initial data provided for 'props.items'.");
+    }
 });
 
 async function addRow() {
     try {
         const newRow = {
-            fixkosten: fixkosten.value, // Use month difference
+            fixkosten: fixkosten.value,
             varPlanverrechnungssatz: varPlanverrechnungssatz.value,
             istLeistung: istLeistung.value,
             verbrauchsabweichung: verbrauchsabweichung.value,
@@ -82,10 +81,10 @@ async function addRow() {
         };
 
         try{
-            newRow.sollKosten = calculateSK(newRow);
-            newRow.verbrauchsabweichung = calculateVA(newRow);
-            newRow.beschaeftAbweichung = calculateBA(newRow);
-            newRow.gesamtabweichung = calculateGA(newRow);
+        newRow.sollKosten = calculateSK(newRow);
+        newRow.verbrauchsabweichung = calculateVA(newRow);
+        newRow.beschaeftAbweichung = calculateBA(newRow);
+        newRow.gesamtabweichung = calculateGA(newRow);
             console.log(newRow);
         }catch(error){
             console.error('Error setting functions:', error)
@@ -104,6 +103,7 @@ async function addRow() {
     } catch (error) {
         console.error('Error adding row:', error);
     }
+    rowsP.value = addRowFromExist();
 }
 
 async function deleteRow(id, index) {
@@ -111,13 +111,28 @@ async function deleteRow(id, index) {
         const response = await axios.delete(`/abweichungsanalyse/${id}`);
         
         if (response.data) {
-            rows.value.splice(index, 1); // Remove row from the array
+            rows.value.splice(index, 1);  // Remove the row from the array
         }
     } catch (error) {
         console.error('Error deleting row:', error);
     }
+    rowsP.value = addRowFromExist();
 }
 
+async function fetchRowsFromAbweichungsanalyse() {
+    try {
+        const response = await axios.get('/getAbweichungsrechnung');
+        rowsP.value = response.data[0];
+    } catch (error) {
+        console.error('Error fetching rows:', error);
+    }
+}
+
+async function addRowFromExist() {
+    await fetchRowsFromAbweichungsanalyse();
+}
+
+// Utility functions to clear inputs
 function clearInputs() {
     fixkosten.value = null;
     varPlanverrechnungssatz.value = null;
@@ -126,6 +141,7 @@ function clearInputs() {
     istKostenVerechneteLeistung.value = null;
 }
 
+// Calculation functions for each type of cost
 function calculateBA(row) {
     let wert = 0;
     if (row.sollKosten && row.istKostenVerechneteLeistung) {
@@ -146,40 +162,35 @@ function calculateGA(row) {
 
 function calculateSK(row){
     let wert = 0;
-    console.log("fixKosten"+row.fixkosten);
-    console.log("varPlanverrechnungssatz"+row.varPlanverrechnungssatz);
-    console.log("istLeistung"+row.istLeistung);
-    if(row.fixkosten && row.varPlanverrechnungssatz && row.istLeistung)
-    {
+    if(row.fixkosten && row.varPlanverrechnungssatz && row.istLeistung) {
         wert = row.fixkosten + (row.varPlanverrechnungssatz * row.istLeistung);
     }
-    console.log("wert:"+ wert)
     row.sollKosten = wert;
     return wert;
 }
 
 function calculateVA(row){
     let wert = 0;
-    if(row.istKosten && row.sollKosten)
-    {
+    if(row.istKosten && row.sollKosten) {
         wert = row.istKosten - row.sollKosten;
     }
     row.verbrauchsabweichung = wert;
     return wert;
 }
+
+rowsP.value = addRowFromExist();
 </script>
-
-
 
 <template>
     <div>
       <Head title="Abweichungsanalyse">
       </Head>
   
-      <AuthenticatedLayout>
+      <AuthenticatedLayout :hideNavbar="true" >
           <template #header>
               <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abweichungsanalyse</h2>
           </template>
+
           <div class="py-12 m-lg-4">
             <div class="input-area"
                 style="display: grid; grid-template-columns: 3fr 2fr; grid-gap: 20px; align-items: center; justify-content: center; justify-items: center; max-width: 600px; margin: 0 auto;">
@@ -229,13 +240,15 @@ function calculateVA(row){
                 </label>
                 <input type="number" v-model="istKostenVerechneteLeistung" id="input6" style="max-width: 250px;" />
 
-                <!-- Empty space to align button -->
                 <div></div>
                 <button class="button bg-primary" style="justify-self: start; max-width: 150px;" @click="addRow">Berechnen</button>
+                <div></div>
             </div>
+
+            <!-- Display the Results in the Table -->
             <table class="table">
-    <thead>
-        <tr>
+                <thead>
+                    <tr>
             <th class="bg-success">SollKosten
                 <span id="tooltip-sollKosten" class="tooltip-container">
                     <sup class="information">i</sup>
@@ -260,53 +273,26 @@ function calculateVA(row){
                     <span class="tooltip-text">Gesamtabweichung: Beschäftigungsabweichung - Verbrauchsabweichung</span>
                 </span>
             </th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr v-for="(row, index) in rows" :key="index">
-            <td>{{ row.sollKosten }}</td>
-            <td>{{ row.verbrauchsabweichung }}</td>
-            <td>{{ row.beschaeftAbweichung }}</td>
-            <td>{{ row.gesamtabweichung }}</td>
-            <td>
-                <button class="button bg-danger" @click="deleteRow(row.id, index)">löschen</button>
-            </td>
-        </tr>
-        <!-- Collapsible details row immediately after each data row -->
-        <tr v-for="(row, index) in rows" :key="'collapse-row-' + index">
-            <td colspan="5">
-                <div class="accordion" :id="'accordionExample-' + index">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" :id="'heading-' + index">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-' + index" aria-expanded="false" :aria-controls="'collapse-' + index">
-                                Details for row {{ index + 1 }}
-                            </button>
-                        </h2>
-                        <div :id="'collapse-' + index" class="accordion-collapse collapse" :aria-labelledby="'heading-' + index">
-                            <div class="accordion-body">
-                                <strong>Daten:</strong> Idee ist das wir die Rechnung hier Abbilden. Sieht glaube ich einfach clean aus. Also ich mach das
-                                <ul>
-                                    <li>SollKosten: {{ row.sollKosten }}</li>
-                                    <li>Verbrauchsabweichung: {{ row.verbrauchsabweichung }}</li>
-                                    <li>Beschäftigungsabweichung: {{ row.beschaeftAbweichung }}</li>
-                                    <li>Gesamtabweichung: {{ row.gesamtabweichung }}</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(row, index) in rowsP" :key="index">
+                        <td>{{ row.sollKosten }}</td>
+                        <td>{{ row.verbrauchsabweichung }}</td>
+                        <td>{{ row.beschaeftAbweichung }}</td>
+                        <td>{{ row.gesamtabweichung }}</td>
+                        <td>
+                            <button class="button bg-danger" @click="deleteRow(row.id, index)">löschen</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
           </div>
       </AuthenticatedLayout>
     </div>
-
 </template>
+
 
 <style>
 
