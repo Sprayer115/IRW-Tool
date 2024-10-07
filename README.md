@@ -66,3 +66,9 @@ Frontend:
 ```
 npm run dev
 ```
+
+
+# Deploy
+sudo ./delpoy
+sudo env "PATH=$PATH" npm install
+sudo env "PATH=$PATH" npm run build
