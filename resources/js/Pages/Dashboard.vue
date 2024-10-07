@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link as NavLink } from '@inertiajs/vue3';
 </script>
 
 <template>
@@ -15,10 +15,139 @@ import { Head } from '@inertiajs/vue3';
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="bg-white2 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6 text-gray-900 dark:text-gray-100">You're logged in!</div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- First Column -->
+                                <div class="space-y-4">
+                                    <NavLink :href="route('abgrenzungsrechnung.index')" :active="route().current('abgrenzungsrechnung.index')" class="block mb-4">
+                                        <div class="bg-white2 dark:bg-gray-700 rounded-lg p-4 shadow-md">
+                                            <h3 class="text-lg font-semibold mb-2 dashboard-link-title">Abgrenzungsrechnung</h3>
+                                            <p class="text-gray-600 dark:text-gray-300">Berechnung von Periodenabgrenzungen für eine korrekte Buchhaltung.</p>
+                                        </div>
+                                    </NavLink>
+                                    <NavLink :href="route('abweichungsanalyse.index')" :active="route().current('abweichungsanalyse.index')" class="block mb-4">
+                                        <div class="bg-white2 dark:bg-gray-700 rounded-lg p-4 shadow-md">
+                                            <h3 class="text-lg font-semibold mb-2 dashboard-link-title">Abweichungsanalyse</h3>
+                                            <p class="text-gray-600 dark:text-gray-300">Analyse von Abweichungen zwischen Ist- und Sollwerten.</p>
+                                        </div>
+                                    </NavLink>
+                                    
+                                    <NavLink :href="route('makeOrBuy')" :active="route().current('makeOrBuy')" class="block mb-4">
+                                        <div class="bg-white2 dark:bg-gray-700 rounded-lg p-4 shadow-md">
+                                            <h3 class="text-lg font-semibold mb-2 dashboard-link-title">Make or Buy</h3>
+                                            <p class="text-gray-600 dark:text-gray-300">Entscheidungshilfe für Eigenfertigung oder Fremdbezug.</p>
+                                        </div>
+                                    </NavLink>
+                                    <NavLink :href="route('breakEven.index')" :active="route().current('breakEven.index')" class="block mb-4">
+                                        <div class="bg-white2 dark:bg-gray-700 rounded-lg p-4 shadow-md">
+                                            <h3 class="text-lg font-semibold mb-2 dashboard-link-title">Break Even</h3>
+                                            <p class="text-gray-600 dark:text-gray-300">Berechnung des Gewinnschwellenpunkts.</p>
+                                        </div>
+                                    </NavLink>
+                                </div>
+
+                                <!-- Second Column -->
+                                <div class="space-y-4">
+                                    <NavLink :href="route('InnerbetrieblicheLeistungsverrechnung')" :active="route().current('InnerbetrieblicheLeistungsverrechnung')" class="block mb-4">
+                                        <div class="bg-white2 dark:bg-gray-700 rounded-lg p-4 shadow-md">
+                                            <h3 class="text-lg font-semibold mb-2 dashboard-link-title">Innerbetriebliche Leistungsverrechnung</h3>
+                                            <p class="text-gray-600 dark:text-gray-300">Verrechnung von Leistungen zwischen Abteilungen.</p>
+                                        </div>
+                                    </NavLink>
+                                    <NavLink :href="route('deckungsbeitragrechnung.index')" :active="route().current('deckungsbeitragrechnung.index')" class="block mb-4">
+                                        <div class="bg-white2 dark:bg-gray-700 rounded-lg p-4 shadow-md">
+                                            <h3 class="text-lg font-semibold mb-2 dashboard-link-title">Deckungsbeitrag</h3>
+                                            <p class="text-gray-600 dark:text-gray-300">Berechnung des Beitrags zur Deckung der Fixkosten.</p>
+                                        </div>
+                                    </NavLink>
+                                    
+                                    <NavLink :href="route('preisuntergrenze.index')" :active="route().current('preisuntergrenze.index')" class="block mb-4">
+                                        <div class="bg-white2 dark:bg-gray-700 rounded-lg p-4 shadow-md">
+                                            <h3 class="text-lg font-semibold mb-2 dashboard-link-title">Preisuntergrenze</h3>
+                                            <p class="text-gray-600 dark:text-gray-300">Ermittlung der minimalen Preisgrenze für Produkte oder Dienstleistungen.</p>
+                                        </div>
+                                    </NavLink>
+                                    <NavLink :href="route('Maschinenstundensatzrechnung')" :active="route().current('Maschinenstundensatzrechnung')" class="block mb-4">
+                                        <div class="bg-white2 dark:bg-gray-700 rounded-lg p-4 shadow-md">
+                                            <h3 class="text-lg font-semibold mb-2 dashboard-link-title">Maschinenstundensatzrechnung</h3>
+                                            <p class="text-gray-600 dark:text-gray-300">Berechnung der Kosten pro Maschinenstunde.</p>
+                                        </div>
+                                    </NavLink>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </AuthenticatedLayout>
     </div>
 </template>
+
+<style scoped>
+.grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.space-y-6 > * + * {
+    margin-top: 1.5rem;
+}
+
+.bg-white2.dark\:bg-gray-700 {
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover .bg-white2.dark\:bg-gray-700 {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.dashboard-link-title {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+    color: inherit;
+}
+
+p {
+    font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* For light mode */
+.bg-white2 .dashboard-link-title {
+    color: rgb(156 163 175);
+}
+
+/* For dark mode */
+.dark .bg-gray-700 .dashboard-link-title {
+    color: #e2e8f0;
+}
+
+/* Ensure all NavLink containers have the same height */
+.space-y-4 {
+    display: flex;
+    flex-direction: column;
+}
+
+.space-y-4 > * {
+    flex: 1;
+}
+
+.bg-white2.dark\:bg-gray-700 {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+</style>
