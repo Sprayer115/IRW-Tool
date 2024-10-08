@@ -289,10 +289,8 @@ rowsP.value = addRowFromExist();
                 </label>
                 <input type="number" v-model="istKostenVerechneteLeistung" id="input6" style="max-width: 250px;" />
 
-                <div></div>
-                <div>
                 <button class="button bg-primary" style="justify-self: start; max-width: 150px;" @click="addRow">Berechnen</button>
-                <button class="button bg-primary" style="justify-self: end;" @click="addRowFromExistFromTabelle">Zeile hinzufügen</button></div>
+                <button class="button bg-primary" style="justify-self: end;" @click="addRowFromExistFromTabelle">Zeile hinzufügen</button>
                 <div></div>
             </div>
 
