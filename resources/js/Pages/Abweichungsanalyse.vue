@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import html2pdf from 'html2pdf.js';
 
 const emit = defineEmits(['update:checked']);
 
@@ -44,6 +45,11 @@ const istKostenVerechneteLeistung = ref(null);
 const gesamtabweichung = ref(null);
 const rows = ref([]);
 const rowsP = ref([]);
+const rowsP2 = ref([]);
+
+const selectedRow = ref(null); // To hold the selected row in the modal
+const showModal = ref(false);  // Controls the modal visibility
+const showModalDetail = ref(false);
 
 // Populating rows on component mount
 onMounted(() => {
@@ -128,10 +134,42 @@ async function fetchRowsFromAbweichungsanalyse() {
     }
 }
 
+function exportToPDF(name) {
+    const element = document.getElementById('modalContent');
+  const opt = {
+    margin:       [0.5, 0.5],
+    filename:     `${name}.pdf`,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2 },
+    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+  html2pdf().from(element).set(opt).save();
+    }
+
 async function addRowFromExist() {
     await fetchRowsFromAbweichungsanalyse();
 }
 
+async function addRowFromExistFromTabelle() {
+    await fetchRowsFromTabelle();
+    showModal.value = true; // Open modal to select the row
+}
+
+async function fetchRowsFromTabelle() {
+    try {
+        const response = await axios.get('/getAbweichungsrechnungTabelle');
+        console.log(("response"));
+        console.log((response.data[0]));
+        rowsP2.value = response.data[0];
+    } catch (error) {
+        console.error('Error fetching rows:', error);
+    }
+}
+
+function openDetailModal(row) {
+      selectedRow.value = row; // Set the selected row for displaying details
+      showModalDetail.value = true; // Open the modal
+    }
 // Utility functions to clear inputs
 function clearInputs() {
     fixkosten.value = null;
@@ -149,6 +187,17 @@ function calculateBA(row) {
     }
     row.beschaeftAbweichung = wert;
     return wert;
+}
+
+function applySelectedRow() {
+    if (selectedRow.value) {
+        varPlanverrechnungssatz.value = selectedRow.value.varPlanverrechnungssatz;
+        istLeistung.value = selectedRow.value.IstLeistung;
+        istKosten.value = selectedRow.value.SummeIstKosten;
+        showModal.value = false;
+    } else {
+        alert("Please select a row to apply.");
+    }
 }
 
 function calculateGA(row) {
@@ -241,7 +290,9 @@ rowsP.value = addRowFromExist();
                 <input type="number" v-model="istKostenVerechneteLeistung" id="input6" style="max-width: 250px;" />
 
                 <div></div>
+                <div>
                 <button class="button bg-primary" style="justify-self: start; max-width: 150px;" @click="addRow">Berechnen</button>
+                <button class="button bg-primary" style="justify-self: end;" @click="addRowFromExistFromTabelle">Zeile hinzufügen</button></div>
                 <div></div>
             </div>
 
@@ -284,11 +335,79 @@ rowsP.value = addRowFromExist();
                         <td>{{ row.gesamtabweichung }}</td>
                         <td>
                             <button class="button bg-danger" @click="deleteRow(row.id, index)">löschen</button>
+                            <button class="button bg-info" @click="openDetailModal(row)">Details</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
           </div>
+                  <!-- Modal Window for Adding a Row -->
+        <div v-if="showModal" class="modal-overlay">
+          <div class="modal-content">
+            <h3>Wählen Sie eine Zeile aus:</h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Auswahl</th>
+                  <th>verrechneteLeistungGesamt</th>
+                  <th>varPlanverrechnungssatz</th>
+                  <th>gesPlanverrechnungssatz</th>
+                  <th>verrechneteLeistungIst</th>
+                  <th>abweichung</th>
+                  <th>IstKosten</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(row, index) in rowsP2" :key="index">
+                  <td><input type="radio" :value="row" v-model="selectedRow" /></td>
+                  <td>{{ row?.verrechneteLeistungGesamt}}</td>
+                  <td>{{ row?.varPlanverrechnungssatz}}</td>
+                  <td>{{ row?.gesPlanverrechnungssatz}}</td>
+                  <td>{{ row?.verrechneteLeistungIst}}</td>
+                  <td>{{ row.abweichung }}</td>
+                  <td>{{ row?.IstKostensatz}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <button @click="applySelectedRow">Anweden</button>
+            <button @click="showModal = false">Schließen</button>
+          </div>
+        </div>
+
+                          <!-- Modal Window for Row Details -->
+                          <div v-if="showModalDetail" class="modal-overlay">
+          <div class="modal-content-details" id="modalContent">
+            <h3>Details für:</h3>
+            <p><strong>Abweichungsanalyse</strong> {{ selectedRow?.kurzPreisUG || '' }}</p>
+
+            <br>
+            <strong>SollKosten:</strong>                    
+            <p> SollKosten = FixKosten + variabler Planverrechnungssatz × Ist Leistung</p>
+            <p> SollKosten = {{ selectedRow?.fixkosten }} + {{ selectedRow?.varPlanverrechnungssatz }} × {{ selectedRow?.istLeistung }}</p>
+            <p> <u>SollKosten = {{ selectedRow.sollKosten }} </u></p>
+            <br> 
+            <strong>Verbrauchsabweichung :</strong>
+            <p> Verbrauchsabweichung  = Ist Kosten – Soll Kosten </p>
+            <p> Verbrauchsabweichung  = {{ selectedRow?.istKosten }} / {{ selectedRow?.sollKosten }}</p>
+            <p><u> Verbrauchsabweichung  = {{ selectedRow?.verbrauchsabweichung }}</u></p>
+            <br> 
+            <p><strong>Beschäftigungsabweichung :</strong> </p>
+            <p> Beschäftigungsabweichung  = Soll Kosten – Ist Kosten verrechnete Leistung</p>
+            <p> Beschäftigungsabweichung  = {{ selectedRow?.sollKosten }} – {{ selectedRow?.istKostenVerechneteLeistung }}</p>
+            <p><u> Beschäftigungsabweichung  = {{ selectedRow?.beschaeftAbweichung }}</u></p>
+            <br> 
+            <p><strong>Gesamtabweichung 	:</strong> </p>
+            <p> Gesamtabweichung  = Beschäftigungsabweichung – Verbrauchsabweichung </p>
+            <p> Gesamtabweichung  = {{ selectedRow?.beschaeftAbweichung }} – {{ selectedRow?.verbrauchsabweichung }}</p>
+            <p><u> Gesamtabweichung 	= {{ selectedRow?.gesamtabweichung }}</u></p>
+            <br> 
+        <div>
+            <button @click="exportToPDF(`Abweichungsanalyse_${selectedRow.id}`)">Als PDF exportieren</button>
+            <div></div>
+            <button @click="showModalDetail = false">Schließen</button>
+        </div>
+          </div>
+        </div>
       </AuthenticatedLayout>
     </div>
 </template>

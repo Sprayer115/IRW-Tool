@@ -25,17 +25,17 @@ const props = defineProps({
       <nav v-if="!props.hideNavbar" class="bg-white2 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between h-16">
+                    <div class="flex justify-between h-16 mb-4">
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                    <img src='/images/SiteLogo2.png' class="block h-16 w-auto fill-current text-gray-800 dark:text-gray-400"/>
+                                    <img src='/images/SiteLogo2.png' class="block h-16 mt-4 w-auto fill-current text-gray-800 dark:text-gray-400"/>
                                 </Link>
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <div class="hidden space-x-8 sm:-my-px mt-4 sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
@@ -51,14 +51,12 @@ const props = defineProps({
                                 <NavLink :href="route('InnerbetrieblicheLeistungsverrechnung')" :active="route().current('InnerbetrieblicheLeistungsverrechnung')">
                                     Innerbetriebliche Leistungsverrechnung
                                 </NavLink>
-                                <NavLink :href="route('deckungsbeitragrechnung.index')" :active="route().current('deckungsbeitragrechnung.index')">
-                                    Deckungsbeitrag
-                                </NavLink>
-                                <NavLink :href="route('preisuntergrenze.index')" :active="route().current('preisuntergrenze.index')">
-                                    Preisuntergrenze
-                                </NavLink>
+
                                 <NavLink :href="route('GanzeAbweichungsanalyse')" :active="route().current('GanzeAbweichungsanalyse')">
                                     AbweichungsanalyseGanz
+                                </NavLink>
+                                <NavLink :href="route('OptimalesProduktionsProgramm')" :active="route().current('OptimalesProduktionsProgramm')">
+                                    OptimalesProduktionsprogramm
                                 </NavLink>
                                 <NavLink :href="route('Maschinenstundensatzrechnung')" :active="route().current('Maschinenstundensatzrechnung')">
                                     Maschinenstundensatzrechnung

@@ -77,6 +77,7 @@ Route::resource('/deckungsbeitrag', DeckungsbeitragController::class)->only([
 Route::get('/getDeckungsbeitragsrechnungen', [DeckungsbeitragController::class, 'getDeckungsbeitragsrechnungen'])->name('getDeckungsbeitragsrechnungen');
 Route::get('/getAbweichungsrechnung', [AbweichungsanalysenController::class, 'getAbweichungsrechnung'])->name('getAbweichungsrechnung');
 Route::get('/getAbweichungsrechnungTabelle', [TabelleAbweichungsanalysenController::class, 'getAbweichungsrechnungTabelle'])->name('getAbweichungsrechnungTabelle');
+Route::get('/getPreisuntergrenze', [PreisuntergrenzenController::class, 'getPreisuntergrenze'])->name('getPreisuntergrenze');
 
 // Preisuntergrenze
 Route::resource('/preisuntergrenze', PreisuntergrenzenController::class)->only([
@@ -91,6 +92,11 @@ Route::resource('/preisuntergrenze', PreisuntergrenzenController::class)->only([
 Route::get('/AA', function () {
     return Inertia::render('GanzeAbweichungsanalyse');
 })->middleware(['auth', 'verified'])->name('GanzeAbweichungsanalyse');
+
+//OptimalesProduktionsprogramm
+Route::get('/OPP', function () {
+    return Inertia::render('OptimalesProduktionsProgramm');
+})->middleware(['auth', 'verified'])->name('OptimalesProduktionsProgramm');
 
 // Define additional routes if needed
 //Route::get('/abweichungsanalyse-tabelle', [AbweichungsanalysenController::class, 'showTable'])->name('abweichungsanalyse.table');

@@ -41,6 +41,7 @@ const langPreisUG = ref(null);
 
 const rows = ref([]);
 const rowsP = ref([]);
+const rowsP2 = ref([]);
 const selectedRow = ref(null); // To hold the selected row in the modal
 const showModal = ref(false);  // Controls the modal visibility
 const showModalDetail = ref(false);
@@ -87,6 +88,7 @@ async function addRow() {
     } catch (error) {
         console.error('Error adding row:', error);
     }
+    rowsP2.value = addRowFromExistInSelf();
 }
 
 async function fetchRowsFromDeckungsbeitrag() {
@@ -100,9 +102,25 @@ async function fetchRowsFromDeckungsbeitrag() {
     }
 }
 
+async function fetchRowsFromPreisuntergrenze() {
+    try {
+        const response = await axios.get('/getPreisuntergrenze');
+        console.log(("response von getPreisuntergrenze"));
+        console.log((response.data[0]));
+        rowsP2.value = response.data[0];
+    } catch (error) {
+        console.error('Error fetching rows:', error);
+    }
+}
+
+
 async function addRowFromExist() {
     await fetchRowsFromDeckungsbeitrag();
     showModal.value = true; // Open modal to select the row
+}
+
+async function addRowFromExistInSelf() {
+    await fetchRowsFromPreisuntergrenze();
 }
 
 function openDetailModal(row) {
@@ -110,11 +128,11 @@ function openDetailModal(row) {
       showModalDetail.value = true; // Open the modal
     }
 
-function exportToPDF() {
+    function exportToPDF(name) {
     const element = document.getElementById('modalContent');
   const opt = {
-    margin:       1,
-    filename:     'Modal_Details.pdf',
+    margin:       [0.5, 0.5],
+    filename:     `${name}.pdf`,
     image:        { type: 'jpeg', quality: 0.98 },
     html2canvas:  { scale: 2 },
     jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -143,6 +161,7 @@ async function deleteRow(id, index) {
     } catch (error) {
         console.error('Error deleting row:', error);
     }
+    rowsP2.value = addRowFromExistInSelf();
 }
 
 function clearInputs() {
@@ -154,7 +173,7 @@ function clearInputs() {
 
 function calculateKurz(row) {
     let wert = row.varKostenProStueck || 0;
-    row.kurzPreisUG = wert;
+    row.kurzPreisUG = parseFloat(wert.toFixed(4));
     return wert;
 }
 
@@ -163,17 +182,18 @@ function calculateLang(row) {
     if (row.varKostenProStueck && row.fixkosten && row.stueckZahl) {
         wert = (row.fixkosten + row.varKostenProStueck * row.stueckZahl) / row.stueckZahl;
     }
-    row.langPreisUG = wert;
+    row.langPreisUG = parseFloat(wert.toFixed(4));
     return wert;
 }
+rowsP2.value = addRowFromExistInSelf();
 </script>
 
 <template>
     <div>
       <Head title="Preisuntergrenze"></Head>
-      <AuthenticatedLayout>
+      <AuthenticatedLayout  :hideNavbar="true">
         <template #header>
-          <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abweichungsanalyse</h2>
+          <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Preisuntergrenze</h2>
         </template>
   
         <div class="py-12 m-lg-4">
@@ -208,7 +228,7 @@ function calculateLang(row) {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(row, index) in rows" :key="index">
+              <tr v-for="(row, index) in rowsP2" :key="index">
                 <!-- Main Row Content -->
                 <td>{{ row?.name || '' }}</td>
                 <td>{{ row?.kurzPreisUG || '' }}</td>
@@ -243,9 +263,9 @@ function calculateLang(row) {
             
             <p><strong>langfristige Preisuntergrenze:</strong> {{ selectedRow?.langPreisUG || '' }}</p>
         <div>
-            <button @click="exportToPDF">Export as PDF</button>
+          <button @click="exportToPDF(`Preisuntergrenze_${selectedRow.name}_${selectedRow.id}`)">Als PDF exportieren</button>
             <div></div>
-            <button @click="showModalDetail = false">Close</button>
+            <button @click="showModalDetail = false">Schließen</button>
         </div>
           </div>
         </div>

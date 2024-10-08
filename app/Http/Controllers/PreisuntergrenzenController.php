@@ -56,4 +56,14 @@ class PreisuntergrenzenController extends Controller
             return response($e->getMessage(), HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function getPreisuntergrenze() 
+    {
+        try {
+            $data = Preisuntergrenzen::all();
+            return response()->json([$data], HttpResponse::HTTP_OK);
+        } catch (Exception $e) {
+            return response()->json([$e->getMessage()], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

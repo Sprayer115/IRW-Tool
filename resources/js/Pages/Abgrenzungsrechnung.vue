@@ -172,9 +172,6 @@ function calculateZAAW(row){
           <template #header>
               <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abgrenzungsrechnung</h2>
           </template>
-          <div style="background: red;">
-            <li>Tooltips hover oder click?</li>
-          </div>
           <div class="py-12 m-lg-4">
             <div class="input-area"
                 style="display: grid; grid-template-columns: 3fr 2fr; grid-gap: 20px; align-items: center; justify-content: center; justify-items: center; max-width: 600px; margin: 0 auto;">

@@ -25,7 +25,7 @@ import { Head, Link as NavLink } from '@inertiajs/vue3';
                                             <p class="text-gray-600 dark:text-gray-300">Berechnung von Periodenabgrenzungen für eine korrekte Buchhaltung.</p>
                                         </div>
                                     </NavLink>
-                                    <NavLink :href="route('abweichungsanalyse.index')" :active="route().current('abweichungsanalyse.index')" class="block mb-4">
+                                    <NavLink :href="route('GanzeAbweichungsanalyse')" :active="route().current('GanzeAbweichungsanalyse')">
                                         <div class="bg-white2 dark:bg-gray-700 rounded-lg p-4 shadow-md">
                                             <h3 class="text-lg font-semibold mb-2 dashboard-link-title">Abweichungsanalyse</h3>
                                             <p class="text-gray-600 dark:text-gray-300">Analyse von Abweichungen zwischen Ist- und Sollwerten.</p>
@@ -54,23 +54,19 @@ import { Head, Link as NavLink } from '@inertiajs/vue3';
                                             <p class="text-gray-600 dark:text-gray-300">Verrechnung von Leistungen zwischen Abteilungen.</p>
                                         </div>
                                     </NavLink>
-                                    <NavLink :href="route('deckungsbeitragrechnung.index')" :active="route().current('deckungsbeitragrechnung.index')" class="block mb-4">
-                                        <div class="bg-white2 dark:bg-gray-700 rounded-lg p-4 shadow-md">
-                                            <h3 class="text-lg font-semibold mb-2 dashboard-link-title">Deckungsbeitrag</h3>
-                                            <p class="text-gray-600 dark:text-gray-300">Berechnung des Beitrags zur Deckung der Fixkosten.</p>
-                                        </div>
-                                    </NavLink>
-                                    
-                                    <NavLink :href="route('preisuntergrenze.index')" :active="route().current('preisuntergrenze.index')" class="block mb-4">
-                                        <div class="bg-white2 dark:bg-gray-700 rounded-lg p-4 shadow-md">
-                                            <h3 class="text-lg font-semibold mb-2 dashboard-link-title">Preisuntergrenze</h3>
-                                            <p class="text-gray-600 dark:text-gray-300">Ermittlung der minimalen Preisgrenze für Produkte oder Dienstleistungen.</p>
-                                        </div>
-                                    </NavLink>
                                     <NavLink :href="route('Maschinenstundensatzrechnung')" :active="route().current('Maschinenstundensatzrechnung')" class="block mb-4">
                                         <div class="bg-white2 dark:bg-gray-700 rounded-lg p-4 shadow-md">
                                             <h3 class="text-lg font-semibold mb-2 dashboard-link-title">Maschinenstundensatzrechnung</h3>
                                             <p class="text-gray-600 dark:text-gray-300">Berechnung der Kosten pro Maschinenstunde.</p>
+                                        </div>
+                                    </NavLink>
+                                    <NavLink :href="route('OptimalesProduktionsProgramm')" :active="route().current('OptimalesProduktionsProgramm')" class="block mb-4">
+                                        <div class="bg-white2 dark:bg-gray-700 rounded-lg p-4 shadow-md">
+                                            <h3 class="text-lg font-semibold mb-2 dashboard-link-title">Optimales ProduktionsProgramm</h3>
+                                            <p class="text-lg font-semibold mb-2 dashboard-link-title ml-2">Deckungsbeitrag</p>
+                                            <p class="text-gray-600 dark:text-gray-300 ml-6">Berechnung des Beitrags zur Deckung der Fixkosten.</p>
+                                            <p class="text-lg font-semibold mb-2 dashboard-link-title ml-2">Preisuntergrenze</p>
+                                            <p class="text-gray-600 dark:text-gray-300 ml-6">Ermittlung der minimalen Preisgrenze für Produkte oder Dienstleistungen.</p>
                                         </div>
                                     </NavLink>
                                 </div>

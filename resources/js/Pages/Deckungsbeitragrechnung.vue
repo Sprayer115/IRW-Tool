@@ -6,6 +6,7 @@ import axios from 'axios';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import html2pdf from 'html2pdf.js';
 
 
 const emit = defineEmits(['update:checked']);
@@ -42,6 +43,10 @@ const deckungsBeitrag = ref(null);
 const gewinn = ref(null);
 
 const rows = ref([]);
+const rowsP = ref([]);
+
+const selectedRow = ref(null); // To hold the selected row in the modal
+const showModalDetail = ref(false);
 
 onMounted(() => {
     rows.value = props.items.map(item => ({
@@ -90,6 +95,7 @@ async function addRow() {
     } catch (error) {
         console.error('Error adding row:', error);
     }
+    rowsP.value = addRowFromExist();
 }
 
 async function deleteRow(id, index) {
@@ -101,7 +107,37 @@ async function deleteRow(id, index) {
     } catch (error) {
         console.error('Error deleting row:', error);
     }
+    rowsP.value = addRowFromExist();
 }
+
+async function addRowFromExist() {
+    await fetchRowsFromAbweichungsanalyse();
+}
+
+async function fetchRowsFromAbweichungsanalyse() {
+    try {
+        const response = await axios.get('/getDeckungsbeitragsrechnungen');
+        rowsP.value = response.data[0];
+    } catch (error) {
+        console.error('Error fetching rows:', error);
+    }
+}
+
+function openDetailModal(row) {
+      selectedRow.value = row; // Set the selected row for displaying details
+      showModalDetail.value = true; // Open the modal
+    }
+    function exportToPDF(name) {
+    const element = document.getElementById('modalContent');
+  const opt = {
+    margin:       [0.5, 0.5],
+    filename:     `${name}.pdf`,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2 },
+    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+  html2pdf().from(element).set(opt).save();
+    }
 
 function clearInputs() {
     name.value = null;
@@ -117,7 +153,7 @@ function calculateDB(row){
     {
         wert = (row.preisProStueck - row.varKostenProStueck) * row.stueckZahl;
     }
-    row.deckungsBeitrag = wert;
+    row.deckungsBeitrag = parseFloat(wert.toFixed(4));
     return wert;
 }
 
@@ -127,9 +163,10 @@ function calculateGewinn(row){
     {
         wert = row.deckungsBeitrag - row.fixkosten;
     }
-    row.gewinn = wert;
+    row.gewinn = parseFloat(wert.toFixed(4));
     return wert;
 }
+rowsP.value = addRowFromExist();
 </script>
 
 
@@ -139,9 +176,9 @@ function calculateGewinn(row){
       <Head title="Deckungsbeitragrechnung">
       </Head>
   
-      <AuthenticatedLayout>
+      <AuthenticatedLayout :hideNavbar="true">
           <template #header>
-              <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abweichungsanalyse</h2>
+              <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Deckungsbeitragrechnung</h2>
           </template>
           <div class="py-12 m-lg-4">
             <div class="input-area"
@@ -195,6 +232,7 @@ function calculateGewinn(row){
                 <!-- Empty space to align button -->
                 <div></div>
                 <button class="button bg-primary" style="justify-self: start; max-width: 150px;" @click="addRow">Berechnen</button>
+                <div></div>
             </div>
             <table class="table">
     <thead>
@@ -220,42 +258,42 @@ function calculateGewinn(row){
         </tr>
     </thead>
     <tbody>
-        <tr v-for="(row, index) in rows" :key="index">
+        <tr v-for="(row, index) in rowsP" :key="index">
             <td>{{ row.name }}</td>
             <td>{{ row.deckungsBeitrag }}</td>
             <td>{{ row.gewinn }}</td>
-            <td><button class="button bg-danger" @click="deleteRow(row.id, index)">löschen</button></td>
-            <td>
-                <div class="accordion" :id="'accordionExample' + index">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" :id="'heading' + index">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse' + index" aria-expanded="true" :aria-controls="'collapse' + index">
-                                Rechnung {{ index + 1 }}
-                            </button>
-                        </h2>
-                        <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" :data-bs-parent="'#accordionExample' + index">
-                            <div class="accordion-body">
-                                <br>
-                                <strong>Deckungsbeitrag für {{ row.name }}:</strong>
-                                 
-                                <p> Deckungsbeitrag = ( Verkaufspreis pro Stück₍<sub>{{ row.name }}</sub>₎ – Variable Kosten pro Stück₍<sub>{{ row.name }}</sub>₎ ) × Stückzahl₍<sub>{{ row.name }}</sub>₎</p>
-                                <p> Deckungsbeitrag = {{ row.preisProStueck }} – {{ row.varKostenProStueck }} × {{ row.stueckZahl }}</p>
-                                <p> Deckungsbeitrag = {{ row.deckungsBeitrag }} </p>
-                                <br> 
-                                <strong>Gewinn für {{ row.name }}:</strong>
-                                <p> Gewinn = Deckungsbeitrag₍<sub>{{ row.name }}</sub>₎ – Fixkosten₍<sub>{{ row.name }}</sub>₎</p>
-                                <p> Gewinn = {{ row.deckungsBeitrag }} – {{ row.fixkosten }}</p>
-                                <p> Gewinn = {{ row.gewinn }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <td><button class="button bg-danger" @click="deleteRow(row.id, index)">löschen</button>
+                <button class="button bg-info" @click="openDetailModal(row)">Details</button>
+            
             </td>
         </tr>
     </tbody>
 </table>
 
           </div>
+                  <!-- Modal Window for Row Details -->
+        <div v-if="showModalDetail" class="modal-overlay">
+          <div class="modal-content-details" id="modalContent">
+            <h3>Details für Deckungsbeitragrechnung</h3>
+            <p><strong>{{ selectedRow?.name || '' }}:</strong> {{ selectedRow?.kurzPreisUG || '' }}</p>
+            <br>
+            <strong>Deckungsbeitrag  für {{ selectedRow?.name }}:</strong>                
+            <p> Deckungsbeitrag = ( Verkaufspreis pro Stück₍<sub>{{ selectedRow?.name }}</sub>₎ – Variable Kosten pro Stück₍<sub>{{ selectedRow?.name }}</sub>₎ ) × Stückzahl₍<sub>{{ selectedRow?.name }}</sub>₎</p>
+            <p> Deckungsbeitrag = {{ selectedRow.preisProStueck }} – {{ selectedRow.varKostenProStueck }} × {{ selectedRow.stueckZahl }}</p>
+            <p><u> Deckungsbeitrag = {{ selectedRow?.deckungsBeitrag }} </u></p>
+            <br> 
+            <strong>Gewinn  für {{ selectedRow?.name }}:</strong>
+            <p> Gewinn = Deckungsbeitrag₍<sub>{{ selectedRow?.name }}</sub>₎ – Fixkosten₍<sub>{{ selectedRow?.name }}</sub>₎</p>
+            <p> Gewinn = {{ selectedRow?.stueckZahl }} – {{ selectedRow?.stueckZahl }}</p>
+            <p><u> Gewinn = {{ selectedRow?.gewinn }}</u></p>
+            <br> 
+        <div>
+            <button @click="exportToPDF(`Deckungsbeitrag_${selectedRow.name}_${selectedRow.id}`)">Als PDF exportieren</button>
+            <div></div>
+            <button @click="showModalDetail = false">Schließen</button>
+        </div>
+          </div>
+        </div>
       </AuthenticatedLayout>
     </div>
     <div> 

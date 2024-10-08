@@ -6,6 +6,7 @@ import axios from 'axios';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import html2pdf from 'html2pdf.js';
 
 
 
@@ -106,7 +107,7 @@ async function addRow() {
     } catch (error) {
         console.error('Error adding row:', error);
     }
-    rowsP.value = addRowFromExist();
+    //rowsP.value = addRowFromExist();
 }
 
 async function deleteRow(id, index) {
@@ -121,6 +122,17 @@ async function deleteRow(id, index) {
     }
     rowsP.value = addRowFromExist();
 }
+function exportToPDF(name) {
+    const element = document.getElementById('modalContent');
+  const opt = {
+    margin:       [0.5, 0.5],
+    filename:     `${name}.pdf`,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2 },
+    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+  html2pdf().from(element).set(opt).save();
+    }
 
 async function addRowFromExist() {
     await fetchRowsFromAbweichungsanalyse();
@@ -222,9 +234,11 @@ rowsP.value = addRowFromExist();
               <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abweichungsanalyse Tabelle</h2>
           </template>
           <div class="py-12 m-lg-4">
+            <img src='/images/klausur.png' style="justify-self: center; max-width: 800px;">
             <div class="input-area"
                 style="display: grid; grid-template-columns: 3fr 2fr; grid-gap: 20px; align-items: center; justify-content: center; justify-items: center; max-width: 600px; margin: 0 auto;">
-                <img src='/images/klausur.png' style="justify-self: stretch; max-width: 500px;">
+                <div>  
+                </div>
                 <div></div>
                 <!-- Label and Date Picker in Grid -->
                 <label for="input1" style="justify-self: start;">verrechneteLeistungGesamt:
@@ -308,25 +322,44 @@ rowsP.value = addRowFromExist();
         <div v-if="showModalDetail" class="modal-overlay">
           <div class="modal-content-details" id="modalContent">
             <h3>Details für {{ selectedRow?.name || '' }}</h3>
-            <p><strong>kurzfristige Preisuntergrenze:</strong> {{ selectedRow?.kurzPreisUG || '' }}</p>
+            <p><strong>Abweichungsanalyse (Tabelle):</strong> {{ selectedRow?.kurzPreisUG || '' }}</p>
 
             <br>
-            <strong>kurzfristige Preisuntergrenze für {{ selectedRow?.name }}:</strong>
+            <strong>verrechneteLeistungGesamt:</strong>
                                  
-            <p> kurzfristige Preisuntergrenze = ( Verkaufspreis pro Stück₍<sub>{{ selectedRow?.name }}</sub>₎ – Variable Kosten pro Stück₍<sub>{{ selectedRow?.name }}</sub>₎ ) × Stückzahl₍<sub>{{ selectedRow?.name }}</sub>₎</p>
-            <!-- <p> Deckungsbeitrag = {{ row.preisProStueck }} – {{ row.varKostenProStueck }} × {{ row.stueckZahl }}</p>-->
-             <p> kurzfristige Preisuntergrenze = {{ selectedRow?.kurzPreisUG }} </p>
+            <p> verrechneteLeistungGesamt = Summe Kosten gesamt</p>
+            <p> <u>verrechneteLeistungGesamt = {{ selectedRow.verrechneteLeistungGesamt }} </u></p>
+            <p> <strong>Info:</strong> Hierbei besteht keine Rechnung. Es wird das Feld darüber übernommen.</p>
             <br> 
-            <strong>langfristige Preisuntergrenze für {{ selectedRow?.name }}:</strong>
-            <p> langfristige Preisuntergrenze = Deckungsbeitrag₍<sub>{{ selectedRow?.name }}</sub>₎ – Fixkosten₍<sub>{{ selectedRow?.name }}</sub>₎</p>
-            <p> langfristige Preisuntergrenze = {{ selectedRow?.stueckZahl }} – {{ selectedRow?.stueckZahl }}</p>
-            <p> langfristige Preisuntergrenze = {{ selectedRow?.langPreisUG }}</p>
-            
-            <p><strong>langfristige Preisuntergrenze:</strong> {{ selectedRow?.langPreisUG || '' }}</p>
+            <strong>varPlanverrechnungssatz:</strong>
+            <p> varPlanverrechnungssatz = Summe variable Kosten / Geplante Leistung <sub>(Stk.)</sub> </p>
+            <p> varPlanverrechnungssatz = {{ selectedRow?.varSummeKosten }} / {{ selectedRow?.geplanteLeistung }}</p>
+            <p><u> varPlanverrechnungssatz = {{ selectedRow?.varPlanverrechnungssatz }}</u></p>
+            <br> 
+            <p><strong>gesPlanverrechnungssatz:</strong> {{ selectedRow?.langPreisUG || '' }}</p>
+            <p> gesPlanverrechnungssatz = Summe Plankosten gesamt / Geplante Lestung <sub>(Stk.)</sub> </p>
+            <p> gesPlanverrechnungssatz = {{ selectedRow?.verrechneteLeistungGesamt }} / {{ selectedRow?.geplanteLeistung }}</p>
+            <p><u> gesPlanverrechnungssatz = {{ selectedRow?.gesPlanverrechnungssatz }}</u></p>
+            <br> 
+            <p><strong>verrechneteLeistungIstKosten	:</strong> {{ selectedRow?.langPreisUG || '' }}</p>
+            <p> verrechneteLeistungIstKosten = IstLeistung <sub>(Stk.)</sub> × gesPlanverrechnungssatz </p>
+            <p> verrechneteLeistungIstKosten = {{ selectedRow?.IstLeistung }} × {{ selectedRow?.gesPlanverrechnungssatz }}</p>
+            <p><u> verrechneteLeistungIstKosten	= {{ selectedRow?.verrechneteLeistungIst }}</u></p>
+            <br> 
+            <p><strong>abweichung (Kostenstellenergebnis IstKosten):</strong> {{ selectedRow?.langPreisUG || '' }}</p>
+            <p> abweichung = Summe Ist Kosten – verrechneteLeistungIstKosten </p>
+            <p> abweichung = {{ selectedRow?.SummeIstKosten }} – {{ selectedRow?.verrechneteLeistungIst }}</p>
+            <p><u> abweichung = {{ selectedRow?.abweichung }}</u></p>
+            <br> 
+            <p><strong>IstKostensatz:</strong> {{ selectedRow?.langPreisUG || '' }}</p>
+            <p> IstKostensatz = Summe Ist Kosten / Ist Leistung <sub>(Stk.)</sub> </p>
+            <p> IstKostensatz = {{ selectedRow?.SummeIstKosten }} / {{ selectedRow?.IstLeistung }}</p>
+            <p><u> IstKostensatz = {{ selectedRow?.IstKostensatz }}</u></p>
+            <br> 
         <div>
-            <button @click="exportToPDF">Export as PDF</button>
+            <button @click="exportToPDF(`AbweichungsanalyseTabelle_${selectedRow.id}`)">Als PDF exportieren</button>
             <div></div>
-            <button @click="showModalDetail = false">Close</button>
+            <button @click="showModalDetail = false">Schließen</button>
         </div>
           </div>
         </div>
@@ -336,7 +369,58 @@ rowsP.value = addRowFromExist();
 </template>
 
 <style>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0); /* Black background with opacity */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.modal-content {
+  background-color: rgb(141, 141, 141);
+  padding: 20px;
+  border-radius: 10px;
+  width: 800px;   /* Set a fixed width for the modal */
+  max-height: 80%; /* Set a maximum height and enable scrolling if needed */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a box shadow for a popup effect */
+}
+
+.modal-content-details {
+  background-color: rgb(255, 255, 255);
+  padding: 20px;
+  border-radius: 10px;
+  width: calc(100vw - 2 * 200px);   /* Set a fixed width for the modal */
+  max-height: 80%; /* Set a maximum height and enable scrolling if needed */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a box shadow for a popup effect */
+}
+
+#modalContent * {
+  color: #2c3e50; /* Custom text color for all text elements in the modal */
+  font-family: Arial, sans-serif; /* Set a custom font family */
+  line-height: 1.5; /* Improve readability */
+}
+
+
+.modal-content-details button {
+  color: #000000; /* Custom color for modal text */
+  outline-color: #000000;
+  outline: auto;
+  outline-offset: 3px;
+}
+
+.modal-content button {
+  color: #000000; /* Custom color for modal text */
+  outline-color: #000000;
+  outline: auto;
+  outline-offset: 3px;
+}
 /* Styles for accordion button, border, and icons */
 .accordion-button {
   padding: var(--accordion-button-padding-y) var(--accordion-button-padding-x);

@@ -67,4 +67,14 @@ class DeckungsbeitragController extends Controller
             return response()->json([$e->getMessage()], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function getDeckungsbeitrag() 
+    {
+        try {
+            $data = Deckungsbeitragrechnungen::all();
+            return response()->json([$data], HttpResponse::HTTP_OK);
+        } catch (Exception $e) {
+            return response()->json([$e->getMessage()], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
