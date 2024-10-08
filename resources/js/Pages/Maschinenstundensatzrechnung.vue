@@ -92,7 +92,7 @@ const formatNumber = (num) => {
 
 // Hilfsfunktion zur Erstellung von Brüchen
 const createFraction = (numerator, denominator) => {
-    return `<span class="fraction"><span class="numerator">${numerator}</span><span class="denominator">${denominator}</span></span>`;
+    return `<span class="fraction"><span class="numerator">${numerator}</span><span class="denominator"> / ${denominator}</span></span>`;
 };
 
 // Aktualisierte berechnete Eigenschaften für detaillierte Berechnungsanzeige

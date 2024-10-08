@@ -18,6 +18,10 @@
     input {
         color: black;
     }
+
+    .bg-white2 .dashboard-link-title {
+        color: #e2e8f0 !important; 
+    }
 }
 
 bg-white2 {
