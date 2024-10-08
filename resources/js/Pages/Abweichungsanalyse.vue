@@ -414,7 +414,27 @@ rowsP.value = addRowFromExist();
 
 
 <style>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0); /* Black background with opacity */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.modal-content {
+  background-color: rgb(141, 141, 141);
+  padding: 20px;
+  border-radius: 10px;
+  width: calc(100vw - 2 * 200px);   /* Set a fixed width for the modal */
+  max-height: 80%; /* Set a maximum height and enable scrolling if needed */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a box shadow for a popup effect */
+}
 /* Styles for accordion button, border, and icons */
 .accordion-button {
   padding: var(--accordion-button-padding-y) var(--accordion-button-padding-x);

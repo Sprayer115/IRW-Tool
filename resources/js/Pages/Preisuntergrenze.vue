@@ -247,21 +247,19 @@ rowsP2.value = addRowFromExistInSelf();
         <div v-if="showModalDetail" class="modal-overlay">
           <div class="modal-content-details" id="modalContent">
             <h3>Details für {{ selectedRow?.name || '' }}</h3>
-            <p><strong>kurzfristige Preisuntergrenze:</strong> {{ selectedRow?.kurzPreisUG || '' }}</p>
-
+            <p><strong>Preisuntergrenze:</strong></p>
             <br>
-            <strong>kurzfristige Preisuntergrenze für {{ selectedRow?.name }}:</strong>
-                                 
-            <p> kurzfristige Preisuntergrenze = ( Verkaufspreis pro Stück₍<sub>{{ selectedRow?.name }}</sub>₎ – Variable Kosten pro Stück₍<sub>{{ selectedRow?.name }}</sub>₎ ) × Stückzahl₍<sub>{{ selectedRow?.name }}</sub>₎</p>
+            <strong>kurzfristige Preisuntergrenze für {{ selectedRow?.name }}:</strong>                  
+            <p> kurzfristige Preisuntergrenze = ( variable Kosten pro Stück₍<sub>{{ selectedRow?.name }}</sub>₎ )</p>
             <!-- <p> Deckungsbeitrag = {{ row.preisProStueck }} – {{ row.varKostenProStueck }} × {{ row.stueckZahl }}</p>-->
-             <p> kurzfristige Preisuntergrenze = {{ selectedRow?.kurzPreisUG }} </p>
+             <p> <u> kurzfristige Preisuntergrenze = {{ selectedRow?.kurzPreisUG }}</u> </p>
+             <p> <strong>Info:</strong> Hierbei besteht keine Rechnung. Es werden die variable Kosten pro Stück₍<sub>{{ selectedRow?.name }}</sub>₎ übernommen.</p>
             <br> 
             <strong>langfristige Preisuntergrenze für {{ selectedRow?.name }}:</strong>
             <p> langfristige Preisuntergrenze = Deckungsbeitrag₍<sub>{{ selectedRow?.name }}</sub>₎ – Fixkosten₍<sub>{{ selectedRow?.name }}</sub>₎</p>
             <p> langfristige Preisuntergrenze = {{ selectedRow?.stueckZahl }} – {{ selectedRow?.stueckZahl }}</p>
-            <p> langfristige Preisuntergrenze = {{ selectedRow?.langPreisUG }}</p>
-            
-            <p><strong>langfristige Preisuntergrenze:</strong> {{ selectedRow?.langPreisUG || '' }}</p>
+            <p> <u> langfristige Preisuntergrenze = {{ selectedRow?.langPreisUG }} </u></p>
+            <br> 
         <div>
           <button @click="exportToPDF(`Preisuntergrenze_${selectedRow.name}_${selectedRow.id}`)">Als PDF exportieren</button>
             <div></div>
@@ -320,7 +318,7 @@ rowsP2.value = addRowFromExistInSelf();
   background-color: rgb(141, 141, 141);
   padding: 20px;
   border-radius: 10px;
-  width: 800px;   /* Set a fixed width for the modal */
+  width: calc(100vw - 2 * 200px);   /* Set a fixed width for the modal */
   max-height: 80%; /* Set a maximum height and enable scrolling if needed */
   overflow-y: auto; /* Enable vertical scrolling if content overflows */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a box shadow for a popup effect */
