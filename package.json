@@ -21,7 +21,7 @@
         "@inertiajs/inertia": "^0.11.1",
         "@vuepic/vue-datepicker": "^9.0.3",
         "bootstrap": "^5.3.3",
-        "bootstrap-vue-next": "^0.24.16",
+        "bootstrap-vue-next": "^0.25.12",
         "html2pdf.js": "^0.10.2",
         "mermaid": "^11.2.1",
         "vue3-datepicker": "^0.4.0"
