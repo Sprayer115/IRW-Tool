@@ -2,6 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import { ref, computed, onMounted } from 'vue';
+import html2pdf from 'html2pdf.js';
 
 const emit = defineEmits(['update:checked']);
 
@@ -45,6 +46,9 @@ const breakEvenMenge = ref(0);
 const breakEvenUmsatz = ref(0);
 
 const rows = ref([]);
+
+const selectedRow = ref(null); // To hold the selected row in the modal
+const showModalDetail = ref(false);
 
 onMounted(() => {
     rows.value = props.items.map(item => ({
@@ -120,6 +124,11 @@ async function deleteRow(id, index) {
     }
 }
 
+function openDetailModal(row) {
+      selectedRow.value = row; // Set the selected row for displaying details
+      showModalDetail.value = true; // Open the modal
+    }
+
 function clearInputs() {
     fixkosten.value = null;
     varKosten.value = null;
@@ -136,6 +145,18 @@ function calculateKTZ(row){
     row.KTZrechnung = wert;
     return wert;
 }
+
+function exportToPDF(name) {
+    const element = document.getElementById('modalContent');
+  const opt = {
+    margin:       [0.5, 0.5],
+    filename:     `${name}.pdf`,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2 },
+    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+  html2pdf().from(element).set(opt).save();
+    }
 
 function calculateOP(row) {
     let wert = 0;
@@ -307,11 +328,59 @@ function calculateBEU(row){
                           <td>{{ row.deckungsBeitragProStueck }}</td>
                           <td>{{ row.breakEvenMenge }}</td>
                           <td>{{ row.breakEvenUmsatz }}</td>
-                          <td><button class = "button bg-danger" @click="deleteRow(row.id, index)">löschen</button></td>
+                          <td><button class = "button bg-danger" @click="deleteRow(row.id, index)">löschen</button>
+                            <button class="button bg-info" @click="openDetailModal(row)">Details</button></td>
                       </tr>
                   </tbody>
               </table>
           </div>
+                   <!-- Modal Window for Row Details -->
+        <div v-if="showModalDetail" class="modal-overlay">
+          <div class="modal-content-details" id="modalContent">
+            <h3>Details für {{ selectedRow?.name || '' }}</h3>
+            <p><strong>Break-Even:</strong> {{ selectedRow?.kurzPreisUG || '' }}</p>
+
+            <br>
+            <strong>KTZrechnung :</strong>    
+            <p> KTZrechnung  = Stückpreis × Produktionsmenge</p>
+            <p> KTZrechnung = {{ selectedRow?.stueckPreis }} × {{ selectedRow?.geplantePMenge }}</p>
+            <p> <u>KTZrechnung  = {{ selectedRow.KTZrechnung }} </u></p>
+            <br> 
+            <strong>deckungsBeitrag :</strong>
+            <p> deckungsBeitrag  = Umsatz – variable Kosten</p>
+            <p> deckungsBeitrag  = {{ selectedRow?.KTZrechnung }} – {{ selectedRow?.varKosten }}</p>
+            <p><u> deckungsBeitrag  = {{ selectedRow?.deckungsBeitrag }}</u></p>
+            <br> 
+            <p><strong>opErgebnis :</strong> {{ selectedRow?.langPreisUG || '' }}</p>
+            <p> opErgebnis  = deckungsBeitrag – Fix Kosten </p>
+            <p> opErgebnis  = {{ selectedRow?.deckungsBeitrag }} – {{ selectedRow?.fixkosten }}</p>
+            <p><u> opErgebnis  = {{ selectedRow?.opErgebnis }}</u></p>
+            <br> 
+            <p><strong>Deckungsbeitrag pro Stück	:</strong> {{ selectedRow?.langPreisUG || '' }}</p>
+            <p> Stückkosten = variable Kosten / Menge </p>
+            <p> Stückkosten = {{ selectedRow?.varKosten }} / {{ selectedRow?.geplantePMenge }} </p>
+            <p> Stückkosten = {{ selectedRow?.stueckkosten }} </p>
+            <p> Deckungsbeitrag pro Stück = Stückpreis – Stückkosten </p>
+            <p> Deckungsbeitrag pro Stück = {{ selectedRow?.stueckPreis }} – {{ selectedRow?.stueckkosten }}</p>
+            <p><u> Deckungsbeitrag pro Stück	= {{ selectedRow?.deckungsBeitragProStueck }}</u></p>
+            <br> 
+            <p><strong>Break Even Menge:</strong> {{ selectedRow?.langPreisUG || '' }}</p>
+            <p> Break Even Menge = Fixkosten / deckungsBeitrag Pro Stück </p>
+            <p> Break Even Menge = {{ selectedRow?.fixkosten }} – {{ selectedRow?.deckungsBeitragProStueck }}</p>
+            <p><u> Break Even Menge = {{ selectedRow?.breakEvenMenge }}</u></p>
+            <br> 
+            <p><strong>Break Even Umsatz:</strong> {{ selectedRow?.langPreisUG || '' }}</p>
+            <p> Break Even Umsatz = Break-Even Menge × Stückpreis</p>
+            <p> Break Even Umsatz = {{ selectedRow?.breakEvenMenge }} / {{ selectedRow?.stueckPreis }}</p>
+            <p><u> Break Even Umsatz = {{ selectedRow?.breakEvenUmsatz }}</u></p>
+            <br> 
+        <div>
+            <button @click="exportToPDF(`BreakEven_${selectedRow.id}`)">Als PDF exportieren</button>
+            <div></div>
+            <button @click="showModalDetail = false">Schließen</button>
+        </div>
+          </div>
+        </div>
       </AuthenticatedLayout>
     </div>
     <div> 
