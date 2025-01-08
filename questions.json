@@ -1,0 +1,44 @@
+{
+    "questions": [
+        {
+            "question": "What is the capital of France?",
+            "answer": ["Paris", "Marseille", "Lyon", "Toulouse"]
+        },
+        {
+            "question": "What is the capital of France?",
+            "answer": "Paris"
+        },
+        {
+            "question": "What is the capital of France?",
+            "answer": "Paris"
+        },
+        {
+            "question": "What is the capital of France?",
+            "answer": "Paris"
+        },
+        {
+            "question": "What is the capital of France?",
+            "answer": "Paris"
+        },
+        {
+            "question": "What is the capital of France?",
+            "answer": "Paris"
+        },
+        {
+            "question": "What is the capital of France?",
+            "answer": "Paris"
+        },
+        {
+            "question": "What is the capital of France?",
+            "answer": "Paris"
+        },
+        {
+            "question": "What is the capital of France?",
+            "answer": "Paris"
+        },
+        {
+            "question": "What is the capital of France?",
+            "answer": "Paris"
+        }
+    ]
+}
