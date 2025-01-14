@@ -4,8 +4,8 @@ import mermaid from "mermaid";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head,usePage, Link } from "@inertiajs/vue3";
 import { Inertia } from '@inertiajs/inertia';
-import Deckungsbeitrag from "@/Pages/Deckungsbeitragrechnung.vue";
-import Preisuntergrenze from "@/Pages/Preisuntergrenze.vue";
+import Deckungsbeitrag from "@/Pages/Calc/Deckungsbeitragrechnung.vue";
+import Preisuntergrenze from "@/Pages/Calc/Preisuntergrenze.vue";
 
 const activeComponent = ref("Deckungsbeitrag");
 

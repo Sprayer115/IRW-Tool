@@ -40,27 +40,28 @@ const props = defineProps({
                                     Dashboard
                                 </NavLink>
                                 <NavLink :href="route('abgrenzungsrechnung.index')" :active="route().current('abgrenzungsrechnung.index')">
-                                    Abgrenzungsrechnung
+                                    Finanzbuchhaltung
                                 </NavLink>
                                 <NavLink :href="route('makeOrBuy')" :active="route().current('makeOrBuy')">
-                                    Make or Buy
+                                    Kostenarten
                                 </NavLink>
                                 <NavLink :href="route('breakEven.index')" :active="route().current('breakEven.index')">
-                                    Break Even
+                                    Kostenstellen
                                 </NavLink>
                                 <NavLink :href="route('InnerbetrieblicheLeistungsverrechnung')" :active="route().current('InnerbetrieblicheLeistungsverrechnung')">
-                                    Innerbetriebliche Leistungsverrechnung
+                                    Kostenträger
                                 </NavLink>
 
                                 <NavLink :href="route('GanzeAbweichungsanalyse')" :active="route().current('GanzeAbweichungsanalyse')">
-                                    AbweichungsanalyseGanz
+                                    Betriebsergebnis
                                 </NavLink>
+                                <!--
                                 <NavLink :href="route('OptimalesProduktionsProgramm')" :active="route().current('OptimalesProduktionsProgramm')">
                                     OptimalesProduktionsprogramm
                                 </NavLink>
                                 <NavLink :href="route('Maschinenstundensatzrechnung')" :active="route().current('Maschinenstundensatzrechnung')">
                                     Maschinenstundensatzrechnung
-                                </NavLink>
+                                </NavLink>-->
                             </div>
                         </div>
 

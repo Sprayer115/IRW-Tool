@@ -3,9 +3,9 @@ import { ref, computed, watch, onMounted } from "vue";
 import mermaid from "mermaid";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
-import Anbauverfahren from "@/Pages/Anbauverfahren.vue";
-import Stufenleiterverfahren from "@/Pages/Stufenleiterverfahren.vue";
-import Gleichungsverfahren from "@/Pages/Gleichungsverfahren.vue";
+import Anbauverfahren from "@/Pages/Calc/Anbauverfahren.vue";
+import Stufenleiterverfahren from "@/Pages/Calc/Stufenleiterverfahren.vue";
+import Gleichungsverfahren from "@/Pages/Calc/Gleichungsverfahren.vue";
 
 const activeComponent = ref("Anbauverfahren");
 

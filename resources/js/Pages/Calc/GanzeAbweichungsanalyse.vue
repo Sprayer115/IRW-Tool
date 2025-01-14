@@ -4,8 +4,8 @@ import mermaid from "mermaid";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head,usePage, Link } from "@inertiajs/vue3";
 import { Inertia } from '@inertiajs/inertia';
-import AbweichungsanalyseTabelle from "@/Pages/AbweichungsanalyseTabelle.vue";
-import Abweichungsanalyse from "@/Pages/Abweichungsanalyse.vue";
+import AbweichungsanalyseTabelle from "@/Pages/Calc/AbweichungsanalyseTabelle.vue";
+import Abweichungsanalyse from "@/Pages/Calc/Abweichungsanalyse.vue";
 
 const activeComponent = ref("Abweichungsanalyse");
 
