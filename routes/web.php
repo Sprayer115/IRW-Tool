@@ -115,4 +115,37 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// routes/web.php
+Route::middleware(['auth'])->group(function () {
+    Route::get('/finanzbuchhaltung', function () {
+        return Inertia::render('TopicLayout', [
+            'topicId' => 'finanzbuchhaltung',
+            'title' => 'Finanzbuchhaltung'
+        ]);
+    })->name('finanzbuchhaltung');
+    
+    Route::get('/kostenarten', function () {
+        return Inertia::render('TopicLayout', [
+            'topicId' => 'kostenarten',
+            'title' => 'kostenarten'
+        ]);
+    })->name('kostenarten');
+    
+    Route::get('/kostenstellen', function () {
+        return Inertia::render('TopicLayout', [
+            'topicId' => 'kostenstellen',
+            'title' => 'kostenstellen'
+        ]);
+    })->name('kostenstellen');
+
+    Route::get('/kostentraeger', function () {
+        return Inertia::render('TopicLayout', [
+            'topicId' => 'kostentraeger',
+            'title' => 'kostentraeger'
+        ]);
+    })->name('kostentraeger');
+    
+    // Add other topic routes
+});
+
 require __DIR__.'/auth.php';

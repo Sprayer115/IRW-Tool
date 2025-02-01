@@ -39,16 +39,24 @@ const props = defineProps({
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-                                <NavLink :href="route('abgrenzungsrechnung.index')" :active="route().current('abgrenzungsrechnung.index')">
+                                <NavLink 
+                                    :href="route('finanzbuchhaltung')" 
+                                    :active="route().current('finanzbuchhaltung')">
                                     Finanzbuchhaltung
                                 </NavLink>
-                                <NavLink :href="route('makeOrBuy')" :active="route().current('makeOrBuy')">
+                                <NavLink 
+                                    :href="route('kostenarten')" 
+                                    :active="route().current('kostenarten')">
                                     Kostenarten
                                 </NavLink>
-                                <NavLink :href="route('breakEven.index')" :active="route().current('breakEven.index')">
+                                <NavLink 
+                                    :href="route('kostenstellen')" 
+                                    :active="route().current('kostenstellen')">
                                     Kostenstellen
                                 </NavLink>
-                                <NavLink :href="route('InnerbetrieblicheLeistungsverrechnung')" :active="route().current('InnerbetrieblicheLeistungsverrechnung')">
+                                <NavLink 
+                                    :href="route('kostentraeger')" 
+                                    :active="route().current('kostentraeger')">
                                     Kostenträger
                                 </NavLink>
 

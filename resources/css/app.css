@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @media (prefers-color-scheme: dark) {
     .dark\:bg-gray-900 {
         --tw-bg-opacity: 1 !important;
@@ -8,6 +9,7 @@
         color: white;
         border-color: white !important;
     }
+
     table {
         border-color: white !important;
     }
@@ -15,16 +17,19 @@
     table, th, td {
         border: 1px solid white !important;
     }
+
     input {
-        color: black;
+        background-color: rgb(31 41 55) !important;  /* dark:bg-gray-800 */
+        color: rgb(209 213 219) !important;         /* dark:text-gray-300 */
+        border-color: rgb(55 65 81) !important;     /* dark:border-gray-700 */
     }
 
     .bg-white2 .dashboard-link-title {
-        color: #e2e8f0 !important; 
+        color: #e2e8f0 !important;
     }
 }
 
-bg-white2 {
+.bg-white2 {
     background-color: white;
 }
 
