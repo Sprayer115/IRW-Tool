@@ -7,6 +7,7 @@ use App\Http\Controllers\BreakEvensController;
 use App\Http\Controllers\DeckungsbeitragController;
 use App\Http\Controllers\PreisuntergrenzenController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuizController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -114,6 +115,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/quiz', [QuizController::class, 'index'])->name('quiz.index');
+
+
 
 // routes/web.php
 Route::middleware(['auth'])->group(function () {
