@@ -20,7 +20,7 @@ const props = defineProps({
 
 <template>
     <div>
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen bg-slate-100 dark:bg-gray-900">
       <!-- Primary Navigation Menu -->
       <nav v-if="!props.hideNavbar" class="bg-white2 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <!-- Primary Navigation Menu -->

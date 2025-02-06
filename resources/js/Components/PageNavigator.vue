@@ -66,39 +66,44 @@ const previousPage = () => {
 </script>
 
 <template>
-    <div class="relative min-h-screen bg-gray-100 dark:bg-gray-900">
-        <!-- Main content container - removed px padding -->
-        <div class="h-full bg-gray-100 dark:bg-gray-900">
-            <!-- Page content - adjusted padding and removed white background -->
-            <div class="bg-gray-100 dark:bg-gray-900">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+    
+    <div class="relative min-h-screen bg-slate-100 dark:bg-gray-900">
+        
+        <!-- Main content container -->
+        <div class="h-full">
+            
+            <!-- Page content -->
+            <div>
+                <div class="p-6 text-slate-800 dark:text-slate-200">
                     <Suspense>
-                        <div class="bg-gray-100 dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-6">
+                        <div class="bg-slate-200 dark:bg-slate-700 rounded-lg shadow-md dark:shadow-gray-950/50 p-6">
+
                             <component 
                                 v-if="currentComponent"
                                 :is="currentComponent"
                                 v-bind="pageProps"
+                                class="text-slate-700 dark:text-slate-200"
                             />
                         </div>
                         <template #fallback>
-                            <div class="text-gray-600 dark:text-gray-400">Loading page content...</div>
+                            <div class="text-slate-600 dark:text-slate-400">Loading page content...</div>
                         </template>
                     </Suspense>
                 </div>
             </div>
         </div>
 
-        <!-- Navigation Controls - Fixed at bottom left -->
-        <div class="fixed bottom-8 left-8 flex items-center space-x-4 bg-gray-800 rounded-lg shadow-lg px-4 py-2">
+        <!-- Navigation Controls -->
+        <div class="fixed bottom-8 left-8 flex items-center space-x-4 bg-slate-600 rounded-lg shadow-lg px-4 py-2">
             <button 
                 @click="previousPage" 
                 :disabled="currentPage === 1"
                 class="w-8 h-8 flex items-center justify-center rounded-full 
-                       text-gray-400
-                       hover:bg-gray-700
-                       disabled:opacity-50 disabled:cursor-not-allowed
+                       text-slate-200
+                       hover:bg-slate-500
+                       disabled:opacity-40 disabled:cursor-not-allowed
                        transition-colors duration-200"
-                :class="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }"
+                :class="{ 'opacity-40 cursor-not-allowed': currentPage === 1 }"
             >
                 <svg 
                     xmlns="http://www.w3.org/2000/svg" 
@@ -114,7 +119,7 @@ const previousPage = () => {
                 </svg>
             </button>
             
-            <span class="text-sm font-medium text-gray-400">
+            <span class="text-sm font-medium text-slate-200">
                 {{ currentPage }}/{{ totalPages }}
             </span>
             
@@ -122,11 +127,11 @@ const previousPage = () => {
                 @click="nextPage" 
                 :disabled="currentPage === totalPages"
                 class="w-8 h-8 flex items-center justify-center rounded-full 
-                       text-gray-400
-                       hover:bg-gray-700
-                       disabled:opacity-50 disabled:cursor-not-allowed
+                       text-slate-200
+                       hover:bg-slate-500
+                       disabled:opacity-40 disabled:cursor-not-allowed
                        transition-colors duration-200"
-                :class="{ 'opacity-50 cursor-not-allowed': currentPage === totalPages }"
+                :class="{ 'opacity-40 cursor-not-allowed': currentPage === totalPages }"
             >
                 <svg 
                     xmlns="http://www.w3.org/2000/svg" 
