@@ -54,7 +54,7 @@ Route::get('/make-or-buy', function () {
 
 //Innerbetriebliche Leistungsverrechnung
 Route::get('/iblv', function () {
-    return Inertia::render('InnerbetrieblicheLeistungsverrechnung');
+    return Inertia::render('Calc/InnerbetrieblicheLeistungsverrechnung');
 })->middleware(['auth', 'verified'])->name('InnerbetrieblicheLeistungsverrechnung');
 
 // Break-Even
@@ -132,21 +132,21 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/kostenarten', function () {
         return Inertia::render('TopicLayout', [
             'topicId' => 'kostenarten',
-            'title' => 'kostenarten'
+            'title' => 'Kostenarten'
         ]);
     })->name('kostenarten');
     
     Route::get('/kostenstellen', function () {
         return Inertia::render('TopicLayout', [
             'topicId' => 'kostenstellen',
-            'title' => 'kostenstellen'
+            'title' => 'Kostenstellen'
         ]);
     })->name('kostenstellen');
 
     Route::get('/kostentraeger', function () {
         return Inertia::render('TopicLayout', [
             'topicId' => 'kostentraeger',
-            'title' => 'kostentraeger'
+            'title' => 'Kostentraeger'
         ]);
     })->name('kostentraeger');
     
