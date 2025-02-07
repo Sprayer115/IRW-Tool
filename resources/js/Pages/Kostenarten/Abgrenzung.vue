@@ -1,8 +1,8 @@
-<!-- Kostentraeger/4.vue -->
+<!-- Kostenarten/Abgrenzung.vue -->
 <template>
     <div class="page">
       <input v-model="pageData" @input="updateData">
-      4
+      Abgrenzung
     </div>
   </template>
   

@@ -1,8 +1,8 @@
-<!-- Kostenarten/1.vue -->
+<!-- Kostenarten/Info.vue -->
 <template>
     <div class="page">
-      <input v-model="pageData" @input="updateData">
-      1
+      <input :model="pageData" @input="updateData">
+      Info
     </div>
   </template>
   

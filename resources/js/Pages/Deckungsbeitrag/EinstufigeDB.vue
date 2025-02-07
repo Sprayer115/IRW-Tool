@@ -1,8 +1,8 @@
-<!-- Kostenarten/3.vue -->
+<!-- Deckungsbeitrag/EinstufigeDB.vue -->
 <template>
     <div class="page">
-      <input v-model="pageData" @input="updateData">
-      3
+      <input :model="pageData" @input="updateData">
+      EinstufigeDB
     </div>
   </template>
   

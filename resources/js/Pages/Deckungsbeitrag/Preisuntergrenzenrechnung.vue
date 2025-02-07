@@ -1,8 +1,8 @@
-<!-- Kostenarten/4.vue -->
+<!-- Deckungsbeitrag/Preisuntergrenzenrechnung.vue -->
 <template>
     <div class="page">
-      <input v-model="pageData" @input="updateData">
-      4
+      <input :model="pageData" @input="updateData">
+      Preisuntergrenzenrechnung
     </div>
   </template>
   

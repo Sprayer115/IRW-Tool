@@ -1,8 +1,8 @@
-<!-- Kostenarten/2.vue -->
+<!-- Deckungsbeitrag/MakeOrBuy.vue -->
 <template>
     <div class="page">
-      <input v-model="pageData" @input="updateData">
-      2
+      <input :model="pageData" @input="updateData">
+      MakeOrBuy
     </div>
   </template>
   
