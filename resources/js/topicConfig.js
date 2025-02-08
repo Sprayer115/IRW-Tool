@@ -2,49 +2,54 @@ export const topicConfigs = {
     finanzbuchhaltung: {
       title: 'Finanzbuchhaltung',
       pages: () => ({
-        components: [
-          import('@/Pages/Finanzbuchhaltung/1.vue'),
-          import('@/Pages/Finanzbuchhaltung/2.vue'),
-          import('@/Pages/Finanzbuchhaltung/3.vue'),
-          import('@/Pages/Finanzbuchhaltung/4.vue'),
-          // Add more pages
-        ]
+        components: {
+          'grundlagen': () => import('@/Pages/Finanzbuchhaltung/1.vue'),
+          'buchungen': () => import('@/Pages/Finanzbuchhaltung/2.vue'),
+          'abschluss': () => import('@/Pages/Finanzbuchhaltung/3.vue'),
+          'auswertung': () => import('@/Pages/Finanzbuchhaltung/4.vue'),
+        }
       })
     },
     kostenarten: {
       title: 'Kostenarten',
       pages: () => ({
-        components: [
-          import('@/Pages/Kostenarten/1.vue'),
-          import('@/Pages/Kostenarten/2.vue'),
-          import('@/Pages/Kostenarten/3.vue'),
-          import('@/Pages/Kostenarten/4.vue'),
-          // Add more pages
-        ]
+        components: {
+          'info': () => import('@/Pages/Kostenarten/Info.vue'),
+          'abgrenzung': () => import('@/Pages/Kostenarten/Abgrenzung.vue'),
+        }
       })
     },
-    kostenstellen : {
-        title: 'Kostenstellen',
-        pages: () => ({
-            components: [
-            import('@/Pages/Kostenstellen/1.vue'),
-            import('@/Pages/Kostenstellen/2.vue'),
-            import('@/Pages/Kostenstellen/3.vue'),
-            import('@/Pages/Kostenstellen/4.vue'),
-            // Add more pages
-            ]
-        })
+    kostenstellen: {
+      title: 'Kostenstellen',
+      pages: () => ({
+        components: {
+          'info': () => import('@/Pages/Kostenstellen/1.vue'),
+          'iblv': () => import('@/Pages/Kostenstellen/2.vue'),
+          'maschinenstunden': () => import('@/Pages/Kostenstellen/3.vue'),
+        }
+      })
     },
     kostentraeger: {
         title: 'Kostentraeger',
         pages: () => ({
-            components: [
-            import('@/Pages/Kostentraeger/1.vue'),
-            import('@/Pages/Kostentraeger/2.vue'),
-            import('@/Pages/Kostentraeger/3.vue'),
-            import('@/Pages/Kostentraeger/4.vue'),
-            // Add more pages
-            ]
+          components: {
+            'info': () => import('@/Pages/Kostentraeger/1.vue'),
+            'zuschlag': () => import('@/Pages/Kostentraeger/2.vue'),
+            'verteilung': () => import('@/Pages/Kostentraeger/3.vue')
+          }
+        })
+    },
+    deckungsbeitrag: {
+        title: 'Deckungsbeitrag',
+        pages: () => ({
+          components: {
+            'einstufig': () => import('@/Pages/Deckungsbeitrag/EinstufigeDB.vue'),
+            'mehrstufig': () => import('@/Pages/Deckungsbeitrag/MehrstufigeDB.vue'),
+            'preisuntergrenze': () => import('@/Pages/Deckungsbeitrag/Preisuntergrenzenrechnung.vue'),
+            'break-even': () => import('@/Pages/Deckungsbeitrag/BreakEven.vue'),
+            'optimierung': () => import('@/Pages/Deckungsbeitrag/OptProduktionsprogramm.vue'),
+            'make-or-buy': () => import('@/Pages/Deckungsbeitrag/MakeOrBuy.vue'),
+          }
         })
     }
     // Add other topics matching your navigation

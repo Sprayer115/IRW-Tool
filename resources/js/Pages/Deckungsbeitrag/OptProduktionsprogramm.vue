@@ -1,8 +1,8 @@
-<!-- Kostenstellen/4.vue -->
+<!-- Deckungsbeitrag/OptProduktionsprogramm.vue -->
 <template>
     <div class="page">
-      <input v-model="pageData" @input="updateData">
-      4
+      <input :model="pageData" @input="updateData">
+      Optimales Produktionsprogramm
     </div>
   </template>
   

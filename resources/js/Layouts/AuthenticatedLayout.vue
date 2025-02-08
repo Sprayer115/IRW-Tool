@@ -20,7 +20,7 @@ const props = defineProps({
 
 <template>
     <div>
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen bg-slate-100 dark:bg-gray-900">
       <!-- Primary Navigation Menu -->
       <nav v-if="!props.hideNavbar" class="bg-white2 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <!-- Primary Navigation Menu -->
@@ -35,41 +35,133 @@ const props = defineProps({
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px mt-4 sm:ms-10 sm:flex">
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items-center">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-                                <NavLink 
-                                    :href="route('finanzbuchhaltung')" 
-                                    :active="route().current('finanzbuchhaltung')">
+
+                                <NavLink :href="route('finanzbuchhaltung')" :active="route().current('finanzbuchhaltung')">
                                     Finanzbuchhaltung
                                 </NavLink>
-                                <NavLink 
-                                    :href="route('kostenarten')" 
-                                    :active="route().current('kostenarten')">
-                                    Kostenarten
-                                </NavLink>
-                                <NavLink 
-                                    :href="route('kostenstellen')" 
-                                    :active="route().current('kostenstellen')">
-                                    Kostenstellen
-                                </NavLink>
-                                <NavLink 
-                                    :href="route('kostentraeger')" 
-                                    :active="route().current('kostentraeger')">
-                                    Kostenträger
-                                </NavLink>
 
-                                <NavLink :href="route('GanzeAbweichungsanalyse')" :active="route().current('GanzeAbweichungsanalyse')">
-                                    Betriebsergebnis
+                                <!-- Kostenabrechnung -->
+                                <div class="flex items-center">
+                                    <Dropdown align="right" width="96">
+                                        <template #trigger>
+                                            <span class="inline-flex rounded-md">
+                                                <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                                                    Kostenartenrechnung
+                                                    <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                        </template>
+                                        <template #content>
+                                            <DropdownLink :href="route('kostenarten', { page: 'info' })" class="whitespace-normal">
+                                                Infoseite
+                                            </DropdownLink>
+                                            <DropdownLink :href="route('kostenarten', { page: 'abgrenzung' })" class="whitespace-normal">
+                                                Abgrenzungsrechnung
+                                            </DropdownLink>
+                                        </template>
+                                    </Dropdown>
+                                </div>
+
+                                <!-- Kostenstellenrechnung -->
+                                <div class="flex items-center">
+                                    <Dropdown align="right" width="96">
+                                        <template #trigger>
+                                            <span class="inline-flex rounded-md">
+                                                <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                                                    Kostenstellenrechnung
+                                                    <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                        </template>
+                                        <template #content>
+                                            <DropdownLink :href="route('kostenstellen', { page: 'info' })" class="whitespace-normal">
+                                                Infoseite
+                                            </DropdownLink>
+                                            <DropdownLink :href="route('kostenstellen', { page: 'iblv' })" class="whitespace-normal">
+                                                Innerbetriebliche Leistungsverrechnung
+                                            </DropdownLink>
+                                            <DropdownLink :href="route('kostenstellen', { page: 'msr' })" class="whitespace-normal">
+                                                Maschinenstundenrechnungen
+                                            </DropdownLink>
+                                        </template>
+                                    </Dropdown>
+                                </div>
+
+                                <!-- Kostenträgerrechnung -->
+                                <div class="flex items-center">
+                                    <Dropdown align="right" width="96">
+                                        <template #trigger>
+                                            <span class="inline-flex rounded-md">
+                                                <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                                                    Kostenträgerrechnung
+                                                    <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                        </template>
+                                        <template #content>
+                                            <DropdownLink :href="route('kostentraeger', { page: 'info' })" class="whitespace-normal">
+                                                Infoseite
+                                            </DropdownLink>
+                                            <DropdownLink :href="route('kostentraeger', { page: 'zuschlag' })" class="whitespace-normal">
+                                                Zuschlagssatzberechnung
+                                            </DropdownLink>
+                                            <DropdownLink :href="route('kostentraeger', { page: 'verteilung' })" class="whitespace-normal">
+                                                Kostenverteilung
+                                            </DropdownLink>
+                                        </template>
+                                    </Dropdown>
+                                </div>
+
+                                <!-- Deckungsbeitragsrechnung -->
+                                <div class="flex items-center">
+                                    <Dropdown align="right" width="96">
+                                        <template #trigger>
+                                            <span class="inline-flex rounded-md">
+                                                <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                                                    Deckungsbeitragsrechnung
+                                                    <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                        </template>
+                                        <template #content>
+                                            <DropdownLink :href="route('deckungsbeitrag', { page: 'einstufig' })" class="whitespace-normal">
+                                                Einstufige DB
+                                            </DropdownLink>
+                                            <DropdownLink :href="route('deckungsbeitrag', { page: 'mehrstufig' })" class="whitespace-normal">
+                                                Mehrstufige DB
+                                            </DropdownLink>
+                                            <DropdownLink :href="route('deckungsbeitrag', { page: 'preisuntergrenze' })" class="whitespace-normal">
+                                                Preisuntergrenzenrechnung
+                                            </DropdownLink>
+                                            <DropdownLink :href="route('deckungsbeitrag', { page: 'break-even' })" class="whitespace-normal">
+                                                Break-Even-Analyse
+                                            </DropdownLink>
+                                            <DropdownLink :href="route('deckungsbeitrag', { page: 'optimierung' })" class="whitespace-normal">
+                                                Optimales Produktionsprogramm
+                                            </DropdownLink>
+                                            <DropdownLink :href="route('deckungsbeitrag', { page: 'make-or-buy' })" class="whitespace-normal">
+                                                Make-or-Buy Entscheidungen
+                                            </DropdownLink>
+                                        </template>
+                                    </Dropdown>
+                                </div>
+
+                                <!-- Plankostenrechnung -->
+                                <NavLink :href="route('plankosten')" :active="route().current('plankosten')">
+                                    Plankostenrechnung
                                 </NavLink>
-                                <!--
-                                <NavLink :href="route('OptimalesProduktionsProgramm')" :active="route().current('OptimalesProduktionsProgramm')">
-                                    OptimalesProduktionsprogramm
-                                </NavLink>
-                                <NavLink :href="route('Maschinenstundensatzrechnung')" :active="route().current('Maschinenstundensatzrechnung')">
-                                    Maschinenstundensatzrechnung
-                                </NavLink>-->
                             </div>
                         </div>
 

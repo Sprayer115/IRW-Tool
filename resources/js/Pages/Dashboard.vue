@@ -39,19 +39,22 @@ const createVerticalArrow = (x, startY, length) => {
         <Head title="Dashboard" />
 
         <AuthenticatedLayout>
-            <template #header>
-                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>
-            </template>
-
+            <header class="bg-slate-50 dark:bg-gray-800 shadow-md">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                        <slot name="header">Dashboard</slot>
+                    </h2>
+                </div>
+            </header>
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="bg-slate-100 dark:bg-gray-800 overflow-hidden sm:rounded-lg shadow-[5px_5px_15px_-3px_rgba(0,0,0,0.3)] dark:shadow-[5px_5px_15px_-3px_rgba(0,0,0,0.7)]">
                         <div class="p-6">
                             <!-- Cost Navigation Diagram -->
                             <div class="relative w-full max-w-4xl mx-auto">
                                 <svg viewBox="0 0 900 450" class="w-full">
                                     <!-- Background -->
-                                    <rect x="0" y="0" width="900" height="450" fill="#ffffff" />
+                                    <rect x="0" y="0" width="900" height="450" fill="rgb(241 245 249)"/>
                                     
                                     <!-- Finanzbuchhaltung -->
                                     <g 

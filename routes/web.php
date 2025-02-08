@@ -9,6 +9,7 @@ use App\Http\Controllers\PreisuntergrenzenController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuizController;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -54,7 +55,7 @@ Route::get('/make-or-buy', function () {
 
 //Innerbetriebliche Leistungsverrechnung
 Route::get('/iblv', function () {
-    return Inertia::render('InnerbetrieblicheLeistungsverrechnung');
+    return Inertia::render('Calc/InnerbetrieblicheLeistungsverrechnung');
 })->middleware(['auth', 'verified'])->name('InnerbetrieblicheLeistungsverrechnung');
 
 // Break-Even
@@ -122,33 +123,47 @@ Route::get('/quiz', [QuizController::class, 'index'])->name('quiz.index');
 
 // routes/web.php
 Route::middleware(['auth'])->group(function () {
-    Route::get('/finanzbuchhaltung', function () {
+    Route::get('/finanzbuchhaltung', function (Request $request) {
         return Inertia::render('TopicLayout', [
             'topicId' => 'finanzbuchhaltung',
-            'title' => 'Finanzbuchhaltung'
+            'title' => 'Finanzbuchhaltung',
+            'page' => $request->query('page', '1')
         ]);
     })->name('finanzbuchhaltung');
     
-    Route::get('/kostenarten', function () {
+    Route::get('/kostenarten', function (Request $request) {
         return Inertia::render('TopicLayout', [
             'topicId' => 'kostenarten',
-            'title' => 'kostenarten'
+            'title' => 'Kostenarten',
+            'page' => $request->query('page', '1')
         ]);
     })->name('kostenarten');
     
-    Route::get('/kostenstellen', function () {
+    Route::get('/kostenstellen', function (Request $request) {
         return Inertia::render('TopicLayout', [
             'topicId' => 'kostenstellen',
-            'title' => 'kostenstellen'
+            'title' => 'Kostenstellen',
+            'page' => $request->query('page', '1')
         ]);
     })->name('kostenstellen');
 
-    Route::get('/kostentraeger', function () {
+    Route::get('/kostentraeger', function (Request $request) {
         return Inertia::render('TopicLayout', [
             'topicId' => 'kostentraeger',
-            'title' => 'kostentraeger'
+            'title' => 'Kostentraeger',
+            'page' => $request->query('page', '1')
         ]);
     })->name('kostentraeger');
+
+    Route::get('/deckungsbeitrag', function (Request $request) {
+        return Inertia::render('TopicLayout', [
+            'topicId' => 'deckungsbeitrag',
+            'title' => 'Deckungsbeitrag',
+            'page' => $request->query('page', '1')
+        ]);
+    })->name('deckungsbeitrag');
+    
+    Route::get('/plankosten')->name('plankosten');
     
     // Add other topic routes
 });
