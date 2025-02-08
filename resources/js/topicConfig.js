@@ -43,12 +43,12 @@ export const topicConfigs = {
         title: 'Deckungsbeitrag',
         pages: () => ({
           components: {
-            'einstufig': () => import('@/Pages/deckungsbeitrag/EinstufigeDB.vue'),
-            'mehrstufig': () => import('@/Pages/deckungsbeitrag/MehrstufigeDB.vue'),
-            'preisuntergrenze': () => import('@/Pages/deckungsbeitrag/Preisuntergrenzenrechnung.vue'),
-            'break-even': () => import('@/Pages/deckungsbeitrag/BreakEven.vue'),
-            'optimierung': () => import('@/Pages/deckungsbeitrag/OptProduktionsprogramm.vue'),
-            'make-or-buy': () => import('@/Pages/deckungsbeitrag/MakeOrBuy.vue'),
+            'einstufig': () => import('@/Pages/Deckungsbeitrag/EinstufigeDB.vue'),
+            'mehrstufig': () => import('@/Pages/Deckungsbeitrag/MehrstufigeDB.vue'),
+            'preisuntergrenze': () => import('@/Pages/Deckungsbeitrag/Preisuntergrenzenrechnung.vue'),
+            'break-even': () => import('@/Pages/Deckungsbeitrag/BreakEven.vue'),
+            'optimierung': () => import('@/Pages/Deckungsbeitrag/OptProduktionsprogramm.vue'),
+            'make-or-buy': () => import('@/Pages/Deckungsbeitrag/MakeOrBuy.vue'),
           }
         })
     }

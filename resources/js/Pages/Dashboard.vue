@@ -42,7 +42,7 @@ const createVerticalArrow = (x, startY, length) => {
             <header class="bg-slate-50 dark:bg-gray-800 shadow-md">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                        <slot name="header">Dashboard2</slot>
+                        <slot name="header">Dashboard</slot>
                     </h2>
                 </div>
             </header>
