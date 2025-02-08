@@ -1,138 +1,3 @@
-<script>
-import { ref, computed, watch, onMounted } from "vue";
-import mermaid from "mermaid";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head,usePage, Link } from "@inertiajs/vue3";
-import { Inertia } from '@inertiajs/inertia';
-
-// Die Unterkomponenten importieren
-import KA1 from "@/Pages/Kostenarten/1.vue";
-import KA2 from "@/Pages/Kostenarten/2.vue";
-import KA3 from "@/Pages/Kostenarten/3.vue";
-import KA4 from "@/Pages/Kostenarten/4.vue";
-
-const activeComponent = ref("KA1");
-
-const components = {
-  KA1,
-  KA2,
-  KA3,
-  KA4,
-};
-
-const setActiveComponent = (component) => {
-  activeComponent.value = component;
-};
-
-const preAuxiliaryCostCenters = ref([
-    { id: 1, name: "Vor-Hilfskostenstelle 1", value: 0, order: 1 },
-]);
-
-const primaryOverheadCosts = ref([
-    { id: 1, name: "Primäre Gemeinkosten 1", value: 0 },
-]);
-
-const allocationMatrix = ref({});
-const mermaidDiagram = ref("");
-
-const calculationResults = ref(null);
-const showResults = ref(false);
-
-const updateMermaidDiagram = () => {
-    let diagramCode = "graph TD;\n";
-
-
-    mermaidDiagram.value = diagramCode;
-};
-
-const renderMermaidDiagram = async () => {
-    try {
-        const { svg } = await mermaid.render(
-            "mermaid-diagram",
-            mermaidDiagram.value
-        );
-        const diagramContainer = document.getElementById("mermaid-container");
-        if (diagramContainer) {
-            diagramContainer.innerHTML = svg;
-        }
-    } catch (error) {
-        console.error("Failed to render Mermaid diagram:", error);
-    }
-};
-
-watch(
-    [preAuxiliaryCostCenters, primaryOverheadCosts, allocationMatrix],
-    () => {
-        updateMermaidDiagram();
-        renderMermaidDiagram();
-    },
-    { deep: true }
-);
-
-onMounted(() => {
-    mermaid.initialize({
-        startOnLoad: false,
-        theme: "neutral",
-        flowchart: {
-            nodeSpacing: 50,
-            rankSpacing: 100,
-            curve: "basis",
-            useMaxWidth: false,
-        },
-        themeVariables: {
-            edgeLabelBackground: "#ffffff",
-            lineColor: "#333333",
-        },
-        htmlLabels: true,
-        sequence: {
-            useMaxWidth: false,
-        },
-        graph: {
-            rankDir: "TB",
-        },
-    });
-    updateMermaidDiagram();
-    renderMermaidDiagram();
-});
-
-const updateAllocationMatrix = () => {
-  preAuxiliaryCostCenters.value.forEach((costCenter) => {
-    if (!allocationMatrix.value[costCenter.id]) {
-      allocationMatrix.value[costCenter.id] = {};
-    }
-    // Include relationships with other Kostenstellen
-    preAuxiliaryCostCenters.value.forEach((targetCostCenter) => {
-      if (
-        costCenter.id !== targetCostCenter.id &&
-        allocationMatrix.value[costCenter.id][targetCostCenter.id] === undefined
-      ) {
-        allocationMatrix.value[costCenter.id][targetCostCenter.id] = 0;
-      }
-    });
-    // Include relationships with Gemeinkosten
-    primaryOverheadCosts.value.forEach((overheadCost) => {
-      if (
-        allocationMatrix.value[costCenter.id][`oc${overheadCost.id}`] === undefined
-      ) {
-        allocationMatrix.value[costCenter.id][`oc${overheadCost.id}`] = 0;
-      }
-    });
-  });
-};
-
-
-
-const handleCalculation = (results) => {
-    calculationResults.value = results;
-    showResults.value = true;
-    updateMermaidDiagram();
-    renderMermaidDiagram();
-};
-
-// Initialize the allocation matrix
-updateAllocationMatrix();
-</script>
-
 <!-- Kostenarten/Info.vue -->
 <template>
   <AuthenticatedLayout>
@@ -168,14 +33,155 @@ updateAllocationMatrix();
             :preAuxiliaryCostCenters="preAuxiliaryCostCenters"
             :primaryOverheadCosts="primaryOverheadCosts"
             :allocationMatrix="allocationMatrix"
-            @calculate="handleCalculation"
+            @calculate="handleCalculation()"
           ></component>
         </div>
       </div>
     </AuthenticatedLayout>
 </template>
   
+<script>
+import { ref, computed, watch, onMounted } from "vue";
+import mermaid from "mermaid";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { Head, usePage, Link } from "@inertiajs/vue3";
+import { Inertia } from '@inertiajs/inertia';
 
+import KA1 from "@/Pages/Kostenarten/1.vue";
+import KA2 from "@/Pages/Kostenarten/2.vue";
+import KA3 from "@/Pages/Kostenarten/3.vue";
+import KA4 from "@/Pages/Kostenarten/4.vue";
+
+export default {
+  name: 'InfoKostenarten',
+  
+  components: {
+    AuthenticatedLayout,
+    Head,
+    Link,
+    KA1,
+    KA2,
+    KA3,
+    KA4
+  },
+
+  setup() {
+    const activeComponent = ref("KA1");
+    const preAuxiliaryCostCenters = ref([
+      { id: 1, name: "Vor-Hilfskostenstelle 1", value: 0, order: 1 },
+    ]);
+    const primaryOverheadCosts = ref([
+      { id: 1, name: "Primäre Gemeinkosten 1", value: 0 },
+    ]);
+    const allocationMatrix = ref({});
+    const mermaidDiagram = ref("");
+    const calculationResults = ref(null);
+    const showResults = ref(false);
+
+    const setActiveComponent = (component) => {
+      activeComponent.value = component;
+    };
+
+    const updateMermaidDiagram = () => {
+      let diagramCode = "graph TD;\n";
+      mermaidDiagram.value = diagramCode;
+    };
+
+    const renderMermaidDiagram = async () => {
+      try {
+        const { svg } = await mermaid.render(
+          "mermaid-diagram",
+          mermaidDiagram.value
+        );
+        const diagramContainer = document.getElementById("mermaid-container");
+        if (diagramContainer) {
+          diagramContainer.innerHTML = svg;
+        }
+      } catch (error) {
+        console.error("Failed to render Mermaid diagram:", error);
+      }
+    };
+
+    const updateAllocationMatrix = () => {
+      preAuxiliaryCostCenters.value.forEach((costCenter) => {
+        if (!allocationMatrix.value[costCenter.id]) {
+          allocationMatrix.value[costCenter.id] = {};
+        }
+        preAuxiliaryCostCenters.value.forEach((targetCostCenter) => {
+          if (
+            costCenter.id !== targetCostCenter.id &&
+            allocationMatrix.value[costCenter.id][targetCostCenter.id] === undefined
+          ) {
+            allocationMatrix.value[costCenter.id][targetCostCenter.id] = 0;
+          }
+        });
+        primaryOverheadCosts.value.forEach((overheadCost) => {
+          if (
+            allocationMatrix.value[costCenter.id][`oc${overheadCost.id}`] === undefined
+          ) {
+            allocationMatrix.value[costCenter.id][`oc${overheadCost.id}`] = 0;
+          }
+        });
+      });
+    };
+
+    const handleCalculation = (results) => {
+      calculationResults.value = results;
+      showResults.value = true;
+      updateMermaidDiagram();
+      renderMermaidDiagram();
+    };
+
+    watch(
+      [preAuxiliaryCostCenters, primaryOverheadCosts, allocationMatrix],
+      () => {
+        updateMermaidDiagram();
+        renderMermaidDiagram();
+      },
+      { deep: true }
+    );
+
+    onMounted(() => {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: "neutral",
+        flowchart: {
+          nodeSpacing: 50,
+          rankSpacing: 100,
+          curve: "basis",
+          useMaxWidth: false,
+        },
+        themeVariables: {
+          edgeLabelBackground: "#ffffff",
+          lineColor: "#333333",
+        },
+        htmlLabels: true,
+        sequence: {
+          useMaxWidth: false,
+        },
+        graph: {
+          rankDir: "TB",
+        },
+      });
+      updateMermaidDiagram();
+      renderMermaidDiagram();
+      updateAllocationMatrix();
+    });
+
+    return {
+      activeComponent,
+      preAuxiliaryCostCenters,
+      primaryOverheadCosts,
+      allocationMatrix,
+      mermaidDiagram,
+      calculationResults,
+      showResults,
+      setActiveComponent,
+      handleCalculation
+    };
+  }
+};
+</script>
 
 
 
