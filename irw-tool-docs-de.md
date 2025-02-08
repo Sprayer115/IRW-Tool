@@ -7,7 +7,8 @@ Das IRW-Tool ist eine webbasierte Lernplattform für Rechnungswesen, aufgebaut a
 - Modularen Aufbau für verschiedene Themenbereiche
 - Interaktive Übungen und Lerneinheiten
 - Umfassende Lernerfahrung
-
+- Anbindung an IRW Vorlesungen der HTWG
+  
 ## 2. Technology Stack
 
 ### Frontend
@@ -98,6 +99,7 @@ Die Wartung wird erleichtert durch:
 - Modular gestaltete Komponenten
 - Unkomplizierte Erweiterbarkeit
 - Gut dokumentierte Codebasis
+- übersichtlich strukturierter Dateien Architektur
 
 ## 10. Zukunftspläne
 
