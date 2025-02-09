@@ -35,7 +35,7 @@ const props = defineProps({
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items-center">
+                            <div class="hidden 2xl:space-x-8 2xl:-my-px 2xl:ms-10 2xl:flex items-center">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
@@ -204,7 +204,7 @@ const props = defineProps({
                         </div>
 
                         <!-- Hamburger -->
-                        <div class="-me-2 flex items-center sm:hidden">
+                        <div class="me-2 flex items-center 2xl:hidden">
                             <button
                                 @click="showingNavigationDropdown = !showingNavigationDropdown"
                                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out"
@@ -237,32 +237,99 @@ const props = defineProps({
                 </div>
 
                 <!-- Responsive Navigation Menu -->
-                <div
-                    :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
-                    class="sm:hidden"
-                >
+                <div :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }" class="2xl:hidden">
                     <div class="pt-2 pb-3 space-y-1">
+                        <!-- Hauptnavigation -->
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
+                        
+                        <ResponsiveNavLink :href="route('finanzbuchhaltung')" :active="route().current('finanzbuchhaltung')">
+                            Finanzbuchhaltung
+                        </ResponsiveNavLink>
+
+                        <div class="border-t border-gray-200 dark:border-gray-600 my-4"></div>
+
+                        <!-- Kostenartenrechnung -->
+                        <div class="px-3 py-2 text-base font-bold text-gray-600 dark:text-gray-300">
+                            Kostenartenrechnung
+                        </div>
+                        <ResponsiveNavLink :href="route('kostenarten', { page: 'info' })">
+                            Infoseite
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('kostenarten', { page: 'abgrenzung' })">
+                            Abgrenzungsrechnung
+                        </ResponsiveNavLink>
+
+                        <div class="border-t border-gray-200 dark:border-gray-600 my-4"></div>
+
+                        <!-- Kostenstellenrechnung -->
+                        <div class="px-3 py-2 text-base font-bold text-gray-600 dark:text-gray-300">
+                            Kostenstellenrechnung
+                        </div>
+                        <ResponsiveNavLink :href="route('kostenstellen', { page: 'info' })">
+                            Infoseite
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('kostenstellen', { page: 'iblv' })">
+                            Innerbetriebliche Leistungsverrechnung
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('kostenstellen', { page: 'msr' })">
+                            Maschinenstundenrechnungen
+                        </ResponsiveNavLink>
+
+                        <div class="border-t border-gray-200 dark:border-gray-600 my-4"></div>
+
+                        <!-- Kostenträgerrechnung -->
+                        <div class="px-3 py-2 text-base font-bold text-gray-600 dark:text-gray-300">
+                            Kostenträgerrechnung
+                        </div>
+                        <ResponsiveNavLink :href="route('kostentraeger', { page: 'info' })">
+                            Infoseite
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('kostentraeger', { page: 'zuschlag' })">
+                            Zuschlagssatzberechnung
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('kostentraeger', { page: 'verteilung' })">
+                            Kostenverteilung
+                        </ResponsiveNavLink>
+
+                        <div class="border-t border-gray-200 dark:border-gray-600 my-4"></div>
+
+                        <!-- Deckungsbeitragsrechnung -->
+                        <div class="px-3 py-2 text-base font-bold text-gray-600 dark:text-gray-300">
+                            Deckungsbeitragsrechnung
+                        </div>
+                        <ResponsiveNavLink :href="route('deckungsbeitrag', { page: 'einstufig' })">
+                            Einstufige DB
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('deckungsbeitrag', { page: 'mehrstufig' })">
+                            Mehrstufige DB
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('deckungsbeitrag', { page: 'preisuntergrenze' })">
+                            Preisuntergrenzenrechnung
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('deckungsbeitrag', { page: 'break-even' })">
+                            Break-Even-Analyse
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('deckungsbeitrag', { page: 'optimierung' })">
+                            Optimales Produktionsprogramm
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('deckungsbeitrag', { page: 'make-or-buy' })">
+                            Make-or-Buy Entscheidungen
+                        </ResponsiveNavLink>
+
+                        <div class="border-t border-gray-200 dark:border-gray-600 my-4"></div>
+
+                        <!-- Plankostenrechnung -->
+                        <div class="px-3 py-2 text-base font-bold text-gray-600 dark:text-gray-300">
+                            Plankostenrechnung
+                        </div>
+                        <ResponsiveNavLink :href="route('plankosten')" :active="route().current('plankosten')">
+                            Plankostenrechnung
+                        </ResponsiveNavLink>
                     </div>
 
-                    <!-- Responsive Settings Options -->
-                    <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
-                        <div class="px-4">
-                            <div class="font-medium text-base text-gray-800 dark:text-gray-200">
-                                {{ $page.props.auth.user.name }}
-                            </div>
-                            <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
-                        </div>
-
-                        <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
-                            <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
-                    </div>
+                    
                 </div>
             </nav>
 
