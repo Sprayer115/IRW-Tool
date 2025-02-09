@@ -1,35 +1,26 @@
 <template>
-      <div class="py-12 bg-white dark:bg-white">
-  <div class="deckungsbeitrag-page">
+  <div class="db2-page">
     <!-- Titel -->
-    <h1>Deckungsbeitrag (einstufig) – DB I</h1>
-
+    <h1 class="title">Deckungsbeitrag (mehrstufig) – <br>Deckungsbeitrag II (nach Produktfixkosten)</h1>
+    <br>
     <!-- Einleitender Text -->
     <p>
-      Die einstufige Deckungsbeitragsrechnung betrachtet den Deckungsbeitrag als
-      Differenz zwischen <strong>Umsatzerlösen</strong> und
-      <strong>variablen Kosten</strong>.
-    </p>
-    <p>
-      Der <strong>einstufige Deckungsbeitrag (DB I)</strong> zeigt, wie viel
-      jedes Produkt zur Deckung der Fixkosten und zur Erzielung eines Gewinns
-      beiträgt.
+      DB II zeigt, wie viel nach Abzug der <strong>produktbezogenen Fixkosten</strong>
+      (z. B. Maschinenkosten, produktbezogene Werbung) übrig bleibt.
     </p>
 
     <!-- Formel -->
-    <h2>Formel:</h2>
     <div class="formula-block">
       <p class="formula">
-        <strong>DB I = Umsatzerlöse – Variable Kosten</strong>
+        <strong>DB II = DB I – Produktfixkosten</strong>
       </p>
     </div>
 
     <!-- Flex-Layout: links die kleine Skizzen-Tabelle, rechts die Zusammenfassung -->
     <div class="layout-row">
-      <!-- Mini-Tabelle (linke Seite, wie im Screenshot) -->
+      <!-- Mini-Tabelle (linke Seite) -->
       <div class="mini-table-section">
         <table class="mini-scheme">
-          <!-- Kopfzeile mit 2 Spalten (Produkt A, Produkt B) -->
           <thead>
             <tr>
               <th></th>
@@ -38,15 +29,15 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Obere graue Zeile (Umsatzerlöse) -->
+            <!-- DB I (grau) -->
             <tr class="gray-row top-border bottom-border">
-              <td>Umsatzerlöse</td>
+              <td>DB I</td>
               <td></td>
               <td></td>
             </tr>
-            <!-- Weiße Zeile (Variable Kosten) -->
+            <!-- Produktfixkosten (weiß) -->
             <tr class="bottom-border">
-              <td>Variable Kosten</td>
+              <td>Produktfixkosten</td>
               <td></td>
               <td></td>
             </tr>
@@ -54,53 +45,54 @@
         </table>
       </div>
 
-      <!-- Zusammenfassung (rechte Seite) -->
+      <!-- Rechte Seite: Tabelle mit DB I, Produktfixkosten, DB II -->
       <div class="summary-section">
-        <h3><strong>Zusammenfassung der Ergebnisse </strong></h3>
-        <table class="dbi-tabelle">
+        <table class="db2-tabelle">
           <thead>
             <tr>
               <th>Produkt</th>
-              <th>Umsatzerlöse (€)</th>
-              <th>Variable Kosten (€)</th>
-              <th>Deckungsbeitrag (€)</th>
+              <th>DB I (€)</th>
+              <th>Produktfixkosten (€)</th>
+              <th>DB II (€)</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>Produkt A</td>
-              <td>500.000</td>
-              <td>283.923,5</td>
               <td>216.076,5</td>
+              <td>30.000</td>
+              <td>186.076,5</td>
             </tr>
             <tr>
               <td>Produkt B</td>
-              <td>320.000</td>
-              <td>191.376,5</td>
               <td>128.623,5</td>
+              <td>20.000</td>
+              <td>108.623,5</td>
             </tr>
             <tr class="total-row">
               <td>Gesamt</td>
-              <td>820.000</td>
-              <td>475.300</td>
               <td>344.700</td>
+              <td>50.000</td>
+              <td>294.700</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
 export default {
-  name: "DeckungsbeitragEinstufigDBI"
+  name: "DeckungsbeitragMehrstufigDBII"
 };
 </script>
 
 <style scoped>
-.deckungsbeitrag-page {
+.title {
+  font-size: 1.4rem;
+}
+.db2-page {
   max-width: 900px;
   margin: 1rem auto;
   font-family: sans-serif;
@@ -111,36 +103,32 @@ h1 {
   margin-bottom: 1rem;
 }
 
-/* Formel-Block */
+/* Formel */
 .formula-block {
-  margin: 1rem 0;
+  margin: 2rem 0 1.5rem;
+  text-align: center;
 }
-
 .formula {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-style: italic;
 }
 
-/* Layout-Container für die zwei Tabellen nebeneinander */
+/* Layout: zwei Spalten nebeneinander */
 .layout-row {
   display: flex;
   gap: 2rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
-/* Kleinere (linke) Tabelle */
 .mini-table-section {
   flex: 0.5;
 }
 
-/* Größere (rechte) Tabelle */
 .summary-section {
   flex: 1;
 }
 
-/* 
-   ============= Mini-Scheme =============
-*/
+/* ===== Mini-Scheme links ===== */
 .mini-scheme {
   border-collapse: collapse;
   width: 100%;
@@ -153,11 +141,9 @@ h1 {
   padding: 4px 8px;
 }
 
-/* Graue Zeile für Umsatzerlöse */
 .gray-row {
   background-color: #ccc;
 }
-
 .top-border {
   border-top: 2px solid #000;
 }
@@ -169,24 +155,24 @@ h1 {
   padding: 8px;
 }
 
-/*
-   ============= DBI-Tabelle (rechte Seite) =============
-*/
-.dbi-tabelle {
+/* ===== Tabelle DB II rechts ===== */
+.db2-tabelle {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 0.5rem;
   text-align: left;
 }
-.dbi-tabelle th,
-.dbi-tabelle td {
+
+.db2-tabelle th,
+.db2-tabelle td {
   border: 1px solid #ccc;
   padding: 8px 12px;
 }
-.dbi-tabelle thead tr {
+
+.db2-tabelle thead tr {
   background-color: #f5f5f5;
 }
-.dbi-tabelle .total-row td {
+
+.total-row td {
   font-weight: bold;
 }
 </style>

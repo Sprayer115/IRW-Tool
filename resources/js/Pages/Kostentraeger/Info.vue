@@ -54,9 +54,8 @@ import mermaid from "mermaid";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 
-import I from "@/Pages/Deckungsbeitrag/Preisuntergrenze/1.vue";
-import II from "@/Pages/Deckungsbeitrag/Preisuntergrenze/2.vue";
-import III from "@/Pages/Deckungsbeitrag/Preisuntergrenze/3.vue";
+import I from "@/Pages/Kostentraeger/Info/1.vue";
+import II from "@/Pages/Kostentraeger/Info/2.vue";
 
 export default {
   name: 'InfoKostenarten',
@@ -65,7 +64,6 @@ export default {
   components: {
     I,
     II,
-    III,
   },
 
   setup() {
@@ -83,7 +81,7 @@ export default {
     const showResults = ref(false);
 
     // Mapping of registered components for dynamic rendering
-    const registeredComponents = { I, II, III};
+    const registeredComponents = { I, II};
 
     const setActiveComponent = (component) => {
       activeComponent.value = component;

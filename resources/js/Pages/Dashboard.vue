@@ -213,6 +213,8 @@ const createVerticalArrow = (x, startY, length) => {
                                         fill="#2c3e50"
                                     />
                                 </svg>
+                                Willkommen im interaktiven Lernportal zur Kostenrechnung!
+Tauchen Sie ein in die Welt der Finanz- und Kostenrechnung – einfach, verständlich und interaktiv. Klicken Sie auf die Bereiche, um Definitionen, Beispiele und praxisnahe Übungen zu entdecken. Ob Kostenarten, -stellen oder -träger: Lernen Sie Schritt für Schritt, wie Unternehmen ihre Kosten strukturieren und Produkte kalkulieren. Los geht's!
                             </div>
                         </div>
                     </div>

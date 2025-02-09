@@ -23,19 +23,19 @@ export const topicConfigs = {
       title: 'Kostenstellen',
       pages: () => ({
         components: {
-          'info': () => import('@/Pages/Kostenstellen/1.vue'),
-          'iblv': () => import('@/Pages/Kostenstellen/2.vue'),
-          'maschinenstunden': () => import('@/Pages/Kostenstellen/3.vue'),
+          'info': () => import('@/Pages/Kostenstellen/Info.vue'),
+          'iblv': () => import('@/Pages/Kostenstellen/InnerbetrieblicheLeistungsverrechnung.vue'),
+          'msr': () => import('@/Pages/Kostenstellen/Maschinenstundenrechnung.vue'),
         }
       })
     },
     kostentraeger: {
-        title: 'Kostentraeger',
+        title: 'Kostenträger',
         pages: () => ({
           components: {
-            'info': () => import('@/Pages/Kostentraeger/1.vue'),
-            'zuschlag': () => import('@/Pages/Kostentraeger/2.vue'),
-            'verteilung': () => import('@/Pages/Kostentraeger/3.vue')
+            'info': () => import('@/Pages/Kostentraeger/Info.vue'),
+            'zuschlag': () => import('@/Pages/Kostentraeger/Zuschlag.vue'),
+            'verteilung': () => import('@/Pages/Kostentraeger/Verteilung.vue')
           }
         })
     },

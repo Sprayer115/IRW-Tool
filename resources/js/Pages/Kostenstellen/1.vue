@@ -1,22 +1,48 @@
 <!-- Kostenstellen/1.vue -->
 <template>
-    <div class="page">
-      <input v-model="pageData" @input="updateData">
-      1
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        pageData: ''
-      }
-    },
-    methods: {
-      updateData() {
-        this.$emit('update:modelValue', this.pageData)
-      }
+  <div class="page">
+    Definition der Kostenstellenrechnung <br>
+    "Die Kostenstellenrechnung ist der zweite Schritt der Kostenrechnung. Sie verteilt die Gemeinkosten aus der Kostenartenrechnung auf die Bereiche des Unternehmens (Kostenstellen), die diese Kosten verursacht haben. Ziel ist es, die Gemeinkosten verursachungsgerecht den Kostenstellen zuzuordnen und eine Basis für die spätere Verrechnung auf Kostenträger zu schaffen."  </div>
+  <br>
+  <br>
+  <div>
+    <img src='/images/Kostenstellen1.png' />
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      pageData: ''
+    }
+  },
+  methods: {
+    updateData() {
+      this.$emit('update:modelValue', this.pageData)
     }
   }
-  </script>
+}
+</script>
+  <style scoped>
+  .finanzbuchhaltung {
+    max-width: 600px;
+    margin: 0 auto;
+    font-family: sans-serif;
+  }
+  
+  h1, h2, h3 {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+  /* Hier werden Aufzählungspunkte aktiviert bzw. sichtbar gemacht */
+  ul {
+    list-style: disc;
+    margin-left: 1.5rem; 
+  }
+  
+  .ergebnis p {
+    font-weight: bold;
+  }
+  </style>
