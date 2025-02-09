@@ -1,6 +1,6 @@
 <template>
   <div class="langfristige-preisuntergrenze">
-    <h3>Berechnung:</h3>
+    <h2>Berechnung:</h2>
     <br>
 
     <!-- Hauptliste (geordnete Liste) mit zwei großen Punkten -->

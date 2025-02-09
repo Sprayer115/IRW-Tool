@@ -2,7 +2,7 @@
       <div class="py-12 bg-white dark:bg-white">
   <div class="deckungsbeitrag-page">
     <!-- Titel -->
-    <h1>Deckungsbeitrag (einstufig) – DB I</h1>
+    <h2>Deckungsbeitrag (einstufig) – DB I</h2>
 
     <!-- Einleitender Text -->
     <p>
@@ -17,7 +17,7 @@
     </p>
 
     <!-- Formel -->
-    <h2>Formel:</h2>
+    <h3>Formel:</h3>
     <div class="formula-block">
       <p class="formula">
         <strong>DB I = Umsatzerlöse – Variable Kosten</strong>

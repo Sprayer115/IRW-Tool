@@ -10,8 +10,7 @@
         Vertrieb anteilig auf die Kostenträger umzulegen:
       </p>
   
-      <h2>Berechnung der Zuschlagssätze:</h2>
-  
+      
 
       <img src='/images/Zuschlag1.png' />
     </div>

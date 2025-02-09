@@ -4,9 +4,7 @@ export const topicConfigs = {
       pages: () => ({
         components: {
           'grundlagen': () => import('@/Pages/Finanzbuchhaltung/1.vue'),
-          'buchungen': () => import('@/Pages/Finanzbuchhaltung/2.vue'),
-          'abschluss': () => import('@/Pages/Finanzbuchhaltung/3.vue'),
-          'auswertung': () => import('@/Pages/Finanzbuchhaltung/4.vue'),
+          'buchungen': () => import('@/Pages/Finanzbuchhaltung/2.vue')
         }
       })
     },

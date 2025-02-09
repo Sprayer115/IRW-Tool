@@ -70,9 +70,7 @@
   </script>
   
   <style scoped>
-  .title {
-  font-size: 1.4rem;
-}
+
   .preisuntergrenze-container {
     max-width: 700px;
     margin: 1rem auto;

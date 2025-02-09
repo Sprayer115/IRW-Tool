@@ -2,7 +2,7 @@
 <!-- Finanzbuchhaltung/1.vue -->
 <template>
   <div class="cost-types">
-    <h1>Einzel- und Gemeinkosten</h1>
+    <h2>Einzel- und Gemeinkosten</h2>
     <br>
     <ol>
       <li>
@@ -50,5 +50,10 @@
 }
 ol {
   margin-left: 1.5rem;
+}
+h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: inherit; /* übernimmt die Textfarbe vom übergeordneten Element */
 }
 </style>

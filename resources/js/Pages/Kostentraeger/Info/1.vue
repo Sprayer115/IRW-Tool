@@ -1,8 +1,8 @@
 <template>
   <div class="gleichungsverfahren-uebernahme">
-    <h1 class="title">Kostenträgerrechnung </h1>
+    <h2 class="title">Kostenträgerrechnung </h2>
     <br>
-    <h2>Übernahme der Zahlen aus dem Gleichungsverfahren</h2>
+    <h3>Übernahme der Zahlen aus dem Gleichungsverfahren</h3>
     <br>
     <p>Die Gesamtkosten aus dem Gleichungsverfahren sind:</p>
     <br>

@@ -1,8 +1,8 @@
 <!-- Kostenarten/Abgrenzung.vue -->
 <template>
     <div class="page">
-      <input v-model="pageData" @input="updateData">
       Abgrenzung
+      TODO, soll hier einfach der Rechner hin?
     </div>
   </template>
   

@@ -1,8 +1,8 @@
 <!-- Deckungsbeitrag/MakeOrBuy.vue -->
 <template>
     <div class="page">
-      <input :model="pageData" @input="updateData">
       MakeOrBuy
+      TODO: Hier nur Rechner?
     </div>
   </template>
   

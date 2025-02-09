@@ -59,9 +59,6 @@
   </script>
   
   <style scoped>
-  .title {
-  font-size: 1.4rem;
-}
   .langfristige-preisuntergrenze {
     max-width: 700px;
     margin: 1rem auto;
