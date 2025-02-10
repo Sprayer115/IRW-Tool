@@ -1,30 +1,18 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
 import { ref, computed, onMounted } from 'vue';
 import html2pdf from 'html2pdf.js';
 
-const emit = defineEmits(['update:checked']);
-
 const props = defineProps({
-    value: {
-        default: null,
-    },
-    items: {
-        type: Array,
-        default: () => [],
-    }
+  preAuxiliaryCostCenters: { type: Array, default: () => [] },
+  primaryOverheadCosts: { type: Array, default: () => [] },
+  allocationMatrix: { type: Object, default: () => ({}) },
+  // Deine bisherigen Props:
+  value: { default: null },
+  items: { type: Array, default: () => [] },
 });
 
-const proxyChecked = computed({
-    get() {
-        return props.checked;
-    },
-
-    set(val) {
-        emit('update:checked', val);
-    },
-});
+const emit = defineEmits(['update:checked', 'calculate']);
+  
 
 // Kostentraegerzeitrechnung
 const stueckPreis = ref(0); //enter
@@ -222,13 +210,6 @@ function calculateBEU(row){
 
 <template>
     <div>
-      <Head title="Break-Even">
-      </Head>
-  
-      <AuthenticatedLayout>
-          <template #header>
-              <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Break-Even</h2>
-          </template>
           <div class="py-12 m-lg-4">
             <div class="input-area"
                 style="display: grid; grid-template-columns: 3fr 2fr; grid-gap: 20px; align-items: center; justify-content: center; justify-items: center; max-width: 600px; margin: 0 auto;">
@@ -381,7 +362,6 @@ function calculateBEU(row){
         </div>
           </div>
         </div>
-      </AuthenticatedLayout>
     </div>
     <div> 
         

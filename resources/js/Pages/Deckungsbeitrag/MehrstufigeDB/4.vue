@@ -38,12 +38,26 @@
         </tr>
       </tbody>
     </table>
+    <!-- Skript-Button, analog zu 2.vue -->
+    <div style="text-align: right; margin-top: 1rem;">
+      <button class="btnShowScript" @click="downloadScript">Skript</button>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "MehrstufigeDBErgebnis"
+  name: "MehrstufigeDBErgebnis",
+  methods: {
+    downloadScript() {
+      const link = document.createElement('a');
+      link.href = '/storage/DB-Rechnung.pdf';
+      link.setAttribute('download', 'Deckungsbeitragsrechnung.pdf');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
 };
 </script>
 
@@ -69,5 +83,21 @@ export default {
 
 .db-ergebnis-tabelle thead tr {
   background-color: #f5f5f5;
+}
+
+/* Skript-Button, angelehnt an 2.vue */
+.btnShowScript {
+  background-color: #475569; /* bg-slate-600 */
+  border-radius: 12px;
+  margin: 5px;
+  padding: 14px 28px;
+  font-weight: 500;
+  color: rgb(226,232,240);
+  border: none;
+  cursor: pointer;
+}
+
+.btnShowScript:hover {
+  opacity: 0.85;
 }
 </style>

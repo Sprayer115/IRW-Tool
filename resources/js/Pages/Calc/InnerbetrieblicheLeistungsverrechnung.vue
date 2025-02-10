@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
 import mermaid from "mermaid";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import Anbauverfahren from "@/Pages/Calc/Anbauverfahren.vue";
 import Stufenleiterverfahren from "@/Pages/Calc/Stufenleiterverfahren.vue";
@@ -291,474 +290,469 @@ updateAllocationMatrix();
 </script>
 
 <template>
-    <AuthenticatedLayout>
-        <Head title="Innerbetriebliche Leistungsverrechnung" />
+  <!-- Haupt-Wrapper oder Layout -->
+  <div>
+    <!-- Seite/Titel -->
+    <Head title="Innerbetriebliche Leistungsverrechnung" />
+    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+      Innerbetriebliche Leistungsverrechnung
+    </h2>
+    <hr class="my-2 border-gray-300 dark:border-gray-600" />
+    
+    <!-- Navigation -->
+    <nav>
+      <ul class="flex space-x-4">
+        <!-- Bisheriges v-for für Komponenten-Buttons -->
+        <li
+          v-for="component in Object.keys(components)"
+          :key="component"
+        >
+          <button
+            @click="setActiveComponent(component)"
+            :class="[
+              'px-4 py-2 bg-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
+              activeComponent === component
+                ? 'text-blue-500 font-semibold'
+                : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white',
+            ]"
+          >
+            {{ component }}
+          </button>
+        </li>
+      </ul>
+    </nav>
 
-        <template #header>
-            <h2
-                class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
-            >
-                Innerbetriebliche Leistungsverrechnung
-            </h2>
-            <hr class="my-2 border-gray-300 dark:border-gray-600" />
-            <nav class="">
-                <ul class="flex space-x-4">
-                    <li
-                        v-for="component in Object.keys(components)"
-                        :key="component"
+    <!-- Hinweise je nach aktivem Verfahren -->
+    <div class="mt-2">
+      <p v-if="activeComponent === 'Anbauverfahren'">
+        Leistungsaustausch zwischen vor und Hilfskostenstellen wird nicht berücksichtigt...
+      </p>
+      <p v-if="activeComponent === 'Stufenleiterverfahren'">
+        Leistungsverrechnung der Vor-/Hilfskostenstellen nur in eine Richtung...
+      </p>
+      <p v-if="activeComponent === 'Gleichungsverfahren'">
+        Berücksichtigung beider Vor-/Hilfskostenstellen...
+      </p>
+    </div>
+
+    <!-- Hauptinhalt -->
+    <div class="py-12">
+      <div class="max-w-9xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white2 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+          <!-- Vor-Hilfskostenstellen & Primäre GK -->
+          <div class="flex flex-wrap -mx-2 mb-8">
+                <div class="w-full md:w-1/2 px-2 mb-4 md:mb-0">
+                    <h3 class="text-xl font-semibold mb-4">
+                        Vor-Hilfskostenstellen
+                    </h3>
+                    <div
+                        v-for="costCenter in preAuxiliaryCostCenters"
+                        :key="costCenter.id"
+                        class="mb-4 flex items-center space-x-2"
                     >
+                        <input
+                            v-model="costCenter.name"
+                            type="text"
+                            class="flex-grow p-2 border rounded text-sm"
+                            :placeholder="`Name der Vor-Hilfskostenstelle ${costCenter.id}`"
+                        />
+                        <input
+                            v-model.number="costCenter.value"
+                            type="number"
+                            class="w-24 p-2 border rounded text-sm"
+                            placeholder="Wert"
+                        />
                         <button
-                            @click="setActiveComponent(component)"
-                            :class="[
-                                'px-4 py-2 bg-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
-                                activeComponent === component
-                                    ? 'text-blue-500 font-semibold'
-                                    : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white',
-                            ]"
+                            @click="
+                                removePreAuxiliaryCostCenter(
+                                    costCenter.id
+                                )
+                            "
+                            class="p-2 text-red-500 hover:text-red-700"
                         >
-                            {{ component }}
+                            <span class="sr-only">Entfernen</span>
+                            <svg
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                ></path>
+                            </svg>
                         </button>
-                    </li>
-                </ul>
-            </nav>
-            <div class="mt-2"> 
-                <p v-if="(activeComponent == 'Anbauverfahren')">
-                    Leistungsaustausch zwischen vor und Hilfskostenstellen wird nicht berücksichtigt. Alle Leistungen werden direkt mit den 
-                    Hauptkostenstellen verrechnet.      
-                </p>
-                <p v-if="(activeComponent == 'Stufenleiterverfahren')">
-                    Leistungsverrechnung der Vor-/Hilfskostenstellen nur in eine Richtung. Eine Vor-/Hilfskostenstelle aussuchen und ausrechnen, was sie der anderen bringt.
-                </p>
-                <p v-if="(activeComponent == 'Gleichungsverfahren')">
-                    Berücksichtigung beider Vor-/Hilfskostenstellen, genaustes Ergebnis.
-                </p>
+                    </div>
+                    <button
+                        @click="addPreAuxiliaryCostCenter"
+                        class="mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+                    >
+                        Vor-Hilfskostenstelle hinzufügen
+                    </button>
+                </div>
+
+                <div class="w-full md:w-1/2 px-2">
+                    <h3 class="text-xl font-semibold mb-4">
+                        Primäre Gemeinkosten
+                    </h3>
+                    <div
+                        v-for="overheadCost in primaryOverheadCosts"
+                        :key="overheadCost.id"
+                        class="mb-4 flex items-center space-x-2"
+                    >
+                        <input
+                            v-model="overheadCost.name"
+                            type="text"
+                            class="flex-grow p-2 border rounded text-sm"
+                            :placeholder="`Name der Primären Gemeinkosten ${overheadCost.id}`"
+                        />
+                        <input
+                            v-model.number="overheadCost.value"
+                            type="number"
+                            class="w-24 p-2 border rounded text-sm"
+                            placeholder="Wert"
+                        />
+                        <button
+                            @click="
+                                removePrimaryOverheadCost(
+                                    overheadCost.id
+                                )
+                            "
+                            class="p-2 text-red-500 hover:text-red-700"
+                        >
+                            <span class="sr-only">Entfernen</span>
+                            <svg
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                ></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <button
+                        @click="addPrimaryOverheadCost"
+                        class="mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+                    >
+                        Primäre Gemeinkosten hinzufügen
+                    </button>
+                </div>
             </div>
-        </template>
 
-        <div class="py-12">
-            <div class="max-w-9xl mx-auto sm:px-6 lg:px-8">
-                <div
-                    class="bg-white2 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6"
-                >
-                    
-                    <div class="flex flex-wrap -mx-2 mb-8">
-                        <div class="w-full md:w-1/2 px-2 mb-4 md:mb-0">
-                            <h3 class="text-xl font-semibold mb-4">
-                                Vor-Hilfskostenstellen
-                            </h3>
-                            <div
-                                v-for="costCenter in preAuxiliaryCostCenters"
-                                :key="costCenter.id"
-                                class="mb-4 flex items-center space-x-2"
-                            >
-                                <input
-                                    v-model="costCenter.name"
-                                    type="text"
-                                    class="flex-grow p-2 border rounded text-sm"
-                                    :placeholder="`Name der Vor-Hilfskostenstelle ${costCenter.id}`"
-                                />
-                                <input
-                                    v-model.number="costCenter.value"
-                                    type="number"
-                                    class="w-24 p-2 border rounded text-sm"
-                                    placeholder="Wert"
-                                />
-                                <button
-                                    @click="
-                                        removePreAuxiliaryCostCenter(
-                                            costCenter.id
-                                        )
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">
+                    Verrechnungssätze
+                </h3>
+                <div class="overflow-x-auto">
+                    <!-- Table for Relations-->
+                    <table class="w-full border-collapse border">
+                        <thead>
+                            <tr>
+                                <th
+                                    v-if="
+                                        activeComponent ===
+                                        'Stufenleiterverfahren'
                                     "
-                                    class="p-2 text-red-500 hover:text-red-700"
+                                    class="border p-2"
                                 >
-                                    <span class="sr-only">Entfernen</span>
-                                    <svg
-                                        class="w-5 h-5"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                        ></path>
-                                    </svg>
-                                </button>
-                            </div>
-                            <button
-                                @click="addPreAuxiliaryCostCenter"
-                                class="mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+                                    Reihenfolge
+                                </th>
+                                <th class="border p-2">Von \ Zu</th>
+                                <th
+                                    v-for="cc in sortedPreAuxiliaryCostCenters"
+                                    :key="cc.id"
+                                    class="border p-2"
+                                >
+                                    {{ cc.name }}
+                                </th>
+                                <th
+                                    v-for="oc in primaryOverheadCosts"
+                                    :key="oc.id"
+                                    class="border p-2"
+                                >
+                                    {{ oc.name }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="sourceCC in sortedPreAuxiliaryCostCenters"
+                                :key="sourceCC.id"
                             >
-                                Vor-Hilfskostenstelle hinzufügen
-                            </button>
-                        </div>
-
-                        <div class="w-full md:w-1/2 px-2">
-                            <h3 class="text-xl font-semibold mb-4">
-                                Primäre Gemeinkosten
-                            </h3>
-                            <div
-                                v-for="overheadCost in primaryOverheadCosts"
-                                :key="overheadCost.id"
-                                class="mb-4 flex items-center space-x-2"
-                            >
-                                <input
-                                    v-model="overheadCost.name"
-                                    type="text"
-                                    class="flex-grow p-2 border rounded text-sm"
-                                    :placeholder="`Name der Primären Gemeinkosten ${overheadCost.id}`"
-                                />
-                                <input
-                                    v-model.number="overheadCost.value"
-                                    type="number"
-                                    class="w-24 p-2 border rounded text-sm"
-                                    placeholder="Wert"
-                                />
-                                <button
-                                    @click="
-                                        removePrimaryOverheadCost(
-                                            overheadCost.id
-                                        )
+                                <td
+                                    v-if="
+                                        activeComponent ===
+                                        'Stufenleiterverfahren'
                                     "
-                                    class="p-2 text-red-500 hover:text-red-700"
+                                    class="border p-2"
                                 >
-                                    <span class="sr-only">Entfernen</span>
-                                    <svg
-                                        class="w-5 h-5"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                        ></path>
-                                    </svg>
-                                </button>
-                            </div>
-                            <button
-                                @click="addPrimaryOverheadCost"
-                                class="mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
-                            >
-                                Primäre Gemeinkosten hinzufügen
-                            </button>
-                        </div>
-                    </div>
+                                    <input
+                                        v-model.number="sourceCC.order"
+                                        @input="
+                                            updateOrder(
+                                                sourceCC.id,
+                                                $event.target.value
+                                            )
+                                        "
+                                        type="number"
+                                        min="1"
+                                        :max="
+                                            preAuxiliaryCostCenters.length
+                                        "
+                                        class="w-full p-1 border rounded"
+                                    />
+                                </td>
+                                <td class="border p-2">
+                                    {{ sourceCC.name }}
+                                </td>
+                                <td
+                                    v-for="targetCC in sortedPreAuxiliaryCostCenters"
+                                    :key="targetCC.id"
+                                    class="border p-2"
+                                >
+                                    <input
+                                        v-if="
+                                            showAllocationInput(
+                                                sourceCC,
+                                                targetCC
+                                            )
+                                        "
+                                        v-model.number="
+                                            allocationMatrix[
+                                                sourceCC.id
+                                            ][targetCC.id]
+                                        "
+                                        type="number"
+                                        class="w-full p-1 border rounded"
+                                        placeholder="Verrechnungssatz"
+                                    />
+                                    <span v-else>-</span>
+                                </td>
+                                <td
+                                    v-for="oc in primaryOverheadCosts"
+                                    :key="oc.id"
+                                    class="border p-2"
+                                >
+                                    <input
+                                        v-model.number="
+                                            allocationMatrix[
+                                                sourceCC.id
+                                            ][`oc${oc.id}`]
+                                        "
+                                        type="number"
+                                        class="w-full p-1 border rounded"
+                                        placeholder="Verrechnungssatz"
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-                    <div class="mb-8">
-                        <h3 class="text-xl font-semibold mb-4">
-                            Verrechnungssätze
-                        </h3>
-                        <div class="overflow-x-auto">
-                            <!-- Table for Relations-->
-                            <table class="w-full border-collapse border">
-                                <thead>
-                                    <tr>
-                                        <th
-                                            v-if="
-                                                activeComponent ===
-                                                'Stufenleiterverfahren'
-                                            "
-                                            class="border p-2"
-                                        >
-                                            Reihenfolge
-                                        </th>
-                                        <th class="border p-2">Von \ Zu</th>
-                                        <th
-                                            v-for="cc in sortedPreAuxiliaryCostCenters"
-                                            :key="cc.id"
-                                            class="border p-2"
-                                        >
-                                            {{ cc.name }}
-                                        </th>
-                                        <th
-                                            v-for="oc in primaryOverheadCosts"
-                                            :key="oc.id"
-                                            class="border p-2"
-                                        >
-                                            {{ oc.name }}
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="sourceCC in sortedPreAuxiliaryCostCenters"
-                                        :key="sourceCC.id"
-                                    >
-                                        <td
-                                            v-if="
-                                                activeComponent ===
-                                                'Stufenleiterverfahren'
-                                            "
-                                            class="border p-2"
-                                        >
-                                            <input
-                                                v-model.number="sourceCC.order"
-                                                @input="
-                                                    updateOrder(
-                                                        sourceCC.id,
-                                                        $event.target.value
-                                                    )
-                                                "
-                                                type="number"
-                                                min="1"
-                                                :max="
-                                                    preAuxiliaryCostCenters.length
-                                                "
-                                                class="w-full p-1 border rounded"
-                                            />
-                                        </td>
-                                        <td class="border p-2">
-                                            {{ sourceCC.name }}
-                                        </td>
-                                        <td
-                                            v-for="targetCC in sortedPreAuxiliaryCostCenters"
-                                            :key="targetCC.id"
-                                            class="border p-2"
-                                        >
-                                            <input
-                                                v-if="
-                                                    showAllocationInput(
-                                                        sourceCC,
-                                                        targetCC
-                                                    )
-                                                "
-                                                v-model.number="
-                                                    allocationMatrix[
-                                                        sourceCC.id
-                                                    ][targetCC.id]
-                                                "
-                                                type="number"
-                                                class="w-full p-1 border rounded"
-                                                placeholder="Verrechnungssatz"
-                                            />
-                                            <span v-else>-</span>
-                                        </td>
-                                        <td
-                                            v-for="oc in primaryOverheadCosts"
-                                            :key="oc.id"
-                                            class="border p-2"
-                                        >
-                                            <input
-                                                v-model.number="
-                                                    allocationMatrix[
-                                                        sourceCC.id
-                                                    ][`oc${oc.id}`]
-                                                "
-                                                type="number"
-                                                class="w-full p-1 border rounded"
-                                                placeholder="Verrechnungssatz"
-                                            />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+          <!-- Visualisierung -->
+          <h3 class="text-xl font-semibold mb-4">Visualisierung</h3>
+          <div id="mermaid-container" class="overflow-x-auto"></div>
 
-                    <div class="mt-8">
-                        <h3 class="text-xl font-semibold mb-4">
-                            Visualisierung
-                        </h3>
-                        <div
-                            id="mermaid-container"
-                            class="overflow-x-auto"
-                        ></div>
-                    </div>
+          <!-- Dynamische Komponente zur Berechnung -->
+          <component
+            :is="components[activeComponent]"
+            :preAuxiliaryCostCenters="preAuxiliaryCostCenters"
+            :primaryOverheadCosts="primaryOverheadCosts"
+            :allocationMatrix="allocationMatrix"
+            @calculate="handleCalculation"
+          ></component>
 
-                    <!-- Active component (calculation method) -->
-                    <component
-                        :is="components[activeComponent]"
-                        :preAuxiliaryCostCenters="preAuxiliaryCostCenters"
-                        :primaryOverheadCosts="primaryOverheadCosts"
-                        :allocationMatrix="allocationMatrix"
-                        @calculate="handleCalculation"
-                    ></component>
-
-                    <div v-if="showResults && calculationResults" class="mt-8">
-                        <h3 class="text-xl font-semibold mb-4">Ergebnisse</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full border-collapse border">
-                                <thead>
-                                    <tr>
-                                        <th class="border p-2">Beschreibung</th>
-                                        <th
-                                            v-for="cc in sortedPreAuxiliaryCostCenters"
-                                            :key="cc.id"
-                                            class="border p-2"
-                                        >
-                                            {{
-                                                calculationResults[cc.id]
-                                                    ?.name ||
-                                                `Kostenstelle ${cc.id}`
-                                            }}
-                                        </th>
-                                        <th
-                                            v-for="oc in primaryOverheadCosts"
-                                            :key="oc.id"
-                                            class="border p-2"
-                                        >
-                                            {{
-                                                calculationResults[`oc${oc.id}`]
-                                                    ?.name ||
-                                                `Gemeinkosten ${oc.id}`
-                                            }}
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border p-2 font-semibold">
-                                            Primäre GK
-                                        </td>
-                                        <td
-                                            v-for="cc in sortedPreAuxiliaryCostCenters"
-                                            :key="cc.id"
-                                            class="border p-2"
-                                        >
-                                            {{
-                                                (
-                                                    calculationResults[cc.id]
-                                                        ?.primaryCosts || 0
-                                                ).toFixed(2)
-                                            }}
-                                            €
-                                        </td>
-                                        <td
-                                            v-for="oc in primaryOverheadCosts"
-                                            :key="oc.id"
-                                            class="border p-2"
-                                        >
-                                            {{
-                                                (
-                                                    calculationResults[
-                                                        `oc${oc.id}`
-                                                    ]?.primaryCosts || 0
-                                                ).toFixed(2)
-                                            }}
-                                            €
-                                        </td>
-                                    </tr>
-                                    <tr
-    v-for="sourceCC in sortedPreAuxiliaryCostCenters"
-    :key="sourceCC.id"
+          <!-- Ergebnisse -->
+          <div v-if="showResults && calculationResults" class="mt-8">
+                <h3 class="text-xl font-semibold mb-4">Ergebnisse</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border">
+                        <thead>
+                            <tr>
+                                <th class="border p-2">Beschreibung</th>
+                                <th
+                                    v-for="cc in sortedPreAuxiliaryCostCenters"
+                                    :key="cc.id"
+                                    class="border p-2"
+                                >
+                                    {{
+                                        calculationResults[cc.id]
+                                            ?.name ||
+                                        `Kostenstelle ${cc.id}`
+                                    }}
+                                </th>
+                                <th
+                                    v-for="oc in primaryOverheadCosts"
+                                    :key="oc.id"
+                                    class="border p-2"
+                                >
+                                    {{
+                                        calculationResults[`oc${oc.id}`]
+                                            ?.name ||
+                                        `Gemeinkosten ${oc.id}`
+                                    }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border p-2 font-semibold">
+                                    Primäre GK
+                                </td>
+                                <td
+                                    v-for="cc in sortedPreAuxiliaryCostCenters"
+                                    :key="cc.id"
+                                    class="border p-2"
+                                >
+                                    {{
+                                        (
+                                            calculationResults[cc.id]
+                                                ?.primaryCosts || 0
+                                        ).toFixed(2)
+                                    }}
+                                    €
+                                </td>
+                                <td
+                                    v-for="oc in primaryOverheadCosts"
+                                    :key="oc.id"
+                                    class="border p-2"
+                                >
+                                    {{
+                                        (
+                                            calculationResults[
+                                                `oc${oc.id}`
+                                            ]?.primaryCosts || 0
+                                        ).toFixed(2)
+                                    }}
+                                    €
+                                </td>
+                            </tr>
+                            <tr
+v-for="sourceCC in sortedPreAuxiliaryCostCenters"
+:key="sourceCC.id"
 >
-    <td class="border p-2 font-semibold">
-        Verrechnung
-        {{
-            calculationResults[sourceCC.id]
-                ?.name ||
-            `Kostenstelle ${sourceCC.id}`
-        }}
-    </td>
-    <td
-        v-for="targetCC in sortedPreAuxiliaryCostCenters"
-        :key="targetCC.id"
-        class="border p-2"
-    >
-        {{
-            sourceCC.id === targetCC.id
-                ? `-${(
-                    (calculationResults[sourceCC.id]?.primaryCosts || 0) +
-                    (calculationResults[sourceCC.id]?.secondaryCosts || 0)
-                ).toFixed(2)} €`
-                : (calculationResults[sourceCC.id]?.allocations?.[targetCC.id] || 0).toFixed(2) + " €"
-        }}
-    </td>
-    <td
-        v-for="oc in primaryOverheadCosts"
-        :key="oc.id"
-        class="border p-2"
-    >
-        {{
-            (
-                calculationResults[
-                    sourceCC.id
-                ]?.allocations?.[
-                    `oc${oc.id}`
-                ] || 0
-            ).toFixed(2) + " €"
-        }}
-    </td>
+<td class="border p-2 font-semibold">
+Verrechnung
+{{
+    calculationResults[sourceCC.id]
+        ?.name ||
+    `Kostenstelle ${sourceCC.id}`
+}}
+</td>
+<td
+v-for="targetCC in sortedPreAuxiliaryCostCenters"
+:key="targetCC.id"
+class="border p-2"
+>
+{{
+    sourceCC.id === targetCC.id
+        ? `-${(
+            (calculationResults[sourceCC.id]?.primaryCosts || 0) +
+            (calculationResults[sourceCC.id]?.secondaryCosts || 0)
+        ).toFixed(2)} €`
+        : (calculationResults[sourceCC.id]?.allocations?.[targetCC.id] || 0).toFixed(2) + " €"
+}}
+</td>
+<td
+v-for="oc in primaryOverheadCosts"
+:key="oc.id"
+class="border p-2"
+>
+{{
+    (
+        calculationResults[
+            sourceCC.id
+        ]?.allocations?.[
+            `oc${oc.id}`
+        ] || 0
+    ).toFixed(2) + " €"
+}}
+</td>
 </tr>
-                                    <tr>
-                                        <td class="border p-2 font-semibold">
-                                            Sekundäre GK
-                                        </td>
-                                        <td
-                                            v-for="cc in sortedPreAuxiliaryCostCenters"
-                                            :key="cc.id"
-                                            class="border p-2"
-                                        >
-                                            <!--{{
-                                                (
-                                                    calculationResults[cc.id]
-                                                        ?.secondaryCosts || 0
-                                                ).toFixed(2) 
-                                            }} €-->
-                                            -
-                                        </td>
-                                        <td
-                                            v-for="oc in primaryOverheadCosts"
-                                            :key="oc.id"
-                                            class="border p-2"
-                                        >
-                                            {{
-                                                (
-                                                    calculationResults[
-                                                        `oc${oc.id}`
-                                                    ]?.secondaryCosts || 0
-                                                ).toFixed(2)
-                                            }}
-                                            €
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border p-2 font-semibold">
-                                            Gesamte GK
-                                        </td>
-                                        <td
-                                            v-for="cc in sortedPreAuxiliaryCostCenters"
-                                            :key="cc.id"
-                                            class="border p-2"
-                                        >
-                                            <!--{{
-                                                (
-                                                    calculationResults[cc.id]
-                                                        ?.totalCosts || 0
-                                                ).toFixed(2)
-                                            }}-->
-                                            -
-                                        </td>
-                                        <td
-                                            v-for="oc in primaryOverheadCosts"
-                                            :key="oc.id"
-                                            class="border p-2"
-                                        >
-                                            {{
-                                                (
-                                                    calculationResults[
-                                                        `oc${oc.id}`
-                                                    ]?.totalCosts || 0
-                                                ).toFixed(2)
-                                            }}
-                                            €
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                            <tr>
+                                <td class="border p-2 font-semibold">
+                                    Sekundäre GK
+                                </td>
+                                <td
+                                    v-for="cc in sortedPreAuxiliaryCostCenters"
+                                    :key="cc.id"
+                                    class="border p-2"
+                                >
+                                    <!--{{
+                                        (
+                                            calculationResults[cc.id]
+                                                ?.secondaryCosts || 0
+                                        ).toFixed(2) 
+                                    }} €-->
+                                    -
+                                </td>
+                                <td
+                                    v-for="oc in primaryOverheadCosts"
+                                    :key="oc.id"
+                                    class="border p-2"
+                                >
+                                    {{
+                                        (
+                                            calculationResults[
+                                                `oc${oc.id}`
+                                            ]?.secondaryCosts || 0
+                                        ).toFixed(2)
+                                    }}
+                                    €
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border p-2 font-semibold">
+                                    Gesamte GK
+                                </td>
+                                <td
+                                    v-for="cc in sortedPreAuxiliaryCostCenters"
+                                    :key="cc.id"
+                                    class="border p-2"
+                                >
+                                    <!--{{
+                                        (
+                                            calculationResults[cc.id]
+                                                ?.totalCosts || 0
+                                        ).toFixed(2)
+                                    }}-->
+                                    -
+                                </td>
+                                <td
+                                    v-for="oc in primaryOverheadCosts"
+                                    :key="oc.id"
+                                    class="border p-2"
+                                >
+                                    {{
+                                        (
+                                            calculationResults[
+                                                `oc${oc.id}`
+                                            ]?.totalCosts || 0
+                                        ).toFixed(2)
+                                    }}
+                                    €
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>

@@ -1,8 +1,4 @@
 <template>
-    <AuthenticatedLayout>
-      <Head title="Maschinenstundensatz" />
-      <template #header></template>
-  
       <!-- Page Content with Side Navigation -->
       <div class="py-12 bg-white dark:bg-white">
   
@@ -23,7 +19,12 @@
                         : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
                     ]"
                   >
+                  <div v-if="component === 'Calculator'">
+                    <i class="fas fa-calculator mr-2"></i>
+                  </div>
+                  <div v-else>
                     {{ component }}
+                  </div>
                   </button>
                 </li>
               </ul>
@@ -45,7 +46,6 @@
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
   </template>
   
   <script>
@@ -59,17 +59,21 @@
   import III from "@/Pages/Kostenstellen/Maschinenstundenrechnung/3.vue";
   import IV from "@/Pages/Kostenstellen/Maschinenstundenrechnung/4.vue";
   import V from "@/Pages/Kostenstellen/Maschinenstundenrechnung/5.vue";
+  import Calculator from "@/Pages/Calc/Maschinenstundensatzrechnung.vue";
   
   export default {
     name: 'InfoKostenarten',
   
     // Register the components so Vue knows about them.
     components: {
+      AuthenticatedLayout,
+      Head,
       I,
       II,
       III,
       IV,
       V,
+      Calculator
     },
   
     setup() {
@@ -87,7 +91,7 @@
       const showResults = ref(false);
   
       // Mapping of registered components for dynamic rendering
-      const registeredComponents = { I, II, III, IV, V };
+      const registeredComponents = { I, II, III, IV, V};
   
       const setActiveComponent = (component) => {
         activeComponent.value = component;

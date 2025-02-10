@@ -8,26 +8,19 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import html2pdf from 'html2pdf.js';
 
-const emit = defineEmits(['update:checked']);
 
 const props = defineProps({
-    value: {
-        default: null,
-    },
-    items: {
-        type: Array,
-        default: () => [],
-    }
+  preAuxiliaryCostCenters: { type: Array, default: () => [] },
+  primaryOverheadCosts: { type: Array, default: () => [] },
+  allocationMatrix: { type: Object, default: () => ({}) },
+  // Deine bisherigen Props:
+  value: { default: null },
+  items: { type: Array, default: () => [] },
 });
 
-const proxyChecked = computed({
-    get() {
-        return props.checked;
-    },
-    set(val) {
-        emit('update:checked', val);
-    },
-});
+const emit = defineEmits(['update:checked', 'calculate']);
+  
+
 
 //Input
 const name = ref(null);

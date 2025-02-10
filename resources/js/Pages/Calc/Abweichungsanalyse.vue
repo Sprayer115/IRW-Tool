@@ -231,14 +231,19 @@ rowsP.value = addRowFromExist();
 </script>
 
 <template>
+    <AuthenticatedLayout>
     <div>
       <Head title="Abweichungsanalyse">
       </Head>
   
       <AuthenticatedLayout :hideNavbar="true" >
-          <template #header>
-              <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abweichungsanalyse</h2>
-          </template>
+            <header class="bg-slate-50 dark:bg-gray-800 shadow-md">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                        <slot name="header">Abweichungsanalyse</slot>
+                    </h2>
+                </div>
+            </header>
 
           <div class="py-12 m-lg-4">
             <div class="input-area"
@@ -408,6 +413,7 @@ rowsP.value = addRowFromExist();
         </div>
       </AuthenticatedLayout>
     </div>
+</AuthenticatedLayout>
 </template>
 
 

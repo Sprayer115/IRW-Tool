@@ -1,7 +1,5 @@
 <template>
-  <AuthenticatedLayout>
-    <Head title="Abweichungsanalyse Komplett" />
-    <template #header></template>
+
 
     <!-- Page Content with Side Navigation -->
     <div class="py-12 bg-white dark:bg-white">
@@ -23,7 +21,12 @@
                       : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
                   ]"
                 >
-                  {{ component }}
+                  <div v-if="component === 'Calculator'">
+                    <i class="fas fa-calculator mr-2"></i>
+                  </div>
+                  <div v-else>
+                    {{ component }}
+                  </div>
                 </button>
               </li>
             </ul>
@@ -45,18 +48,16 @@
         </div>
       </div>
     </div>
-  </AuthenticatedLayout>
 </template>
 
 <script>
 import { ref, watch, onMounted } from "vue";
 import mermaid from "mermaid";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
 
 import I from "@/Pages/Deckungsbeitrag/Preisuntergrenze/1.vue";
 import II from "@/Pages/Deckungsbeitrag/Preisuntergrenze/2.vue";
 import III from "@/Pages/Deckungsbeitrag/Preisuntergrenze/3.vue";
+import Calculator from "@/Pages/Calc/Preisuntergrenze.vue";
 
 export default {
   name: 'InfoKostenarten',
@@ -66,6 +67,7 @@ export default {
     I,
     II,
     III,
+    Calculator
   },
 
   setup() {

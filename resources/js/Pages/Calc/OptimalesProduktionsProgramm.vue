@@ -1,11 +1,22 @@
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
 import mermaid from "mermaid";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head,usePage, Link } from "@inertiajs/vue3";
 import { Inertia } from '@inertiajs/inertia';
 import Deckungsbeitrag from "@/Pages/Calc/Deckungsbeitragrechnung.vue";
 import Preisuntergrenze from "@/Pages/Calc/Preisuntergrenze.vue";
+
+const props = defineProps({
+  preAuxiliaryCostCenters: { type: Array, default: () => [] },
+  primaryOverheadCosts: { type: Array, default: () => [] },
+  allocationMatrix: { type: Object, default: () => ({}) },
+  // Deine bisherigen Props:
+  value: { default: null },
+  items: { type: Array, default: () => [] },
+});
+
+const emit = defineEmits(['update:checked', 'calculate']);
+  
 
 const activeComponent = ref("Deckungsbeitrag");
 
@@ -22,10 +33,8 @@ const setActiveComponent = (component) => {
 </script>
 
 <template>
-    <AuthenticatedLayout>
-      <Head title="Abweichungsanalyse Komplett" />
       <!-- Page Title and Navigation Buttons -->
-      <template #header>
+      <div >
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
           Optimales Produktionsprogramm
         </h2>
@@ -47,7 +56,7 @@ const setActiveComponent = (component) => {
             </li>
           </ul>
         </nav>
-      </template>
+      </div>
   
       <!-- Dynamic Component Rendering Based on Selection -->
       <div class="py-12">
@@ -57,12 +66,10 @@ const setActiveComponent = (component) => {
             :preAuxiliaryCostCenters="preAuxiliaryCostCenters"
             :primaryOverheadCosts="primaryOverheadCosts"
             :allocationMatrix="allocationMatrix"
-            @calculate="handleCalculation"
           ></component>
         </div>
       </div>
-    </AuthenticatedLayout>
-  </template>
+</template>
 
 
 
