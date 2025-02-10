@@ -32,14 +32,12 @@
         i
       </div>
       <br>
-          <!-- Buttons unter der Tabelle -->
+      <!-- Skript-Button unter der Tabelle -->
+      <div style="text-align: right;">
+        <button class="btnShowScript" @click="onShowScript">Skript</button>
+      </div>
     </div>
   </div>
-  <div class="button-group">
-      <button class="btnShowScript" @click="onShowScript">Show script</button>
-      <button class="btnShowScript" @click="onCalculator">Calculator</button>
-      <button class="btnShowScript" @click="onQuiz">Quiz</button>
-    </div>
 </template>
 
 <script>
@@ -50,8 +48,12 @@ export default {
       alert("Hier könnten weitere Informationen angezeigt werden!");
     },
     onShowScript() {
-      alert("Show script clicked!");
-      // Hier ggf. Route wechseln, Script anzeigen usw.
+      const link = document.createElement('a');
+      link.href = '/storage/Kostenstellen.pdf';
+      link.setAttribute('download', 'Kostenstellen.pdf');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     },
     onCalculator() {
       alert("Calculator clicked!");
@@ -102,7 +104,7 @@ th {
 .info-button {
   position: absolute;
   top: 50%;
-  right: -2rem; /* Passe den Wert an, wenn du den Button weiter innen oder außen willst */
+  right: -2rem;
   transform: translateY(-50%);
   width: 24px;
   height: 24px;
@@ -119,12 +121,16 @@ th {
 .info-button:hover {
   opacity: 0.85;
 }
-.btnShowScript{
-  background-color: #dbe4ec; /* Blau */
+
+/* Skript-Button, angelehnt an 2.vue */
+.btnShowScript {
+  background-color: #475569; /* bg-slate-600 */
   border-radius: 12px;
   margin: 5px;
   padding: 14px 28px;
-  position: relative;
-  left: 20%;
+  font-weight: 500;
+  color: rgb(226, 232, 240);
+  border: none;
+  cursor: pointer;
 }
 </style>

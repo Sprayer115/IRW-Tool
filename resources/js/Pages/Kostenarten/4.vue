@@ -47,11 +47,9 @@
       </tbody>
     </table>
 
-    <!-- Buttons unter der Tabelle -->
+    <!-- Button-Gruppe: Skript-Button am unteren Rand -->
     <div class="button-group">
-      <button class="btnShowScript" @click="onShowScript">Show script</button>
-      <button class="btnShowScript" @click="onCalculator">Calculator</button>
-      <button class="btnShowScript" @click="onQuiz">Quiz</button>
+      <button class="btnShowScript" @click="downloadScript">Skript</button>
     </div>
   </div>
 </template>
@@ -60,17 +58,13 @@
 export default {
   name: "KostenAbgrenzungsTabelle",
   methods: {
-    onShowScript() {
-      alert("Show script clicked!");
-      // Hier ggf. Route wechseln, Script anzeigen usw.
-    },
-    onCalculator() {
-      alert("Calculator clicked!");
-      // Hier könntest du z.B. ein Modal öffnen oder eine andere Seite laden
-    },
-    onQuiz() {
-      alert("Quiz clicked!");
-      // Hier könntest du z.B. zu einem Quiz-Modul navigieren
+    downloadScript() {
+      const link = document.createElement('a');
+      link.href = '/storage/Kostenartenrechnung.pdf';
+      link.setAttribute('download', 'Kostenartenrechnung.pdf');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   }
 };
@@ -103,31 +97,23 @@ td {
 .button-group {
   margin-top: 1rem;
   display: flex;
-  gap: 1rem; /* Abstand zwischen den Buttons */
+  justify-content: flex-end;
 }
 
-/* Einheitlicher Button-Grundstil */
-.btn {
-  padding: 0.6rem 1rem;
-  border: none;
-  border-radius: 4px;
-  
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.btnShowScript{
-  background-color: #dbe4ec; /* Blau */
+/* Skript-Button, angelehnt an 2.vue */
+.btnShowScript {
+  background-color: #475569; /* bg-slate-600 */
   border-radius: 12px;
   margin: 5px;
   padding: 14px 28px;
-  position: relative;
-  left: 20%;
+  font-weight: 500;
+  color: rgb(226,232,240);
+  border: none;
+  cursor: pointer;
 }
 
 /* Hover-Effekt */
-.btn:hover {
+.btnShowScript:hover {
   opacity: 0.85;
 }
 </style>

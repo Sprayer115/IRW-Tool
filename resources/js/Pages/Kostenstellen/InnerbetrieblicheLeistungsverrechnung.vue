@@ -1,8 +1,4 @@
 <template>
-    <AuthenticatedLayout>
-      <Head title="Innerbetriebliche Leistungsverrechnung" />
-      <template #header></template>
-  
       <!-- Page Content with Side Navigation -->
       <div class="py-12 bg-white dark:bg-white">
   
@@ -23,9 +19,16 @@
                         : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
                     ]"
                   >
-                    {{ component }}
+                    <div v-if="component === 'Calculator'">
+                      <i class="fas fa-calculator mr-2"></i>
+                    </div>
+                    <div v-else>
+                      {{ component }}
+                    </div>
+                    
                   </button>
                 </li>
+
               </ul>
             </nav>
           </div>
@@ -45,7 +48,6 @@
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
   </template>
   
   <script>
@@ -53,19 +55,21 @@
   import mermaid from "mermaid";
   import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
   import { Head } from "@inertiajs/vue3";
-  
   import I from "@/Pages/Kostenstellen/InnerbetrieblicheLeistungsverrechnung/1.vue";
   import II from "@/Pages/Kostenstellen/InnerbetrieblicheLeistungsverrechnung/2.vue";
   import III from "@/Pages/Kostenstellen/InnerbetrieblicheLeistungsverrechnung/3.vue";
+  import Calculator from "@/Pages/Calc/InnerbetrieblicheLeistungsverrechnung.vue"; 
   
   export default {
     name: 'InfoKostenarten',
   
     // Register the components so Vue knows about them.
     components: {
+      AuthenticatedLayout,
+      Head,
       I,
       II,
-      III,
+      III
     },
   
     setup() {
@@ -83,7 +87,7 @@
       const showResults = ref(false);
   
       // Mapping of registered components for dynamic rendering
-      const registeredComponents = { I, II, III };
+      const registeredComponents = { I, II, III, Calculator };
   
       const setActiveComponent = (component) => {
         activeComponent.value = component;
@@ -191,4 +195,3 @@
     },
   };
   </script>
-  

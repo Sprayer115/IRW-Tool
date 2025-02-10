@@ -37,6 +37,9 @@
         der effektive Wertverzehr (Kosten) für dieselbe Periode liegt bei EUR 490.000.
       </li>
     </ol>
+    <div style="text-align: right;">
+      <button class="btnShowScript" @click="downloadScript">Skript</button>
+    </div>
   </div>
 </template>
   
@@ -50,6 +53,14 @@
     methods: {
       updateData() {
         this.$emit('update:modelValue', this.pageData)
+      },
+      downloadScript() {
+        const link = document.createElement('a')
+        link.href = '/storage/Finanzbuchhaltung.pdf'
+        link.setAttribute('download', 'Finanzbuchhaltung.pdf')
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
       }
     }
   }
@@ -73,5 +84,17 @@ ol {
 
 li {
   margin-bottom: 0.5rem;
+}
+
+
+
+.btnShowScript {
+  background-color: #475569; /* bg-slate-600 */
+  border-radius: 12px;
+  margin: 5px;
+  padding: 14px 28px;
+  font-weight: 500;
+  color: rgb(226 232 240);
+  --tw-text-opacity: 1;
 }
 </style>

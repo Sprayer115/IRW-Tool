@@ -163,7 +163,9 @@ Route::middleware(['auth'])->group(function () {
         ]);
     })->name('deckungsbeitrag');
     
-    Route::get('/plankosten')->name('plankosten');
+    Route::get('/plankosten', function (Request $request) {
+        return Inertia::render('Calc/Abweichungsanalyse');
+    })->name('plankosten');
     
     // Add other topic routes
 });
