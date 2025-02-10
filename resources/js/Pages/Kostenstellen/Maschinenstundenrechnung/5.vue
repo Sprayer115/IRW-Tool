@@ -157,29 +157,21 @@
         </strong>
       </p>
   
-      <!-- 5) Instandhaltungskosten p.a. -->
-      <br>
-      <h2 class="red-title">Instandhaltungskosten im Maschinenstundensatz</h2>
-      <br>
-      <p>
-        Instandhaltung p.a. = {{ instandhaltungProzent }} % × {{ anschaffungskosten }} € =
-        <strong>
-          <animated-number :value="instandhaltung" :clearTrigger="clearTrigger" /> € p.a.
-        </strong>
-      </p>
-  
-      <!-- 6) Raumkosten -->
+      <!-- 5) Raumkosten -->
       <br>
       <h2 class="red-title">Raumkosten im Maschinenstundensatz</h2>
       <br>
+      <p>
+        Raumkosten p.a. = Raumkostensatz × benötigte Fläche
+      </p>
       <p>
         Raumkosten p.a. = {{ raumkostensatz }} € × {{ stellflaeche }} m² =
         <strong>
           <animated-number :value="raumkosten" :clearTrigger="clearTrigger" /> € p.a.
         </strong>
       </p>
-  
-      <!-- 7) Energiekosten -->
+
+      <!-- 6) Energiekosten -->
       <br>
       <h2 class="red-title">Energiekosten im Maschinenstundensatzrechnung</h2>
       <br>
@@ -196,6 +188,75 @@
             <animated-number :value="energiekostenJaehrlich" :clearTrigger="clearTrigger" /> € p.a.
           </strong>
       </p>
+
+      <!-- 7) Instandhaltungskosten p.a. -->
+      <br>
+      <h2 class="red-title">Instandhaltungskosten im Maschinenstundensatz</h2>
+      <br>
+      <p>
+        Instandhaltung p.a. = {{ instandhaltungProzent }} % × {{ anschaffungskosten }} € =
+        <strong>
+          <animated-number :value="instandhaltung" :clearTrigger="clearTrigger" /> € p.a.
+        </strong>
+      </p>
+      <br>
+
+      <!-- 8) Maschinenstundensatz -->
+      <h2 class="red-title">Maschinenstundensatz</h2>
+      <br>
+      <p>
+        <em>Formel:</em> <br>
+        Maschinenstundensatz = 
+        <span class="fraction">
+          <span class="numerator">
+            Maschinenkosten
+          </span>
+          <span class="sep"></span>
+          <span class="denominator">
+            Nutzungszeit p.a.
+          </span>
+        </span>
+      </p>
+      <br>
+      <p style="text-align: center; font-size: 1.7rem;">=</p>
+      <br>
+      <p>
+        Maschinenstundensatz = 
+        <span class="fraction">
+          <span class="numerator">
+            Abschreibung + Zinsen + Raumkosten + Engergie + Instandhaltung
+          </span>
+          <span class="sep"></span>
+          <span class="denominator">
+            Nutzungszeit p.a.
+          </span>
+        </span>
+      </p>
+      <br>
+      <p style="text-align: center; font-size: 1.7rem;">=</p>
+      <br>
+      <p>
+        Maschinenstundensatz = 
+        <span class="fraction">
+          <span class="numerator">
+            <animated-number :value="abschreibung" :clearTrigger="clearTrigger" /> + <animated-number :value="zinskosten" :clearTrigger="clearTrigger" /> €
+          </span>
+          <span class="sep"></span>
+          <span class="denominator">
+            Nutzungszeit p.a.
+          </span>
+        </span>
+      </p>
+      <br>
+      <p>
+        Abschreibungskosten (im Beispiel) =
+        {{ wiederbeschaffungswert }} € / {{ nutzungsdauer }} Jahre =
+        <strong>
+          <animated-number :value="abschreibung" :clearTrigger="clearTrigger" /> € p.a.
+        </strong>
+      </p>
+      <br>
+  
     </div>
   </template>
   
