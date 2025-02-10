@@ -58,6 +58,7 @@
   import II from "@/Pages/Kostenstellen/Maschinenstundenrechnung/2.vue";
   import III from "@/Pages/Kostenstellen/Maschinenstundenrechnung/3.vue";
   import IV from "@/Pages/Kostenstellen/Maschinenstundenrechnung/4.vue";
+  import V from "@/Pages/Kostenstellen/Maschinenstundenrechnung/5.vue";
   
   export default {
     name: 'InfoKostenarten',
@@ -68,6 +69,7 @@
       II,
       III,
       IV,
+      V,
     },
   
     setup() {
@@ -85,7 +87,7 @@
       const showResults = ref(false);
   
       // Mapping of registered components for dynamic rendering
-      const registeredComponents = { I, II, III, IV };
+      const registeredComponents = { I, II, III, IV, V };
   
       const setActiveComponent = (component) => {
         activeComponent.value = component;
@@ -192,5 +194,6 @@
       };
     },
   };
-  </script>
+</script>
+
   
