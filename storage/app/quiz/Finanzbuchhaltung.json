@@ -1,0 +1,70 @@
+{
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "question": "Was ist die Hauptaufgabe des internen Rechnungswesens?",
+        "options": [
+          "Ermittlung der Steuerlast",
+          "Bereitstellung von Informationen für interne Entscheidungen",
+          "Erstellung des Jahresabschlusses nach HGB",
+          "Festlegung der Dividendenhöhe"
+        ],
+        "correctAnswer": "Bereitstellung von Informationen für interne Entscheidungen",
+        "hint": "Das interne Rechnungswesen dient primär der Unternehmenssteuerung."
+      },
+      {
+        "id": "q2",
+        "type": "multiple_choice",
+        "question": "Welche der folgenden Aussagen zur Bilanz ist korrekt?",
+        "options": [
+          "Die Bilanz zeigt nur die Ertragslage eines Unternehmens.",
+          "Die Bilanz gibt einen Überblick über die finanzielle Lage eines Unternehmens.",
+          "Die Bilanz wird monatlich erstellt.",
+          "Die Bilanz enthält ausschließlich Eigenkapital."
+        ],
+        "correctAnswer": "Die Bilanz gibt einen Überblick über die finanzielle Lage eines Unternehmens.",
+        "hint": "Die Bilanz stellt Vermögen und Finanzierung eines Unternehmens gegenüber."
+      },
+      {
+        "id": "q3",
+        "type": "multiple_choice",
+        "question": "Welche der folgenden Begriffe ist kein Bestandteil der Bilanz?",
+        "options": [
+          "Anlagevermögen",
+          "Fremdkapital",
+          "Kostenarten",
+          "Eigenkapital"
+        ],
+        "correctAnswer": "Kostenarten",
+        "hint": "Die Bilanz betrachtet Vermögen und Finanzierung, nicht Kostenkategorien."
+      },
+      {
+        "id": "q4",
+        "type": "multiple_choice",
+        "question": "Welche der folgenden Kostenarten zählt nicht zu den variablen Kosten?",
+        "options": [
+          "Materialkosten",
+          "Fertigungslöhne",
+          "Miete für ein Büro",
+          "Energiekosten für Maschinen"
+        ],
+        "correctAnswer": "Miete für ein Büro",
+        "hint": "Variable Kosten ändern sich mit der Produktionsmenge, fixe Kosten nicht."
+      },
+      {
+        "id": "q5",
+        "type": "multiple_choice",
+        "question": "Welches Prinzip wird in der Kostenrechnung zur verursachungsgerechten Zurechnung von Kosten angewendet?",
+        "options": [
+          "Finalprinzip",
+          "Verursachungsprinzip",
+          "Durchschnittsprinzip",
+          "Tragfähigkeitsprinzip"
+        ],
+        "correctAnswer": "Verursachungsprinzip",
+        "hint": "Dieses Prinzip sorgt dafür, dass Kosten dort zugeordnet werden, wo sie entstehen."
+      }
+    ]
+  }
+  

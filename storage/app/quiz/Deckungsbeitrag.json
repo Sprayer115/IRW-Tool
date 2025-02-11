@@ -1,0 +1,70 @@
+{
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "question": "Was ist die Hauptfunktion der Deckungsbeitragsrechnung?",
+        "options": [
+          "Ermittlung der Gewinnsteuer eines Unternehmens",
+          "Aufteilung der Fixkosten auf einzelne Produkte",
+          "Bestimmung des Preisuntergrenzen und Entscheidungsunterstützung",
+          "Berechnung des Eigenkapitals eines Unternehmens"
+        ],
+        "correctAnswer": "Bestimmung des Preisuntergrenzen und Entscheidungsunterstützung",
+        "hint": "Die Deckungsbeitragsrechnung dient vor allem der kurzfristigen Entscheidungsfindung."
+      },
+      {
+        "id": "q2",
+        "type": "multiple_choice",
+        "question": "Welche Aussage zur Vollkostenrechnung ist problematisch?",
+        "options": [
+          "Sie unterscheidet zwischen fixen und variablen Kosten.",
+          "Fixkosten werden proportional auf Kostenträger verteilt.",
+          "Sie eignet sich gut für kurzfristige Preisentscheidungen.",
+          "Sie wird in der Kostenrechnung nicht mehr verwendet."
+        ],
+        "correctAnswer": "Fixkosten werden proportional auf Kostenträger verteilt.",
+        "hint": "Fixkosten ändern sich nicht mit der Produktionsmenge."
+      },
+      {
+        "id": "q3",
+        "type": "multiple_choice",
+        "question": "Welches Prinzip liegt der Teilkostenrechnung zugrunde?",
+        "options": [
+          "Finalprinzip",
+          "Verursachungsprinzip",
+          "Durchschnittsprinzip",
+          "Tragfähigkeitsprinzip"
+        ],
+        "correctAnswer": "Verursachungsprinzip",
+        "hint": "Es werden nur die Kosten berücksichtigt, die durch die Entscheidung tatsächlich beeinflusst werden."
+      },
+      {
+        "id": "q4",
+        "type": "multiple_choice",
+        "question": "Welche Aussage zur Preisuntergrenze ist richtig?",
+        "options": [
+          "Die langfristige Preisuntergrenze entspricht den variablen Kosten.",
+          "Die kurzfristige Preisuntergrenze liegt unterhalb der variablen Kosten.",
+          "Die langfristige Preisuntergrenze deckt auch die Fixkosten.",
+          "Die kurzfristige Preisuntergrenze deckt die Gemeinkosten."
+        ],
+        "correctAnswer": "Die langfristige Preisuntergrenze deckt auch die Fixkosten.",
+        "hint": "Langfristig müssen alle Kosten eines Unternehmens gedeckt werden."
+      },
+      {
+        "id": "q5",
+        "type": "multiple_choice",
+        "question": "Welche Aussage zur mehrstufigen Deckungsbeitragsrechnung ist korrekt?",
+        "options": [
+          "Sie betrachtet alle Fixkosten als eine einzige Summe.",
+          "Sie differenziert zwischen verschiedenen Fixkostenblöcken.",
+          "Sie berücksichtigt keine variablen Kosten.",
+          "Sie ist nur für Großunternehmen geeignet."
+        ],
+        "correctAnswer": "Sie differenziert zwischen verschiedenen Fixkostenblöcken.",
+        "hint": "Mehrere Stufen helfen, Fixkosten gezielt zu analysieren."
+      }
+    ]
+  }
+  

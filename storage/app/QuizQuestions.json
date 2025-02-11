@@ -1,0 +1,21 @@
+{
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "question": "What is the capital of France?",
+        "options": ["London", "Berlin", "Paris", "Madrid"],
+        "correctAnswer": "Paris",
+        "hint": "This city is known as the City of Light"
+      },
+      {
+        "id": "q2",
+        "type": "free_text",
+        "question": "Name a programming language starting with 'P'",
+        "correctAnswers": ["python", "php", "perl"],
+        "matchType": "fuzzy",
+        "fuzzyThreshold": 0.8,
+        "hint": "Think of snake-related names"
+      }
+    ]
+  }

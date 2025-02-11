@@ -1,0 +1,70 @@
+{
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "question": "Was ist die Hauptaufgabe der Kostenstellenrechnung?",
+        "options": [
+          "Die Ermittlung der Herstellkosten von Produkten",
+          "Die Verteilung der Einzelkosten auf Kostenträger",
+          "Die Verteilung der Gemeinkosten auf Kostenstellen",
+          "Die Berechnung der Verkaufspreise"
+        ],
+        "correctAnswer": "Die Verteilung der Gemeinkosten auf Kostenstellen",
+        "hint": "Es geht darum, wo die Kosten im Unternehmen entstehen."
+      },
+      {
+        "id": "q2",
+        "type": "multiple_choice",
+        "question": "Welche der folgenden Kostenstellen zählt nicht zu den Hauptkostenstellen?",
+        "options": [
+          "Materialkostenstelle",
+          "Fertigungskostenstelle",
+          "Verwaltungskostenstelle",
+          "Energiezentrale"
+        ],
+        "correctAnswer": "Energiezentrale",
+        "hint": "Diese Kostenstelle dient hauptsächlich der Unterstützung und nicht der direkten Produktion."
+      },
+      {
+        "id": "q3",
+        "type": "multiple_choice",
+        "question": "Wie erfolgt die Zurechnung der Gemeinkosten auf Kostenstellen?",
+        "options": [
+          "Immer direkt ohne Schlüsselung",
+          "Entweder direkt oder indirekt durch Schlüsselung",
+          "Ausschließlich durch Umlagen von Vor- und Hilfskostenstellen",
+          "Gemeinkosten werden nicht auf Kostenstellen verteilt"
+        ],
+        "correctAnswer": "Entweder direkt oder indirekt durch Schlüsselung",
+        "hint": "Manche Kosten lassen sich direkt zuordnen, andere benötigen Verrechnungsschlüssel."
+      },
+      {
+        "id": "q4",
+        "type": "multiple_choice",
+        "question": "Welche Kostenstellenart wird zur Unterstützung anderer Kostenstellen genutzt?",
+        "options": [
+          "Hauptkostenstellen",
+          "Vorkostenstellen",
+          "Vertriebskostenstellen",
+          "Materialkostenstellen"
+        ],
+        "correctAnswer": "Vorkostenstellen",
+        "hint": "Diese Kostenstellen erbringen keine direkte Produktionsleistung."
+      },
+      {
+        "id": "q5",
+        "type": "multiple_choice",
+        "question": "Welches der folgenden Gliederungskriterien für Kostenstellen gibt es nicht?",
+        "options": [
+          "Räumlich-geographische Faktoren",
+          "Funktionsbereiche",
+          "Verantwortungsbereiche",
+          "Rechnungsbasierte Kostenstellen"
+        ],
+        "correctAnswer": "Rechnungsbasierte Kostenstellen",
+        "hint": "Kostenstellen werden eher nach funktionalen oder organisatorischen Kriterien gegliedert."
+      }
+    ]
+  }
+  
