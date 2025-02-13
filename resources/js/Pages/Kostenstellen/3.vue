@@ -1,9 +1,13 @@
 <template>
   <div class="gemeinkosten-container">
     <h2>Primäre Gemeinkosten</h2>
+    <br>
 
     <!-- Wrapper mit position: relative, damit wir den Button oben rechts platzieren können -->
+           <!-- Infobutton rechts, mittig zur Tabelle ausgerichtet -->
+             <!-- eine div mehr da table wrapper mit scroll versehen ist -->
     <div class="table-wrapper">
+    <div class="table-scroller">
       <table>
         <thead>
           <tr>
@@ -65,11 +69,24 @@
         </tbody>
       </table>
 
-      <!-- Infobutton rechts, mittig zur Tabelle ausgerichtet -->
-      <div class="info-button" @click="onInfoClick" title="Mehr Informationen">
-        i
-      </div>
     </div>
+    <div>
+      <span id="tooltip-aufwand" class="tooltip-container">
+            <sup class="info-button">i</sup>
+            <div class="table-scroller">
+            <span class="tooltip-text">Primäre Gemeinkosten sind jene Kosten, die aus <br>externen Quellen direkt in das Unternehmen einfließen und <br>
+              keinem bestimmten Produkt oder Auftrag direkt zugeordnet werden können. <br>Sie umfassen verschiedene Kategorien wie Miete, Zinsen, Abschreibungen und Versicherungen. <br>
+              <br>
+                •	Miete: Wird oft nach genutzter Fläche aufgeteilt, z. B. zwischen Produktion und Verwaltung. <br>
+                •	Zinsen: Verteilt sich basierend auf dem Kapitaleinsatz, also der finanziellen Ressourcennutzung.<br>
+                •	Abschreibungen: Orientieren sich an den Anlagenwerten, da diese die langfristigen Investitionen widerspiegeln.<br>
+                •	Versicherungen: Meist ebenfalls flächenbezogen verteilt, da sie für die Absicherung von Betriebsmitteln gelten.<br>
+                •	Einzelmaterial und -löhne: Werden, wenn direkt zuordenbar, nicht in der Kostenstellenrechnung <br>berücksichtigt, sondern direkt den Kostenträgern zugeordnet.<br><br>
+                Die Kostenstellenrechnung hilft dabei, diese Gemeinkosten verursachungsgerecht auf <br>Kostenstellen zu verteilen, um später eine präzise Zuweisung an die Kostenträger zu ermöglichen.<br>
+            </span></div>
+      </span>
+    </div>
+  </div>
   </div>
 </template>
 
@@ -89,12 +106,18 @@ export default {
   max-width: 800px;
   margin: 1rem auto;
   font-family: sans-serif;
+
 }
 
 /* Wrapper mit position: relative für Button-Positionierung */
 .table-wrapper {
   position: relative;
 }
+
+.table-scroller{
+  overflow: auto;
+}
+
 
 /* Tabelle-Design */
 table {
@@ -134,10 +157,41 @@ th {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  overflow: visible;
+  
 }
 
 /* Optional: Hover-Effekt */
 .info-button:hover {
   opacity: 0.85;
+}
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0.1s; /* Delay before showing the tooltip */
+    overflow: visible;
+    left: -20rem;
+    display: table;
+}
+.tooltip-container {
+    position: absolute;
+    display: block;
+    cursor: pointer;
+    top: 50%;
+    right: -1rem;  /*Falls du mehr Platz willst, anpassen */
+   transform: translateY(-50%);
+   width: fit-content;
+}
+.tooltip-text {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    /*border-radius: 5px;*/
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;  /*Adjust to position above the element */
+    width: fit-content;
 }
 </style>

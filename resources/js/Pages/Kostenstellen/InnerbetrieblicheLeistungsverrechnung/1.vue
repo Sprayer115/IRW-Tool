@@ -1,9 +1,6 @@
 <template>
   <div class="stufenleiter-container">
     <!-- Infobutton rechts oben -->
-    <div class="info-button" @click="onInfoClick" title="Mehr Informationen">
-      i
-    </div>
 
     <h1 class="title">Kostenstellenrechnung – innerbetriebliche Leistungsverrechnung</h1>
     <br>
@@ -38,6 +35,7 @@
 
     <!-- Beispielhafte Tabelle -->
     <h3><strong>Gesamtkosten nach Stufenleiterverfahren:</strong></h3>
+    <div class="table-scroller">
     <table class="kosten-tabelle">
       <thead>
         <tr>
@@ -68,6 +66,19 @@
         </tr>
       </tbody>
     </table>
+  </div>
+    <div>
+      <span id="tooltip-aufwand" class="tooltip-container">
+            <sup class="info-button">i</sup>
+            <span class="tooltip-text">Die innerbetriebliche Leistungsverrechnung dient dazu, Kosten, die durch die Nutzung von <br>Leistungen innerhalb des Unternehmens entstehen, korrekt zuzuordnen. Es gibt verschiedene Verfahren dafür:<br><br>
+   1.	Stufenleiterverfahren: Kosten werden schrittweise auf die nachfolgenden Kostenstellen verteilt.<br> Vorherige Kostenstellen werden dabei nicht erneut berücksichtigt.<br><br>
+   2.	Anbauverfahren: Verteilt nur auf die Endkostenstellen, ohne gegenseitige <br>Verrechnung zwischen den Hauptkostenstellen.<br><br>
+   3.	Gleichungsverfahren: Nutzt ein mathematisches System von Gleichungen, um <br>alle innerbetrieblichen Leistungen vollständig zu berücksichtigen.<br><br>
+Jedes Verfahren hat unterschiedliche Genauigkeitsgrade und Anforderungen in der Anwendung.
+
+            </span>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -109,10 +120,6 @@ export default {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
-
-.info-button:hover {
-  opacity: 0.8;
 }
 
 /* Manuelles Listen-Layout */
@@ -157,5 +164,42 @@ export default {
 
 .kosten-tabelle th {
   font-weight: 600;
+}
+
+/* Optional: Hover-Effekt */
+.info-button:hover {
+  opacity: 0.85;
+}
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0.1s; /* Delay before showing the tooltip */
+    overflow: visible;
+    left: -20rem;
+    display: table;
+}
+.tooltip-container {
+    position: absolute;
+    display: block;
+    cursor: pointer;
+    top: 50%;
+    right: -1rem;  /*Falls du mehr Platz willst, anpassen */
+   transform: translateY(-50%);
+   width: fit-content;
+}
+.tooltip-text {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    /*border-radius: 5px;*/
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;  /*Adjust to position above the element */
+    width: fit-content;
+}
+.table-scroller{
+  overflow: auto;
 }
 </style>

@@ -3,6 +3,7 @@
     <div class="kostenverteilung-container">
       <h1 class="title">Kostenträgerrechnung – Kostenverteilung</h1>
   
+      <div class="tabelle-overflow">
       <table class="kostenverteilung-tabelle">
         <thead>
           <tr>
@@ -45,7 +46,7 @@
           </tr>
         </tbody>
       </table>
-  
+      </div>
       <ul class="summary-list">
         <li>
           <strong>Produkt A</strong> verursacht Gesamtkosten in Höhe von 
@@ -71,6 +72,10 @@
   </script>
   
   <style scoped>
+  .tabelle-overflow{
+  overflow: auto;
+}
+
   .title {
   font-size: 1.4rem;
 }

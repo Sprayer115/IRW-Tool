@@ -48,10 +48,11 @@
     </table>
 
     <!-- Button-Gruppe: Skript-Button am unteren Rand -->
-    <div class="button-group">
+
+  </div>
+  <div class="button-group">
       <button class="btnShowScript" @click="downloadScript">Skript</button>
     </div>
-  </div>
 </template>
 
 <script>
@@ -75,6 +76,7 @@ export default {
   max-width: 800px;
   margin: 1rem auto;
   font-family: sans-serif;
+  overflow: auto;
 }
 
 table {

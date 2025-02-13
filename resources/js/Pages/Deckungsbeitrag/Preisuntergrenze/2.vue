@@ -20,11 +20,13 @@
       <!-- Formel -->
       <h3><strong>Formel:</strong></h3>
       <br>
-      <img src="images/Preisuntergrenze2.png">
+      <div class="tabelle-overflow">
+        <img src="images/Preisuntergrenze2.png" style="min-width: 600px;"/></div>
       <br>
   
       <!-- Gegeben: Tabelle -->
       <h3><strong>Gegeben:</strong></h3>
+      <div class="tabelle-overflow">
       <table class="kosten-tabelle">
         <thead>
           <tr>
@@ -50,6 +52,7 @@
         </tbody>
       </table>
     </div>
+    </div>
   </template>
   
   <script>
@@ -58,7 +61,11 @@
   };
   </script>
   
-  <style scoped>
+  <style>
+  .tabelle-overflow{
+  overflow: auto;
+}
+
   .langfristige-preisuntergrenze {
     max-width: 700px;
     margin: 1rem auto;

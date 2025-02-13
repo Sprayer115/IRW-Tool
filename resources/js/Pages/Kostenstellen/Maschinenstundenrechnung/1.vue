@@ -12,6 +12,22 @@
       Produktionskosten präziser auf die Kostenträger (Produkte) umgelegt.
     </p>
 
+    <div>
+      <span class="tooltip-container">
+            <sup class="info-button">i</sup>
+            <span class="tooltip-text">Die Maschinenstundensatzrechnung ist eine Erweiterung der Kostenstellenrechnung. <br>Sie ordnet die Maschinenkosten verursachungsgerecht pro Stunde zu, um <br>eine präzisere Verteilung der Produktionskosten auf die Produkte zu ermöglichen. <br>Wichtige Bestandteile sind:<br>
+•	Abschreibungen: Basierend auf Anschaffungskosten und Nutzungsdauer.<br>
+•	Zinsen: Berücksichtigen den Kapitaleinsatz.<br>
+•	Raumkosten: Verteilt nach genutzter Fläche.<br>
+•	Energiekosten: Abhängig vom Verbrauch.<br>
+•	Instandhaltungskosten: Werden anteilig auf die Laufzeit umgelegt.<br>
+
+
+            </span>
+      </span>
+    </div>
+    <br>
+
     <img src='/images/Maschinenstundensatz1.png'/>
   </div>
 </template>
@@ -96,5 +112,58 @@ export default {
 /* Gleichheitszeichen größer darstellen */
 .equals {
   font-size: 1.3rem;
+}
+
+/* Optional: Hover-Effekt */
+.info-button:hover {
+  opacity: 0.85;
+}
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0.1s; /* Delay before showing the tooltip */
+    overflow: visible;
+    left: 20rem;
+    display: table;
+}
+.tooltip-container {
+    position: relative;
+    display: block;
+    cursor: pointer;
+    top: 50%;
+    right: -1rem;  /*Falls du mehr Platz willst, anpassen */
+   transform: translateY(-50%);
+   width: fit-content;
+}
+.tooltip-text {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    /*border-radius: 5px;*/
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;  /*Adjust to position above the element */
+    width: fit-content;
+}
+.table-scroller{
+  overflow: scroll;
+}
+.info-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  width: 28px;
+  height: 28px;
+  background-color: #000;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 </style>

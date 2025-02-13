@@ -7,18 +7,19 @@
     <ol>
       <li>
         <strong>1. Fixkostenanteil pro Stück:</strong>
-        
         <!-- Unterliste für beide Produkte (ungeordnet) -->
         <ul>
           <li>
             <br>
             <strong>• Produkt A:</strong>
-            <img src="images/Preisuntergrenze3.png" style="width: 60%; margin: auto;">
+            <div class="tabelle-overflow"> <br>
+              <img src="images/Preisuntergrenze3.png" style="max-width: 500px;"/></div>
           </li>
           <li>
             <br>
             <strong>• Produkt B:</strong>
-            <img src="images/Preisuntergrenze4.png" style="width: 60%; margin: auto;">
+            <div class="tabelle-overflow"><br>
+              <img src="images/Preisuntergrenze4.png" style="max-width: 500px;"/></div>
           </li>
         </ul>
       </li>
@@ -82,7 +83,11 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+.tabelle-overflow{
+  overflow: auto;
+}
+
 .langfristige-preisuntergrenze {
   max-width: 700px;
   margin: 1rem auto;

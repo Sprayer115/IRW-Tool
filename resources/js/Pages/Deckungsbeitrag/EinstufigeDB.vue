@@ -126,6 +126,7 @@ h1 {
   display: flex;
   gap: 2rem;
   margin-top: 2rem;
+  overflow: auto;
 }
 
 /* Kleinere (linke) Tabelle */
@@ -188,5 +189,8 @@ h1 {
 }
 .dbi-tabelle .total-row td {
   font-weight: bold;
+}
+.table-scroller{
+  overflow: scroll;
 }
 </style>

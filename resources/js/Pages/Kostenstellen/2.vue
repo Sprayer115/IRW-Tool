@@ -1,6 +1,6 @@
 <template>
   <div class="kurzes-beispiel">
-    <h2><strong>Kurzes Beispiel</strong></h2>
+    <h2><strong>Kurzes Beispiel</strong></h2> <br>
     <p>
       Ein Unternehmen verteilt Mietkosten von 6.667 € nach genutzter Fläche:
     </p>

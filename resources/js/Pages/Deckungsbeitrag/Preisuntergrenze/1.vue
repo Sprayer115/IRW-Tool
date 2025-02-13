@@ -20,11 +20,13 @@
       <!-- Formel -->
       <h3><strong>Formel:</strong></h3>
       <br>
-      <img src="images/Preisuntergrenze1.png">
+    <div class="tabelle-overflow">
+    <img src="images/Preisuntergrenze1.png" style="min-width: 600px;"/></div>
       <br>
   
       <!-- Gegeben: Tabelle -->
       <h3><strong>Gegeben:</strong></h3>
+      <div class="tabelle-overflow">
       <table class="kosten-tabelle">
         <thead>
           <tr>
@@ -43,7 +45,7 @@
           </tr>
         </tbody>
       </table>
-  
+    </div>
       <!-- Ergebnis -->
       <h3>Ergebnis:</h3>
       <ul class="result-list">
@@ -69,7 +71,10 @@
   };
   </script>
   
-  <style scoped>
+  <style>
+  .tabelle-overflow{
+  overflow: auto;
+}
 
   .preisuntergrenze-container {
     max-width: 700px;

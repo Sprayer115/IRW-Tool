@@ -7,6 +7,7 @@
     <p>Die Gesamtkosten aus dem Gleichungsverfahren sind:</p>
     <br>
 
+    <div class="tabelle-overflow">
     <table class="gesamtkosten-tabelle">
       <thead>
         <tr>
@@ -29,6 +30,7 @@
         </tr>
       </tbody>
     </table>
+  </div>
   </div>
 </template>
 
@@ -72,4 +74,8 @@ h2 {
 .gesamtkosten-tabelle th {
   font-weight: 600;
 }
+.tabelle-overflow{
+  overflow: auto;
+}
+
 </style>

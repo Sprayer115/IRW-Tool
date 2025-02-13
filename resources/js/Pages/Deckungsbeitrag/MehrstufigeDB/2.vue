@@ -15,7 +15,8 @@
     </p>
 
     <!-- Formel-Beispiel -->
-    <img src='/images/DBmehr1.png' />
+    <div class="tabelle-overflow">
+      <img src='/images/DBmehr1.png' style="min-width: 600px;"/></div>
 
     <!-- Flex-Layout: links Mini-Tabelle, rechts Ergebnis-Tabelle -->
     <div class="layout-row">
@@ -104,6 +105,10 @@ export default {
 </script>
 
 <style scoped>
+.tabelle-overflow{
+  overflow: auto;
+}
+
 .title {
   font-size: 1.4rem;
 }
@@ -153,6 +158,7 @@ h1 {
   display: flex;
   gap: 2rem;
   margin-top: 2rem;
+  overflow: auto;
 }
 .mini-table-section {
   flex: 0.6;

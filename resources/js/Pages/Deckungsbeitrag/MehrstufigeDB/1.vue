@@ -89,6 +89,10 @@ export default {
 </script>
 
 <style scoped>
+.tabelle-overflow{
+  overflow: auto;
+}
+
 .title {
   font-size: 1.4rem;
 }
@@ -118,6 +122,7 @@ h1 {
   display: flex;
   gap: 2rem;
   margin-top: 1rem;
+  overflow: auto;
 }
 
 .mini-table-section {

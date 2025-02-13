@@ -1,6 +1,7 @@
 <!-- Finanzbuchhaltung/1.vue -->
 <template>
-    <div >
+        <div class="py-12 bg-white dark:bg-white p-4">
+
         <!-- Your page content here -->
         <p>"Die Finanzbuchhaltung erfasst alle Aufwendungen und Erträge eines Unternehmens und bildet die Grundlage für die Kostenrechnung. Sie dokumentiert alle Geschäftsvorfälle und dient der Erstellung von Jahresabschlüssen (Bilanz und Gewinn- und Verlustrechnung)."</p>
         <br>
@@ -33,7 +34,6 @@
         Gewinn = 12.000 €−(5.000 €+2.000 €+3.000 €+500 €)=1.500 €Gewinn
       </p>
     </div>
-
     </div>
   </template>
   

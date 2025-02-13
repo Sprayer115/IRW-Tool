@@ -32,6 +32,7 @@
     </ol>
 
     <h3><strong> Gesamtkosten nach Anbauverfahren:</strong></h3>
+    <div class="tabelle-overflow">
     <table class="kosten-tabelle">
       <thead>
         <tr>
@@ -62,6 +63,7 @@
         </tr>
       </tbody>
     </table>
+  </div>
   </div>
 </template>
 
@@ -104,6 +106,10 @@ h1 {
   border-collapse: collapse;
   margin-top: 0.5rem;
   text-align: left;
+}
+
+.tabelle-overflow{
+  overflow: auto;
 }
 
 .kosten-tabelle th,

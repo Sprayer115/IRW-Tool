@@ -1,7 +1,7 @@
 <template>
   <div class="db-ergebnis-container">
     <h2>Ergebnis der mehrstufigen Deckungsbeitragsrechnung</h2>
-
+    <div class="tabelle-overflow">
     <table class="db-ergebnis-tabelle">
       <thead>
         <tr>
@@ -38,6 +38,7 @@
         </tr>
       </tbody>
     </table>
+  </div>
     <!-- Skript-Button, analog zu 2.vue -->
     <div style="text-align: right; margin-top: 1rem;">
       <button class="btnShowScript" @click="downloadScript">Skript</button>
@@ -62,6 +63,10 @@ export default {
 </script>
 
 <style scoped>
+.tabelle-overflow{
+  overflow: auto;
+}
+
 .db-ergebnis-container {
   max-width: 700px;
   margin: 1rem auto;

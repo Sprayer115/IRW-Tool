@@ -35,6 +35,7 @@
     </ol>
 
     <h3>Gesamtkosten nach Gleichungsverfahren:</h3>
+    <div class="tabelle-overflow">
     <table class="kosten-tabelle">
       <thead>
         <tr>
@@ -61,7 +62,7 @@
         </tr>
       </tbody>
     </table>
-    
+    </div>
     <!-- Skript-Button am unteren Rand -->
     <div style="text-align: right; margin-top: 10px;">
       <button class="btnShowScript" @click="downloadScript">Skript</button>
@@ -140,4 +141,9 @@ export default {
   border: none;
   cursor: pointer;
 }
+
+.tabelle-overflow{
+  overflow: auto;
+}
+
 </style>

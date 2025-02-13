@@ -199,6 +199,61 @@
           <animated-number :value="energiekostenJaehrlich" :clearTrigger="clearTrigger" /> € p.a.
         </strong>
     </p>
+    <!-- 8) Maschinenstundensatz -->
+    <h2 class="red-title">Maschinenstundensatz</h2>
+      <br>
+      <p>
+        <em>Formel:</em> <br>
+        Maschinenstundensatz = 
+        <span class="fraction">
+          <span class="numerator">
+            Maschinenkosten
+          </span>
+          <span class="sep"></span>
+          <span class="denominator">
+            Nutzungszeit p.a.
+          </span>
+        </span>
+      </p>
+      <br>
+      <p style="text-align: center; font-size: 1.7rem;">=</p>
+      <br>
+      <p>
+        Maschinenstundensatz = 
+        <span class="fraction">
+          <span class="numerator">
+            Abschreibung + Zinsen + Raumkosten + Engergie + Instandhaltung
+          </span>
+          <span class="sep"></span>
+          <span class="denominator">
+            Nutzungszeit p.a.
+          </span>
+        </span>
+      </p>
+      <br>
+      <p style="text-align: center; font-size: 1.7rem;">=</p>
+      <br>
+      <p>
+        Maschinenstundensatz = 
+        <span class="fraction">
+          <span class="numerator">
+            <animated-number :value="abschreibung" :clearTrigger="clearTrigger" /> ] 
+          </span>
+          <span class="sep"></span>
+          <span class="denominator">
+            Nutzungszeit p.a.
+          </span>
+        </span>
+      </p>
+      <br>
+      <p>
+        Abschreibungskosten (im Beispiel) =
+        {{ wiederbeschaffungswert }} € / {{ nutzungsdauer }} Jahre =
+        <strong>
+          <animated-number :value="abschreibung" :clearTrigger="clearTrigger" /> € p.a.
+        </strong>
+      </p>
+      <br>
   </div>
 </template>
 
@@ -354,4 +409,29 @@ input {
   border-bottom: 1px solid #000;
   margin: 2px 0;
 }
-</style>
+
+.fraction {
+    display: inline-block;
+    text-align: center;
+    margin: 0 0.5rem;
+  }
+  
+  .numerator,
+  .denominator {
+    display: block;
+  }
+  
+  .sep {
+    display: block;
+    border-bottom: 1px solid #000;
+    margin: 2px 0;
+  }
+  
+  /* Style for the clear button */
+  .clear-button {
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
+  </style>
+  

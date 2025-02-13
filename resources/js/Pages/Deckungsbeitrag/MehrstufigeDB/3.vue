@@ -13,9 +13,11 @@
     <p class="red-hint">Formel:</p>
 
     <!-- Formel-Beispiel -->
-    <img src='/images/DBmehr2.png' />
+    <div class="tabelle-overflow">
+    <img src='/images/DBmehr2.png' style="min-width: 600px;"/></div>
 
     <!-- Erste (kleine) Tabelle: DB III, Unternehmensfixkosten -->
+    <div class="tabelle-overflow">
     <table class="mini-scheme">
       <thead>
         <tr>
@@ -42,8 +44,9 @@
         </tr>
       </tbody>
     </table>
-
+  </div>
     <!-- Zweite (große) Tabelle mit DB III, Unternehmensfixkosten, DB IV -->
+    <div class="tabelle-overflow">
     <table class="db4-tabelle">
       <thead>
         <tr>
@@ -75,6 +78,7 @@
       </tbody>
     </table>
   </div>
+  </div>
 </template>
 
 <script>
@@ -84,6 +88,10 @@ export default {
 </script>
 
 <style scoped>
+.tabelle-overflow{
+  overflow: auto;
+}
+
 .title {
   font-size: 1.4rem;
 }
