@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
@@ -18,6 +19,16 @@ const submit = () => {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
+
+const passwordFeedback = computed(() => {
+    if (form.password && form.password.length < 6) {
+        return "Das Passwort muss mindestens 6 Zeichen lang sein.";
+    }
+    if (form.password && !/(?=.*[^a-zA-Z])/.test(form.password)) {
+        return "Das Passwort muss mindestens ein Sonderzeichen oder eine Ziffer enthalten.";
+    }
+    return "";
+});
 </script>
 
 <template>
@@ -67,6 +78,11 @@ const submit = () => {
                     required
                     autocomplete="new-password"
                 />
+
+                <!-- Live Feedback zur Passwortvalidierung -->
+                <div v-if="passwordFeedback" class="mt-2 text-sm text-red-600">
+                    {{ passwordFeedback }}
+                </div>
 
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
