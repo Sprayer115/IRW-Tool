@@ -117,8 +117,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/quiz', [QuizController::class, 'index'])->name('quiz.index');
-
+Route::get('/quiz/{filename}', [QuizController::class, 'getJsonFile']);
 
 
 // routes/web.php

@@ -4,10 +4,10 @@
 set -e
 
 echo "Starting deployment with Docker..."
-git stash
+#git stash
 # Pull latest changes from Git
 echo "Pulling latest changes from git..."
-git pull origin main
+#git pull origin main
 cd ..
 # Run Composer install/update inside the app container
 echo "Running composer install/update in Docker..."

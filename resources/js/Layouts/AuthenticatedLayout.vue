@@ -34,8 +34,8 @@ const props = defineProps({
                                 </Link>
                             </div>
 
-                            <!-- Navigation Links -->
-                            <div class="hidden 2xl:space-x-8 2xl:-my-px 2xl:ms-10 2xl:flex items-center">
+                            <!-- Navigation Links (normale Nav) -->
+                            <div class="normal-nav hidden custom-nav-spacing pt-4 items-center xl:-my-px xl:ms-10 2xl:-my-px 2xl:ms-10">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
@@ -165,7 +165,7 @@ const props = defineProps({
                             </div>
                         </div>
 
-                        <div class="hidden sm:flex sm:items-center sm:ms-6">
+                        <div class="hidden sm:flex sm:items-center sm:ms-6  pt-4">
                             <!-- Settings Dropdown -->
                             <div class="ms-3 relative">
                                 <Dropdown align="right" width="48">
@@ -173,28 +173,17 @@ const props = defineProps({
                                         <span class="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white2 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
+                                                class="inline-flex items-center p-2 border border-transparent text-sm leading-4 font-medium rounded-full text-gray-500 dark:text-gray-400 bg-white2 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
                                             >
-                                                {{ $page.props.auth.user.name }}
-
-                                                <svg
-                                                    class="ms-2 -me-0.5 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fill-rule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd"
-                                                    />
+                                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 
+                                                    0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                                                 </svg>
                                             </button>
                                         </span>
                                     </template>
-
                                     <template #content>
-                                        <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
+                                        <DropdownLink :href="route('profile.edit')">Profile</DropdownLink>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
                                             Log Out
                                         </DropdownLink>
@@ -203,11 +192,11 @@ const props = defineProps({
                             </div>
                         </div>
 
-                        <!-- Hamburger -->
-                        <div class="me-2 flex items-center 2xl:hidden">
+                        <!-- Hamburger Menü -->
+                        <div class="hamburger-nav me-2 flex items-center">
                             <button
                                 @click="showingNavigationDropdown = !showingNavigationDropdown"
-                                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out"
+                                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none transition duration-150 ease-in-out"
                             >
                                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                     <path
@@ -347,3 +336,43 @@ const props = defineProps({
         </div>
     </div>
 </template>
+
+<style scoped>
+/* Standard: falls der Breakpoint unter 1400px liegt, kannst Du hier ggf. einen anderen space-x-Wert setzen */
+.custom-nav-spacing {
+  @apply space-x-4;
+}
+
+/* Wenn der Bildschirm zwischen 1400px und 1599px breit ist, verwende space-x-2 */
+@media (min-width: 1400px) and (max-width: 1599px) {
+  .custom-nav-spacing {
+    @apply space-x-2;
+  }
+}
+
+/* Ab 1600px: space-x-6 */
+@media (min-width: 1600px) {
+  .custom-nav-spacing {
+    @apply space-x-6;
+  }
+}
+
+/* Steuerung der Sichtbarkeit der normalen Navigation und des Hamburger-Menüs */
+@media (max-width: 1399px) {
+  .normal-nav {
+    display: none !important;
+  }
+  .hamburger-nav {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  .normal-nav {
+    display: flex !important;
+  }
+  .hamburger-nav {
+    display: none !important;
+  }
+}
+</style>

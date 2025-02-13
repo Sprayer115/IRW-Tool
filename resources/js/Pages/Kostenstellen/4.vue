@@ -2,7 +2,7 @@
   <div class="gemeinkostenzuweisung">
     <h2><strong>Zuweisung der primären Gemeinkosten:</strong></h2>
 
-    <!-- Wrapper, um den Infobutton rechts platzieren zu können -->
+    <!-- Wrapper, um Tabelle und Info-Button zusammen zu fassen -->
     <div class="table-wrapper">
       <div class="table-scroller">
       <table>
@@ -44,17 +44,75 @@
     </div>
       <br>
       <br>
-      <!-- Skript-Button unter der Tabelle -->
+      <!-- Button-Gruppe: Skript- und Quiz-Button -->
       <div style="text-align: right;">
         <button class="btnShowScript" @click="onShowScript">Skript</button>
+        <button class="btnStartQuiz" @click="onQuiz">Quiz</button>
       </div>
     </div>
+
+    <!-- Modal: Quiz Component via Headless UI -->
+    <TransitionRoot appear :show="showQuiz" as="template">
+      <Dialog as="div" @close="closeQuiz" class="relative z-10">
+        <TransitionChild
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black bg-opacity-25" />
+        </TransitionChild>
+  
+        <div class="fixed inset-0 overflow-y-auto">
+          <div class="flex min-h-full items-center justify-center p-4">
+            <TransitionChild
+              enter="ease-out duration-300"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <DialogPanel class="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 shadow-xl transition-all">
+                <QuizComponent 
+                  :questions="quizQuestions" 
+                  @complete="handleQuizComplete"
+                  @close="closeQuiz" />
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
-
+  
 <script>
+import axios from 'axios'
+import QuizComponent from '../../Components/Quiz.vue'
+import { TransitionRoot, TransitionChild, Dialog, DialogPanel } from '@headlessui/vue'
+import { onMounted } from 'vue';
+
 export default {
   name: "GemeinkostenZuweisung",
+  components: {
+    TransitionRoot,
+    TransitionChild,
+    Dialog,
+    DialogPanel,
+    QuizComponent
+  },
+  data() {
+    return {
+      showQuiz: false,
+      quizQuestions: []
+    }
+  },
+  mounted() { 
+    this.fetchQuizQuestions();
+  },
   methods: {
     onInfoClick() {
       alert("Hier könnten weitere Informationen angezeigt werden!");
@@ -67,18 +125,31 @@ export default {
       link.click();
       document.body.removeChild(link);
     },
-    onCalculator() {
-      alert("Calculator clicked!");
-      // Hier könntest du z.B. ein Modal öffnen oder eine andere Seite laden
-    },
     onQuiz() {
-      alert("Quiz clicked!");
-      // Hier könntest du z.B. zu einem Quiz-Modul navigieren
+      this.showQuiz = true;
+    },
+    closeQuiz() {
+      this.showQuiz = false;
+    },
+    fetchQuizQuestions() {
+      axios.get('/quiz/Kostenstellen.json')
+        .then(response => {
+          // Passe dies ggf. an die Struktur Deiner JSON-Datei an
+          this.quizQuestions = response.data.questions || response.data;
+        })
+        .catch(error => {
+          console.error('Error fetching quiz questions:', error);
+        });
+    },
+    handleQuizComplete() {
+      setTimeout(() => {
+        this.showQuiz = false;
+      }, 1500);
     }
   }
-};
+}
 </script>
-
+  
 <style scoped>
 .gemeinkostenzuweisung {
   max-width: 600px;
@@ -112,7 +183,7 @@ th {
   font-weight: 600;
 }
 
-/* Infobutton: rechts, vertical center (top 50% + translateY) */
+/* Infobutton: rechts, vertikal zentriert */
 .info-button {
   position: absolute;
   top: 50%;
@@ -120,7 +191,7 @@ th {
   transform: translateY(-50%);
   width: 24px;
   height: 24px;
-  background-color: #000000;
+  background-color: #000;
   color: #fff;
   font-weight: bold;
   border-radius: 50%;
@@ -134,16 +205,30 @@ th {
   opacity: 0.85;
 }
 
-/* Skript-Button, angelehnt an 2.vue */
-.btnShowScript {
-  background-color: #475569; /* bg-slate-600 */
+/* Skript- und Quiz-Buttons */
+.btnShowScript,
+.btnStartQuiz {
+  border: none;
+  cursor: pointer;
   border-radius: 12px;
   margin: 5px;
   padding: 14px 28px;
   font-weight: 500;
-  color: rgb(226, 232, 240);
-  border: none;
-  cursor: pointer;
+}
+
+.btnShowScript {
+  background-color: #475569;
+  color: rgb(226,232,240);
+}
+
+.btnStartQuiz {
+  background-color: #2563eb;
+  color: white;
+}
+
+/* Headless UI Dialog */
+.fixed {
+  position: fixed;
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);

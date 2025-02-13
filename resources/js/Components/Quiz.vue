@@ -60,9 +60,6 @@
           </div>
         </div>
   
-        <div class="text-sm text-gray-500">
-          Question {{ remainingQuestions.length + 1 }} of {{ totalQuestions }}
-        </div>
       </div>
   
       <div v-else class="text-center py-8">

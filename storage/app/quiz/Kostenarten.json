@@ -1,0 +1,64 @@
+{
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "question": "Welche der folgenden Aussagen zur Abgrenzungsrechnung ist korrekt?",
+        "options": [
+          "Sie dient dazu, die Erträge aus der Finanzbuchhaltung in die Kostenrechnung zu übernehmen.",
+          "Sie unterscheidet zwischen zeitlicher und sachlicher Abgrenzung.",
+          "Sie ordnet ausschließlich Gemeinkosten den Kostenstellen zu.",
+          "Sie stellt sicher, dass alle Kostenarten in der Finanzbuchhaltung erfasst werden."
+        ],
+        "correctAnswer": "Sie unterscheidet zwischen zeitlicher und sachlicher Abgrenzung.",
+        "hint": "Es geht um die Übernahme von Aufwendungen in die Kostenrechnung."
+      },
+      {
+        "id": "q2",
+        "type": "multiple_choice",
+        "question": "Welche Kostenart gehört nicht zu den wesentlichen Kostenarten in der Kostenartenrechnung?",
+        "options": [
+          "Materialkosten",
+          "Personalkosten",
+          "Einkommenssteuer",
+          "Kalkulatorische Zinsen"
+        ],
+        "correctAnswer": "Einkommenssteuer",
+        "hint": "Nur Kostensteuern werden in der Kostenrechnung berücksichtigt."
+      },
+      {
+        "id": "q3",
+        "type": "multiple_choice",
+        "question": "Wie werden Gemeinkosten typischerweise verrechnet?",
+        "options": [
+          "Direkte Zuweisung zu einem Kostenobjekt",
+          "Über Maschinenstundensätze oder Zuschlagssätze",
+          "Gar nicht, da sie nicht in der Kostenrechnung berücksichtigt werden",
+          "Sie werden automatisch als Einzelkosten gebucht"
+        ],
+        "correctAnswer": "Über Maschinenstundensätze oder Zuschlagssätze",
+        "hint": "Gemeinkosten können nicht direkt einem Kostenobjekt zugeordnet werden."
+      },
+      {
+        "id": "q4",
+        "type": "free_text",
+        "question": "Nenne zwei Beispiele für kalkulatorische Kosten.",
+        "correctAnswers": ["kalkulatorische Abschreibungen", "kalkulatorische Zinsen", "kalkulatorische Miete", "kalkulatorische Wagnisse"],
+        "hint": "Diese Kosten sind oft nicht identisch mit den in der Finanzbuchhaltung erfassten Aufwendungen."
+      },
+      {
+        "id": "q5",
+        "type": "multiple_choice",
+        "question": "Welche Methode gehört nicht zu den Verfahren zur Materialkostenbewertung?",
+        "options": [
+          "Lifo-Verfahren",
+          "Fifo-Verfahren",
+          "Hifo-Verfahren",
+          "Tifo-Verfahren"
+        ],
+        "correctAnswer": "Tifo-Verfahren",
+        "hint": "Es gibt drei gängige Verbrauchsfolgeverfahren, aber eines der genannten ist erfunden."
+      }
+    ]
+  }
+  
