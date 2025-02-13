@@ -32,8 +32,16 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
+            'password' => [
+                'required',
+                'confirmed',
+                'min:6', // Mindestlänge 6 Zeichen
+                'regex:/^(?=.*[^a-zA-Z]).+$/', // Mindestens ein Zeichen, das kein Buchstabe ist
+            ],
+        ], [
+            'password.min' => 'Das Passwort muss mindestens 6 Zeichen lang sein.',
+            'password.regex' => 'Das Passwort muss mindestens ein Sonderzeichen oder eine Ziffer enthalten.',
         ]);
 
         $user = User::create([
