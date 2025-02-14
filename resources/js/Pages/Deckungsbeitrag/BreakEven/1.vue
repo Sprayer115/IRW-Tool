@@ -98,7 +98,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+.tabelle-overflow{
+  overflow: auto;
+}
 .title {
   font-size: 1.4rem;
 }
@@ -144,6 +147,7 @@ export default {
   gap: 2rem;
   align-items: flex-start;
   margin-top: 1rem;
+  overflow: auto;
 }
 
 /* Left "mini-scheme" table */

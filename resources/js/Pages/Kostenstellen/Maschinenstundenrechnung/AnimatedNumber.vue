@@ -26,7 +26,7 @@
         // This counter is used to select the next color in the array.
         colorCounter: 0,
         // Define a list of colors. Each change will pick the next color.
-        colors: ["yellow", "lightblue", "pink", "lightgreen", "orange"]
+        colors: ["yellow", "lightblue", "pink", "lightgreen", "orange", "aqua", "Aquamarine", "DarkSeaGreen"]
       };
     },
     watch: {

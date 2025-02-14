@@ -23,6 +23,7 @@
 
     <!-- 8. Endergebnis -->
     <h2>8. Endergebnis</h2>
+    <div class="tabelle-overflow">
     <table class="ergebnis-tabelle">
       <thead>
         <tr>
@@ -47,7 +48,7 @@
         </tr>
       </tbody>
     </table>
-
+  </div>
     <p class="sum">
       Gesamter Deckungsbeitrag: <strong>24.000 €</strong>
     </p>
@@ -60,7 +61,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .title {
   font-size: 1.4rem;
 }

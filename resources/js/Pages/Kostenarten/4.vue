@@ -90,7 +90,6 @@
         </div>
       </Dialog>
     </TransitionRoot>
-  </div>
 </template>
 
 <script>

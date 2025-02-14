@@ -63,7 +63,7 @@
       </div>
   
       <div v-else class="text-center py-8">
-        <h3 class="text-xl font-bold mb-4">Quiz Complete! 🎉</h3>
+        <h3 class="text-xl font-bold mb-4">Geschafft! 🎉</h3>
         <button
           @click="$emit('close')"
           class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"

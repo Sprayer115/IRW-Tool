@@ -1,15 +1,19 @@
 <template>
   <div class="msr-container">
     <h1>Erweiterung der Kostenstellenrechnung – Maschinenstundensatzrechnung</h1>
+    <br>
     
     <!-- Container für die beiden Buttons -->
     <div class="button-group">
-      <button @click="clearHighlights" class="clear-button">Highlight Clear</button>
+      <button @click="clearHighlights" class="clear-button">Highlights entfernen</button>
       <button @click="downloadScript" class="btnShowScript">Skript</button>
     </div>
     
     <!-- 1) Dynamische Eingabe-Tabelle -->
-    <h2>Gegebene Beispielwerte für die Rechnung</h2>
+     
+    <details open>
+      <summary> <h2>Gegebene Beispielwerte für die Rechnung</h2></summary>
+    <br>
     <table class="input-table">
       <tbody>
         <tr>
@@ -92,7 +96,7 @@
         </tr>
       </tbody>
     </table>
-
+  </details>
     <!-- 2) Formel & Berechnung: Maschinenlaufzeit -->
     <h2 class="red-title">Berechnung der Maschinenlaufzeit</h2>
     <br>
@@ -147,58 +151,96 @@
       <em>Formel:</em>
       Zinskosten p.a. = Zinssatz × durchschnittlich gebundenes Kapital
     </p>
+    <br>
     <p>
-      (Hier vereinfacht: durchschnittliches Kapital = 
-      {{ (anschaffungskosten + wiederbeschaffungswert) / 2 }} €)
+      <em>Formel:</em> durchschnittlich gebundenes Kapital = 
+      <span class="fraction">
+        <span class="numerator">
+          (Anschaffungskosten + Restbuchwert)
+        </span>
+        <span class="sep"></span>
+        <span class="denominator">
+          2
+        </span>
+      </span>
     </p>
+    <br>
+    <p>
+      durchschnittlich gebundenes Kapital = 
+      <span class="fraction">
+        <span class="numerator">
+          (<animated-number :value="anschaffungskosten" :clearTrigger="clearTrigger" /> + 0)
+        </span>
+        <span class="sep"></span>
+        <span class="denominator">
+          2
+        </span>
+      </span>
+      <span>
+        = <animated-number :value="durchschnittlichGebundenesKapital" :clearTrigger="clearTrigger" />
+      </span>
+    </p>
+    <br>
     <p>
       Zinskosten p.a. (Beispiel) =
-      {{ zinssatz }} % × 
+      <animated-number :value="zinssatz" :clearTrigger="clearTrigger" /> % × 
       <animated-number :value="durchschnittlichGebundenesKapital" :clearTrigger="clearTrigger" /> =
       <strong>
         <animated-number :value="zinskosten" :clearTrigger="clearTrigger" /> € p.a.
       </strong>
     </p>
 
-    <!-- 5) Instandhaltungskosten p.a. -->
-    <br>
-    <h2 class="red-title">Instandhaltungskosten im Maschinenstundensatz</h2>
-    <br>
-    <p>
-      Instandhaltung p.a. = {{ instandhaltungProzent }} % × {{ anschaffungskosten }} € =
-      <strong>
-        <animated-number :value="instandhaltung" :clearTrigger="clearTrigger" /> € p.a.
-      </strong>
-    </p>
-
-    <!-- 6) Raumkosten -->
+    <!-- 5) Raumkosten -->
     <br>
     <h2 class="red-title">Raumkosten im Maschinenstundensatz</h2>
     <br>
     <p>
-      Raumkosten p.a. = {{ raumkostensatz }} € × {{ stellflaeche }} m² =
+      <em>Formel:</em> Raumkosten p.a. = Raumkostensatz × benötigte Fläche 
+    </p>
+    <br>
+    <p>
+      Raumkosten p.a. = <animated-number :value="raumkostensatz" :clearTrigger="clearTrigger" /> €/qm × <animated-number :value="stellflaeche" :clearTrigger="clearTrigger" /> qm =
       <strong>
         <animated-number :value="raumkosten" :clearTrigger="clearTrigger" /> € p.a.
       </strong>
     </p>
 
-    <!-- 7) Energiekosten -->
+    <!-- 6) Energiekosten -->
     <br>
     <h2 class="red-title">Energiekosten im Maschinenstundensatzrechnung</h2>
     <br>
     <p>
-      Energiekosten p.a. = Energieverbrauch × Nutzungszeit × Energiekostensatz
-      <br />
-      (Vereinfacht: <em>Motorenleistung ({{ motorenleistung }} kW)</em> × 
-      <em>Auslastungsgrad ({{ auslastungsgrad }} %)</em> × 
-      <em>Nutzungszeit ({{ nutzungszeit }} h)</em> × 
-      <em>{{ energiekosten }} €/kWh</em>)
+      <em>Formel:</em> Energiekosten p.a. = Energieverbrauch × Nutzungszeit × Energiekostensatz</p>
+      <br>
+      <p>
+        Energiekosten p.a. = <em>(Motorenleistung) <animated-number :value="motorenleistung" :clearTrigger="clearTrigger" /> kW</em> × 
+       <!--<em>Auslastungsgrad ({{ auslastungsgrad }} %)</em> × -->
+      <em><animated-number :value="nutzungszeit" :clearTrigger="clearTrigger" /> h</em> × 
+      <em><animated-number :value="energiekosten" :clearTrigger="clearTrigger" /> €/kWh</em>
     </p>
     <p>
       = <strong>
           <animated-number :value="energiekostenJaehrlich" :clearTrigger="clearTrigger" /> € p.a.
         </strong>
+        <br>
     </p>
+
+    <!-- 7) Instandhaltungskosten p.a. -->
+    <br>
+    <h2 class="red-title">Instandhaltungskosten im Maschinenstundensatz</h2>
+    <br>
+    <p>
+      <em>Formel:</em> Instandhaltung p.a. = Instandhaltung (% von Anschaffungskosten) × Anschaffungskosten (€)
+
+    </p>
+    <br>
+    <p>
+      Instandhaltung p.a. = <animated-number :value="instandhaltungProzent" :clearTrigger="clearTrigger" /> % × <animated-number :value="anschaffungskosten" :clearTrigger="clearTrigger" /> € =
+      <strong>
+        <animated-number :value="instandhaltung" :clearTrigger="clearTrigger" /> € p.a.
+      </strong>
+    </p>
+    <br>
     <!-- 8) Maschinenstundensatz -->
     <h2 class="red-title">Maschinenstundensatz</h2>
       <br>
@@ -237,28 +279,29 @@
         Maschinenstundensatz = 
         <span class="fraction">
           <span class="numerator">
-            <animated-number :value="abschreibung" :clearTrigger="clearTrigger" /> ] 
+            <animated-number :value="abschreibung" :clearTrigger="clearTrigger" /> + <animated-number :value="zinskosten" :clearTrigger="clearTrigger" /> + <animated-number :value="raumkosten" :clearTrigger="clearTrigger" /> + <animated-number :value="energiekostenJaehrlich" :clearTrigger="clearTrigger" /> + <animated-number :value="instandhaltung" :clearTrigger="clearTrigger" />
           </span>
           <span class="sep"></span>
           <span class="denominator">
-            Nutzungszeit p.a.
+            <animated-number :value="nutzungszeit" :clearTrigger="clearTrigger" />
           </span>
         </span>
       </p>
       <br>
+      <p style="text-align: center; font-size: 1.7rem;">=</p>
+      <br>
       <p>
-        Abschreibungskosten (im Beispiel) =
-        {{ wiederbeschaffungswert }} € / {{ nutzungsdauer }} Jahre =
-        <strong>
-          <animated-number :value="abschreibung" :clearTrigger="clearTrigger" /> € p.a.
-        </strong>
+        Maschinenstundensatz = <animated-number :value="maschinenstundensatz" :clearTrigger="clearTrigger" /> €/h
       </p>
+      <br>
       <br>
   </div>
 </template>
 
 <script>
 import AnimatedNumber from "@/Pages/Kostenstellen/Maschinenstundenrechnung/AnimatedNumber.vue";
+import Maschinenstundenrechnung from "../Maschinenstundenrechnung.vue";
+import Maschinenstundensatzrechnung from "@/Pages/Calc/Maschinenstundensatzrechnung.vue";
 
 export default {
   name: "MaschinenstundensatzRechnung",
@@ -270,12 +313,12 @@ export default {
       wiederbeschaffungswert: 320000,
       nutzungsdauer: 8,
       stellflaeche: 50.75,
-      motorenleistung: 25,
+      motorenleistung: 10,
       auslastungsgrad: 40,
       zinssatz: 9,
       instandhaltungProzent: 7.5,
       raumkostensatz: 240,
-      energiekosten: 0.4,
+      energiekosten: 0.5,
       arbeitstage: 220,
       stundenProTag: 8,
       pauseProzent: 25,
@@ -296,7 +339,7 @@ export default {
       return (this.wiederbeschaffungswert / this.nutzungsdauer).toFixed(2);
     },
     durchschnittlichGebundenesKapital() {
-      return ((this.anschaffungskosten + this.wiederbeschaffungswert) / 2).toFixed(2);
+      return ((this.anschaffungskosten + 0) / 2).toFixed(2);
     },
     zinskosten() {
       const zinsDecimal = this.zinssatz / 100;
@@ -309,9 +352,18 @@ export default {
       return (this.raumkostensatz * this.stellflaeche).toFixed(2);
     },
     energiekostenJaehrlich() {
-      const verbrauchProJahr =
-        this.motorenleistung * (this.auslastungsgrad / 100) * this.nutzungszeit;
-      return (verbrauchProJahr * this.energiekosten).toFixed(2);
+      const verbrauchProJahr = this.motorenleistung * this.nutzungszeit * this.energiekosten  ;/* (this.auslastungsgrad / 100)*/ 
+      return verbrauchProJahr.toFixed(2);
+    },
+    maschinenstundensatz() {
+      const instandhaltung = Number(this.instandhaltung);
+      const energiekostenJaehrlich = Number(this.energiekostenJaehrlich);
+      const raumkosten = Number(this.raumkosten);
+      const zinskosten = Number(this.zinskosten);
+      const abschreibung = Number(this.abschreibung);
+      const nutzungszeit = Number(this.nutzungszeit);
+      const maschinenstundensatz = instandhaltung + energiekostenJaehrlich + raumkosten + zinskosten + abschreibung;
+      return (maschinenstundensatz / nutzungszeit).toFixed(2);
     }
   },
   methods: {
@@ -345,15 +397,21 @@ export default {
 
 /* Container für die beiden Buttons */
 .button-group {
-  display: flex;
+  display: table;
   gap: 350px;
   margin-bottom: 1rem;
 }
 
 /* Style for the clear button */
 .clear-button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
+  background-color: #475569; /* bg-slate-600 */
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-weight: 500;
+  color: rgb(226, 232, 240);
+  /* Damit der Button in der Flex-Box mit dem Clear-Button mitskalieren kann */
+  border: none;
+  cursor: pointer;
 }
 
 /* Style for the Skript button, angelehnt an 2.vue */

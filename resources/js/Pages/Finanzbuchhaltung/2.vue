@@ -1,5 +1,6 @@
 <!-- Finanzbuchhaltung/2.vue -->
 <template>
+  <div class="py-12 bg-white dark:bg-white p-4">
   <div class="finanzbuchhaltung">
     <h1>Finanzbuchhaltung – Geschäftsbeispiele</h1>
     <ol>
@@ -76,6 +77,7 @@
       </Dialog>
     </TransitionRoot>
   </div>
+</div>
 </template>
   
 <script>

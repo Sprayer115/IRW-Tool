@@ -144,6 +144,7 @@ h1 {
   display: flex;
   gap: 2rem;
   margin-top: 2rem;
+  overflow: auto;
 }
 
 /* Linke (mini-scheme) Tabelle */
