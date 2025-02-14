@@ -16,7 +16,7 @@ const props = defineProps({
 });
 
 const formattedTopicId = computed(() => {
-    return props.topicId.charAt(0).toUpperCase() + props.topicId.slice(1);
+    return props.topicId.charAt(0).toUpperCase() + props.topicId.slice(1).replace(/ae/g, 'ä');
 });
 
 const handlePageChange = (data) => {

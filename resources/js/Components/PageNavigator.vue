@@ -147,19 +147,21 @@ const previousPage = () => {
                 @click="previousPage" 
                 class="w-8 h-8 flex items-center justify-center rounded-full 
                        text-slate-200 hover:bg-slate-500 transition-colors duration-200"
+                style="margin-top: 0 !important"
             >
-               < <!-- SVG code -->
+               <<!-- SVG code -->
             </button>
             
             <button 
                 v-else-if="hasPreviousTopic"
                 @click="navigateToPreviousTopic"
-                class="px-3 py-1 rounded-full text-slate-200 hover:bg-slate-500 transition-colors duration-200"
+                class="h-8 px-3 py-1 rounded-full text-slate-200 hover:bg-slate-500 transition-colors duration-200"
+                style="margin-top: 0 !important"
             >
                 <<
             </button>
             
-            <span class="flex items-center text-sm font-medium text-slate-200">
+            <span class="w-12 h-8 flex items-center justify-center text-sm font-medium text-slate-200 tabular-nums">
                 {{ currentPage }}/{{ totalPages }}
             </span>
             
@@ -170,6 +172,8 @@ const previousPage = () => {
                 class="w-8 h-8 flex items-center justify-center rounded-full 
                        text-slate-200 hover:bg-slate-500 disabled:opacity-40 disabled:cursor-not-allowed
                        transition-colors duration-200"
+                style="margin-top: 0 !important"
+
             >
                > <!-- SVG code -->
             </button>
@@ -177,7 +181,8 @@ const previousPage = () => {
             <button 
                 v-else-if="hasNextTopic"
                 @click="navigateToNextTopic"
-                class="px-3 py-1 rounded-full text-slate-200 hover:bg-slate-500 transition-colors duration-200"
+                class="h-8 px-3 py-1 rounded-full text-slate-200 hover:bg-slate-500 transition-colors duration-200"
+                style="margin-top: 0 !important"
             >
                 >>
             </button>
