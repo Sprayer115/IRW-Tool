@@ -107,12 +107,19 @@
     } else {
       // Free text answer with fuzzy matching
       isCorrect = currentQuestion.value.correctAnswers.some(correctAnswer => {
-        const similarity = calculateSimilarity(
-          answer.toLowerCase(),
-          correctAnswer.toLowerCase()
-        )
-        return similarity >= currentQuestion.value.fuzzyThreshold
-      })
+      const similarity = calculateSimilarity(
+        answer.toLowerCase(),
+        correctAnswer.toLowerCase()
+      )
+      console.log(similarity)
+      // Setze einen Default-Schwellenwert, falls keiner definiert ist.
+      const threshold = currentQuestion.value.fuzzyThreshold ?? 0.5
+      
+      if (Array.isArray(similarity)) {
+        return similarity.some(val => val >= threshold)
+      }
+      return similarity >= threshold
+    })
     }
   
     feedback.value = {

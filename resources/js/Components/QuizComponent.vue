@@ -33,7 +33,7 @@
               class="w-full p-2 border rounded"
               placeholder="Type your answer..."
               :disabled="isChecking"
-            >
+            > {{ currentQuestion.correctAnswers }}
           </div>
   
           <!-- Hint -->
@@ -100,15 +100,17 @@
   const totalQuestions = computed(() => props.questions.length)
   
   const checkAnswer = (answer) => {
+    console.log(answer)
     if (isChecking.value) return
     isChecking.value = true
     
     let isCorrect = false
-    
+    console.log(currentQuestion.value)
     if (currentQuestion.value.type === 'multiple_choice') {
       isCorrect = answer === currentQuestion.value.correctAnswer
     } else {
       // Free text answer with fuzzy matching
+      
       isCorrect = currentQuestion.value.correctAnswers.some(correctAnswer => {
         const similarity = calculateSimilarity(
           answer.toLowerCase(),

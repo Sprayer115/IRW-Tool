@@ -42,8 +42,8 @@
       {
         "id": "q4",
         "type": "free_text",
-        "question": "Nenne zwei Beispiele für kalkulatorische Kosten.",
-        "correctAnswers": ["kalkulatorische Abschreibungen", "kalkulatorische Zinsen", "kalkulatorische Miete", "kalkulatorische Wagnisse"],
+        "question": "Nenne ein Beispiel für kalkulatorische Kosten.",
+        "correctAnswers": ["Abschreibungen", "Zinsen", "Miete", "Wagnisse"],
         "hint": "Diese Kosten sind oft nicht identisch mit den in der Finanzbuchhaltung erfassten Aufwendungen."
       },
       {

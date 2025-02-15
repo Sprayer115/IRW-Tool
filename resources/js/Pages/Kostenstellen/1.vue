@@ -12,14 +12,24 @@
 
 <script>
 export default {
+  props: {
+    preAuxiliaryCostCenters: {
+      type: Array,
+      default: () => []
+    },
+    primaryOverheadCosts: {
+      type: Array,
+      default: () => []
+    },
+    allocationMatrix: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  emits: ['calculate'],
   data() {
     return {
       pageData: ''
-    }
-  },
-  methods: {
-    updateData() {
-      this.$emit('update:modelValue', this.pageData)
     }
   }
 }

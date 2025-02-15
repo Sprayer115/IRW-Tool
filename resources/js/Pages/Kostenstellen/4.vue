@@ -1,7 +1,5 @@
 <template>
   <div class="gemeinkostenzuweisung">
-    <h2><strong>Zuweisung der primären Gemeinkosten:</strong></h2>
-
     <!-- Wrapper, um Tabelle und Info-Button zusammen zu fassen -->
     <div class="table-wrapper">
       <div class="table-scroller">
@@ -88,12 +86,11 @@
     </TransitionRoot>
   </div>
 </template>
-  
+
 <script>
 import axios from 'axios'
 import QuizComponent from '../../Components/Quiz.vue'
 import { TransitionRoot, TransitionChild, Dialog, DialogPanel } from '@headlessui/vue'
-import { onMounted } from 'vue';
 
 export default {
   name: "GemeinkostenZuweisung",
@@ -114,9 +111,6 @@ export default {
     this.fetchQuizQuestions();
   },
   methods: {
-    onInfoClick() {
-      alert("Hier könnten weitere Informationen angezeigt werden!");
-    },
     onShowScript() {
       const link = document.createElement('a');
       link.href = '/storage/Kostenstellen.pdf';
@@ -134,7 +128,6 @@ export default {
     fetchQuizQuestions() {
       axios.get('/quiz/Kostenstellen.json')
         .then(response => {
-          // Passe dies ggf. an die Struktur Deiner JSON-Datei an
           this.quizQuestions = response.data.questions || response.data;
         })
         .catch(error => {
@@ -149,7 +142,7 @@ export default {
   }
 }
 </script>
-  
+
 <style scoped>
 .gemeinkostenzuweisung {
   max-width: 600px;
@@ -229,9 +222,6 @@ th {
 /* Headless UI Dialog */
 .fixed {
   position: fixed;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 /* Optional: Hover-Effekt */

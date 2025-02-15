@@ -1,7 +1,4 @@
 <template>
-  <AuthenticatedLayout>
-    <Head title="Abweichungsanalyse Komplett" />
-    <template #header></template>
 
     <!-- Page Content with Side Navigation -->
     <div class="py-12 bg-white dark:bg-white">
@@ -45,14 +42,11 @@
         </div>
       </div>
     </div>
-  </AuthenticatedLayout>
 </template>
 
 <script>
 import { ref, watch, onMounted } from "vue";
 import mermaid from "mermaid";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
 
 import I from "@/Pages/Kostenstellen/1.vue";
 import II from "@/Pages/Kostenstellen/2.vue";
