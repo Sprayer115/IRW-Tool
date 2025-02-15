@@ -85,7 +85,7 @@ export default {
     const showResults = ref(false);
 
     // Mapping of registered components for dynamic rendering
-    const registeredComponents = { I, II, III};
+    const registeredComponents = { I, II, III, Calculator};
 
     const setActiveComponent = (component) => {
       activeComponent.value = component;

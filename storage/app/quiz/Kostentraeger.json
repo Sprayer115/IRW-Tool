@@ -1,0 +1,70 @@
+{
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "question": "Was ist die Hauptaufgabe der Kostenträgerrechnung?",
+        "options": [
+          "Die Erfassung aller betrieblichen Kosten",
+          "Die Verteilung der Gemeinkosten auf Kostenstellen",
+          "Die Zurechnung der Kosten auf die Produkte oder Dienstleistungen",
+          "Die Ermittlung der Kapitalkosten eines Unternehmens"
+        ],
+        "correctAnswer": "Die Zurechnung der Kosten auf die Produkte oder Dienstleistungen",
+        "hint": "Die Kostenträgerrechnung weist die Kosten den Endprodukten oder Leistungen zu."
+      },
+      {
+        "id": "q2",
+        "type": "multiple_choice",
+        "question": "Welche der folgenden Methoden wird zur Kostenträgerrechnung verwendet?",
+        "options": [
+          "Kostenartenrechnung",
+          "Deckungsbeitragsrechnung",
+          "Finanzbuchhaltung",
+          "Kapitalflussrechnung"
+        ],
+        "correctAnswer": "Deckungsbeitragsrechnung",
+        "hint": "Diese Methode zeigt auf, welchen Beitrag ein Produkt zur Deckung der Fixkosten leistet."
+      },
+      {
+        "id": "q3",
+        "type": "multiple_choice",
+        "question": "Welche Kostenart wird in der Kostenträgerrechnung direkt den Produkten oder Dienstleistungen zugeordnet?",
+        "options": [
+          "Gemeinkosten",
+          "Einzelkosten",
+          "Fixkosten",
+          "Verwaltungskosten"
+        ],
+        "correctAnswer": "Einzelkosten",
+        "hint": "Diese Kosten lassen sich direkt einem Produkt oder einer Dienstleistung zuordnen."
+      },
+      {
+        "id": "q4",
+        "type": "multiple_choice",
+        "question": "Welches Verfahren dient zur Verrechnung der Gemeinkosten auf die Kostenträger?",
+        "options": [
+          "Äquivalenzziffernrechnung",
+          "Divisionskalkulation",
+          "Zuschlagskalkulation",
+          "Liquiditätsrechnung"
+        ],
+        "correctAnswer": "Zuschlagskalkulation",
+        "hint": "Dieses Verfahren nutzt Zuschlagssätze zur Verteilung der Gemeinkosten."
+      },
+      {
+        "id": "q5",
+        "type": "multiple_choice",
+        "question": "Welche der folgenden Aussagen zur Kostenträgerrechnung ist falsch?",
+        "options": [
+          "Die Kostenträgerrechnung ermittelt die Selbstkosten eines Produkts.",
+          "Die Kostenträgerrechnung dient der Preisbildung.",
+          "Die Kostenträgerrechnung ist ein Bestandteil des internen Rechnungswesens.",
+          "Die Kostenträgerrechnung berücksichtigt ausschließlich Fixkosten."
+        ],
+        "correctAnswer": "Die Kostenträgerrechnung berücksichtigt ausschließlich Fixkosten.",
+        "hint": "Es werden sowohl fixe als auch variable Kosten berücksichtigt."
+      }
+    ]
+  }
+  

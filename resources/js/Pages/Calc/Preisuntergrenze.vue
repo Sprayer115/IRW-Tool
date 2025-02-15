@@ -1,6 +1,4 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import VueDatePicker from '@vuepic/vue-datepicker';
@@ -183,11 +181,7 @@ rowsP2.value = addRowFromExistInSelf();
 
 <template>
     <div>
-      <Head title="Preisuntergrenze"></Head>
-      <AuthenticatedLayout  :hideNavbar="true">
-        <template #header>
-          <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Preisuntergrenze</h2>
-        </template>
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Preisuntergrenze</h2>
   
         <div class="py-12 m-lg-4">
           <!-- Input Fields -->
@@ -289,10 +283,8 @@ rowsP2.value = addRowFromExistInSelf();
             <button @click="showModal = false">Schließen</button>
           </div>
         </div>
-  
-      </AuthenticatedLayout>
-    </div>
-  </template>
+      </div>
+</template>
   
 <style>
 .modal-overlay {

@@ -1,6 +1,4 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import VueDatePicker from '@vuepic/vue-datepicker';
@@ -164,85 +162,77 @@ function calculateZAAW(row){
 
 
 <template>
-    <div>
-      <Head title="Abgrenzungsrechnung">
-      </Head>
-  
-      <AuthenticatedLayout>
-          <template #header>
-              <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abgrenzungsrechnung</h2>
-          </template>
-          <div class="py-12 m-lg-4">
-            <div class="input-area"
-                style="display: grid; grid-template-columns: 3fr 2fr; grid-gap: 20px; align-items: center; justify-content: center; justify-items: center; max-width: 600px; margin: 0 auto;">
-                <!-- Label and Date Picker in Grid -->
-                <label for="input2" style="justify-self: start;">Für welchen Zeitraum soll abgegrenzt werden?</label>
-                <VueDatePicker v-model="selectedRange" auto-apply month-picker range style="max-width: 250px;" />
+    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Abgrenzungsrechnung</h2>
 
-                <!-- Aufwand Input -->
-                <label for="input1" style="justify-self: start;">Bitte trage den <span id="tooltip-aufwand" class="tooltip-container">
-                    Aufwand<sup class="information">i</sup>
-                    <span class="tooltip-text">Was wurde bezahlt</span>
-                </span>
-                ein:</label>
-                <input type="number" v-model="aufwand" id="input1" style="max-width: 250px;" />
-                
-                <!-- Sachliche Abgrenzung Input -->
-                <label for="input4" style="justify-self: start;">Gibt es eine sachliche <span id="tooltip-aufwand" class="tooltip-container">
-                    Abgrenzung<sup class="information">i</sup>
-                    <span class="tooltip-text">betriebsfremde, außerordentliche und periodenfremde Aufwendungen</span>
-                </span>?</label>
-                <input type="number" v-model="sachliche_abgrenzung" id="input4" style="max-width: 250px;" />
+    <div class="py-12 m-lg-4">
+        <div class="input-area"
+            style="display: grid; grid-template-columns: 3fr 2fr; grid-gap: 20px; align-items: center; justify-content: center; justify-items: center; max-width: 600px; margin: 0 auto;">
+            <!-- Label and Date Picker in Grid -->
+            <label for="input2" style="justify-self: start;">Für welchen Zeitraum soll abgegrenzt werden?</label>
+            <VueDatePicker v-model="selectedRange" auto-apply month-picker range style="max-width: 250px;" />
 
-                <!-- Kosten Input -->
-                <label for="input6" style="justify-self: start;">Gibt es schon die fertigen Kosten?</label>
-                <input type="number" v-model="kosten" id="input6" style="max-width: 250px;" />
+            <!-- Aufwand Input -->
+            <label for="input1" style="justify-self: start;">Bitte trage den <span id="tooltip-aufwand" class="tooltip-container">
+                Aufwand<sup class="information">i</sup>
+                <span class="tooltip-text">Was wurde bezahlt</span>
+            </span>
+            ein:</label>
+            <input type="number" v-model="aufwand" id="input1" style="max-width: 250px;" />
+            
+            <!-- Sachliche Abgrenzung Input -->
+            <label for="input4" style="justify-self: start;">Gibt es eine sachliche <span id="tooltip-aufwand" class="tooltip-container">
+                Abgrenzung<sup class="information">i</sup>
+                <span class="tooltip-text">betriebsfremde, außerordentliche und periodenfremde Aufwendungen</span>
+            </span>?</label>
+            <input type="number" v-model="sachliche_abgrenzung" id="input4" style="max-width: 250px;" />
 
-                <!-- Empty space to align button -->
-                <div></div>
-                <button class="button bg-primary" style="justify-self: start; max-width: 150px;" @click="addRow">Berechnen</button>
-            </div>
+            <!-- Kosten Input -->
+            <label for="input6" style="justify-self: start;">Gibt es schon die fertigen Kosten?</label>
+            <input type="number" v-model="kosten" id="input6" style="max-width: 250px;" />
+
+            <!-- Empty space to align button -->
+            <div></div>
+            <button class="button bg-primary" style="justify-self: start; max-width: 150px;" @click="addRow">Berechnen</button>
+        </div>
 
 
 
 
-  
-              <table class="table">
-                  <thead>
-                      <tr>
-                            <th class="bg-success">Aufwand</th>
-                            <th class = "bg-warning">Zeitraum</th>
-                            <th>Zeitliche Abgrenzung</th>
-                            <th>Sachliche Abgrenzung</th>
-                            <th>
-                                <span id="tooltip-aufwand" class="tooltip-container">
-                                    zeitlich abgegrenzter Aufwand<sup class="information">i</sup>
-                                    <span class="tooltip-text">Definition/Rechnung für den zeitlich abgegrenzter Aufwand</span>
-                                </span>
-                            </th>
-                            <th class="bg-danger">
-                                <span id="tooltip-aufwand" class="tooltip-container">
-                                    Kosten<sup class="information">i</sup>
-                                    <span class="tooltip-text">tatsächlich angefallene Kosten</span>
-                                </span>
-                            </th>
-                            <th>Actions</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr v-for="(row, index) in rows" :key="index">
-                          <td>{{ row.aufwand }}</td>
-                          <td>{{ row.zeitraum }}</td>
-                          <td>{{ row.zeitliche_abgrenzung }}</td>
-                          <td>{{ row.sachliche_abgrenzung }}</td>
-                          <td>{{ row.za_aw }}</td>
-                          <td>{{ row.kosten }}</td>
-                          <td><button class = "button bg-danger" @click="deleteRow(row.id, index)">löschen</button></td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
-      </AuthenticatedLayout>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="bg-success">Aufwand</th>
+                    <th class = "bg-warning">Zeitraum</th>
+                    <th>Zeitliche Abgrenzung</th>
+                    <th>Sachliche Abgrenzung</th>
+                    <th>
+                        <span id="tooltip-aufwand" class="tooltip-container">
+                            zeitlich abgegrenzter Aufwand<sup class="information">i</sup>
+                            <span class="tooltip-text">Definition/Rechnung für den zeitlich abgegrenzter Aufwand</span>
+                        </span>
+                    </th>
+                    <th class="bg-danger">
+                        <span id="tooltip-aufwand" class="tooltip-container">
+                            Kosten<sup class="information">i</sup>
+                            <span class="tooltip-text">tatsächlich angefallene Kosten</span>
+                        </span>
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(row, index) in rows" :key="index">
+                    <td>{{ row.aufwand }}</td>
+                    <td>{{ row.zeitraum }}</td>
+                    <td>{{ row.zeitliche_abgrenzung }}</td>
+                    <td>{{ row.sachliche_abgrenzung }}</td>
+                    <td>{{ row.za_aw }}</td>
+                    <td>{{ row.kosten }}</td>
+                    <td><button class = "button bg-danger" @click="deleteRow(row.id, index)">löschen</button></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 

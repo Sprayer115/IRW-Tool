@@ -6,7 +6,7 @@
     <!-- Container für die beiden Buttons -->
     <div class="button-group">
       <button @click="clearHighlights" class="clear-button">Highlights entfernen</button>
-      <button @click="downloadScript" class="btnShowScript">Skript</button>
+      <button @click="downloadScript" class="btnShowScript clear-button ml-2">Skript</button>
     </div>
     
     <!-- 1) Dynamische Eingabe-Tabelle -->
