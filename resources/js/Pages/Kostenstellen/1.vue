@@ -1,7 +1,7 @@
 <!-- Kostenstellen/1.vue -->
 <template>
   <div class="page">
-    <h1 class="title">Definition der Kostenstellenrechnung</h1> <br>
+    <h1 >Definition der Kostenstellenrechnung</h1> <br>
     "Die Kostenstellenrechnung ist der zweite Schritt der Kostenrechnung. Sie verteilt die Gemeinkosten aus der Kostenartenrechnung auf die Bereiche des Unternehmens (Kostenstellen), die diese Kosten verursacht haben. Ziel ist es, die Gemeinkosten verursachungsgerecht den Kostenstellen zuzuordnen und eine Basis für die spätere Verrechnung auf Kostenträger zu schaffen."  </div>
   <br>
   <br>
