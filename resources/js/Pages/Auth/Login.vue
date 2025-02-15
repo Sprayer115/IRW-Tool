@@ -84,14 +84,14 @@ const submit = () => {
                 >
                     Forgot your password?
                 </Link>
+                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Log in
+                </PrimaryButton>
                 <Link :href="route('register')" class="ms-4">
                     <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Register
                     </PrimaryButton>
                 </Link>
-                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
-                </PrimaryButton>
             </div>
         </form>
     </GuestLayout>
