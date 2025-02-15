@@ -4,9 +4,9 @@
     <br>
     <p>
       Für die Kostenträgerrechnung nehmen wir an, dass es
-      <strong>zwei Produkte</strong> (z. B. <strong>Produkt A</strong> und
+      <strong>zwei Produkte</strong> (z.B. <strong>Produkt A</strong> und
       <strong>Produkt B</strong>) gibt. Die Verteilung der Kosten erfolgt auf
-      Basis von <strong>proportionalen Schlüsselgrößen</strong>, z. B.
+      Basis von <strong>proportionalen Schlüsselgrößen</strong>, z.B.
       Maschinenstunden oder Stückzahlen:
     </p>
 
