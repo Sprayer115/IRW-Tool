@@ -104,7 +104,7 @@
     <ul>
       <li>
         Maschinenzeit =
-        <animated-number :value="arbeitstage" :clearTrigger="clearTrigger" /> Tage × {{ stundenProTag }} h/Tag =
+        <animated-number :value="arbeitstage" :clearTrigger="clearTrigger" /> Tage × <animated-number :value="stundenProTag" :clearTrigger="clearTrigger" /> h/Tag =
         <animated-number :value="gesamtArbeitsstunden" :clearTrigger="clearTrigger" /> h
       </li>
       <li>
@@ -137,8 +137,8 @@
     </p>
     <br>
     <p>
-      Abschreibungskosten (im Beispiel) =
-      {{ wiederbeschaffungswert }} € / {{ nutzungsdauer }} Jahre =
+      Abschreibungskosten =
+      <animated-number :value="wiederbeschaffungswert" :clearTrigger="clearTrigger" /> € / <animated-number :value="nutzungsdauer" :clearTrigger="clearTrigger" /> Jahre =
       <strong>
         <animated-number :value="abschreibung" :clearTrigger="clearTrigger" /> € p.a.
       </strong>

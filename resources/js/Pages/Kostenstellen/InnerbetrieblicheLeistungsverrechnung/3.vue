@@ -76,11 +76,11 @@ export default {
   methods: {
     downloadScript() {
       const link = document.createElement('a')
-      link.href = '/storage/Leistungsverrechnung.pdf'
-      link.setAttribute('download', 'Leistungsverrechnung.pdf')
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+      link.href = '/storage/Leistungsvererchnung.pdf';
+      link.setAttribute('download', 'Leistungsvererchnung.pdf');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   }
 };
