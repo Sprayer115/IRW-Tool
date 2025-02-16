@@ -70,11 +70,11 @@
     <div>
       <span id="tooltip-aufwand" class="tooltip-container">
             <sup class="info-button">i</sup>
-            <span class="tooltip-text">Die innerbetriebliche Leistungsverrechnung dient dazu, Kosten, die durch die Nutzung von <br>Leistungen innerhalb des Unternehmens entstehen, korrekt zuzuordnen. Es gibt verschiedene Verfahren dafür:<br><br>
-   1.	Stufenleiterverfahren: Kosten werden schrittweise auf die nachfolgenden Kostenstellen verteilt.<br> Vorherige Kostenstellen werden dabei nicht erneut berücksichtigt.<br><br>
-   2.	Anbauverfahren: Verteilt nur auf die Endkostenstellen, ohne gegenseitige <br>Verrechnung zwischen den Hauptkostenstellen.<br><br>
-   3.	Gleichungsverfahren: Nutzt ein mathematisches System von Gleichungen, um <br>alle innerbetrieblichen Leistungen vollständig zu berücksichtigen.<br><br>
-Jedes Verfahren hat unterschiedliche Genauigkeitsgrade und Anforderungen in der Anwendung.
+            <span class="tooltip-text">Die innerbetriebliche Leistungsverrechnung dient dazu, Kosten, die <br>durch die Nutzung von <br>Leistungen innerhalb des Unternehmens entstehen, korrekt zuzuordnen.<br> Es gibt verschiedene Verfahren dafür:<br><br>
+   1.	Stufenleiterverfahren: <br>Kosten werden schrittweise auf <br>die nachfolgenden Kostenstellen verteilt.<br> Vorherige Kostenstellen werden dabei nicht erneut berücksichtigt.<br><br>
+   2.	Anbauverfahren: <br>Verteilt nur auf die Endkostenstellen, ohne gegenseitige <br>Verrechnung zwischen den Hauptkostenstellen.<br><br>
+   3.	Gleichungsverfahren: <br>Nutzt ein mathematisches System von Gleichungen, um <br>alle innerbetrieblichen Leistungen vollständig zu berücksichtigen.<br><br>
+Jedes Verfahren hat unterschiedliche <br>Genauigkeitsgrade und Anforderungen in der Anwendung.
 
             </span>
       </span>
@@ -196,8 +196,9 @@ export default {
     padding: 5px;
     position: absolute;
     z-index: 1;
-    bottom: 150%;  /*Adjust to position above the element */
+    bottom: 50%;  /*Adjust to position above the element */
     width: fit-content;
+    top: -15rem;
 }
 .table-scroller{
   overflow: auto;
