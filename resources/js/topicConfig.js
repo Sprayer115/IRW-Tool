@@ -24,6 +24,7 @@ export const topicConfigs = {
           'info': () => import('@/Pages/Kostenstellen/Info.vue'),
           'iblv': () => import('@/Pages/Kostenstellen/InnerbetrieblicheLeistungsverrechnung.vue'),
           'msr': () => import('@/Pages/Kostenstellen/Maschinenstundenrechnung.vue'),
+          'pkr': () => import('@/Pages/Kostenstellen/Prozesskostenrechnung.vue'),
         }
       })
     },

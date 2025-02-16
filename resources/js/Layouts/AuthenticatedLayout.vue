@@ -91,6 +91,9 @@ const props = defineProps({
                                             <DropdownLink :href="route('kostenstellen', { page: 'msr' })" class="whitespace-normal">
                                                 Maschinenstundenrechnungen
                                             </DropdownLink>
+                                            <DropdownLink :href="route('kostenstellen', { page: 'pkr' })" class="whitespace-normal">
+                                                Prozesskostenrechnung
+                                            </DropdownLink>
                                         </template>
                                     </Dropdown>
                                 </div>
@@ -264,6 +267,9 @@ const props = defineProps({
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('kostenstellen', { page: 'msr' })">
                             Maschinenstundenrechnungen
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('kostenstellen', { page: 'pkr' })">
+                            Prozesskostenrechnung
                         </ResponsiveNavLink>
 
                         <div class="border-t border-gray-200 dark:border-gray-600 my-4"></div>

@@ -75,14 +75,14 @@
             <sup class="info-button">i</sup>
             <div class="table-scroller">
             <span class="tooltip-text">Primäre Gemeinkosten sind jene Kosten, die aus <br>externen Quellen direkt in das Unternehmen einfließen und <br>
-              keinem bestimmten Produkt oder Auftrag direkt zugeordnet werden können. <br>Sie umfassen verschiedene Kategorien wie Miete, Zinsen, Abschreibungen und Versicherungen. <br>
+              keinem bestimmten Produkt oder Auftrag direkt zugeordnet werden können. <br>Sie umfassen verschiedene Kategorien wie <br>Miete, Zinsen, Abschreibungen und Versicherungen. <br>
               <br>
-                •	Miete: Wird oft nach genutzter Fläche aufgeteilt, z. B. zwischen Produktion und Verwaltung. <br>
-                •	Zinsen: Verteilt sich basierend auf dem Kapitaleinsatz, also der finanziellen Ressourcennutzung.<br>
-                •	Abschreibungen: Orientieren sich an den Anlagenwerten, da diese die langfristigen Investitionen widerspiegeln.<br>
-                •	Versicherungen: Meist ebenfalls flächenbezogen verteilt, da sie für die Absicherung von Betriebsmitteln gelten.<br>
-                •	Einzelmaterial und -löhne: Werden, wenn direkt zuordenbar, nicht in der Kostenstellenrechnung <br>berücksichtigt, sondern direkt den Kostenträgern zugeordnet.<br><br>
-                Die Kostenstellenrechnung hilft dabei, diese Gemeinkosten verursachungsgerecht auf <br>Kostenstellen zu verteilen, um später eine präzise Zuweisung an die Kostenträger zu ermöglichen.<br>
+                •	Miete: Wird oft nach genutzter Fläche aufgeteilt, <br>z. B. zwischen Produktion und Verwaltung. <br><br>
+                •	Zinsen: Verteilt sich basierend auf dem <br>Kapitaleinsatz, also der finanziellen Ressourcennutzung.<br><br>
+                •	Abschreibungen: Orientieren sich an den <br>Anlagenwerten, da diese die langfristigen Investitionen widerspiegeln.<br><br>
+                •	Versicherungen: Meist ebenfalls flächenbezogen <br>verteilt, da sie für die Absicherung von Betriebsmitteln gelten.<br><br>
+                •	Einzelmaterial und -löhne: Werden, wenn direkt <br>zuordenbar, nicht in der Kostenstellenrechnung <br>berücksichtigt, sondern direkt den Kostenträgern zugeordnet.<br><br>
+                Die Kostenstellenrechnung hilft dabei, diese Gemeinkosten verursachungsgerecht auf <br>Kostenstellen zu verteilen, um später <br>eine präzise Zuweisung an die Kostenträger zu ermöglichen.<br>
             </span></div>
       </span>
     </div>
@@ -190,8 +190,8 @@ th {
     /*border-radius: 5px;*/
     padding: 5px;
     position: absolute;
+    top: -15rem;
     z-index: 1;
     bottom: 150%;  /*Adjust to position above the element */
-    width: fit-content;
 }
 </style>

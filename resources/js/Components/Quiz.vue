@@ -31,7 +31,7 @@
               @keyup.enter="checkAnswer(userAnswer)"
               type="text"
               class="w-full p-2 border rounded"
-              placeholder="Type your answer..."
+              placeholder="Schreibe deine Antwort..."
               :disabled="isChecking"
             >
           </div>
